@@ -33,13 +33,14 @@ const NAV_ITEMS: {
   id: NavTab;
   icon: React.ComponentType<{ className?: string }>;
 }[] = [
+    { id: 'overview', icon: LayoutDashboard },
     { id: 'detect', icon: ScanSearch },
     { id: 'dampen', icon: Flame },
     { id: 'heal', icon: Gavel },
   ];
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<NavTab>('detect');
+  const [activeTab, setActiveTab] = useState<NavTab>('overview');
   const [lang, setLang] = useState<Language>('en');
   const [baseUrl, setBaseUrl] = useState<string>(DEFAULT_BASE_URL);
   const [mode] = useState<ExecutionMode>('live');

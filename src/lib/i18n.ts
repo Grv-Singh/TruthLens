@@ -7,7 +7,7 @@ export const copy = {
       'Systems Thinking + Multimodal AI to detect synthetic media, dampen viral loops, and enforce court-ready law.',
     badge: 'REAL-TIME MULTIMODAL FORENSICS & COUNTER-VIRALITY',
     nav: {
-      overview: 'Overview',
+      overview: 'Home',
       deck: 'Pitch Deck',
       detect: 'Forensics Scanner',
       vault: 'Origin Vault',
@@ -52,7 +52,7 @@ export const copy = {
       'सिस्टम्स थिंकिंग + AI: सिंथेटिक मीडिया पहचानें, वायरलिटी रोकें और क़ानूनी कार्रवाई करें।',
     badge: 'रीयल-टाइम डीपफेक फॉरेन्सिक व रक्षा मंच',
     nav: {
-      overview: 'अवलोकन',
+      overview: 'होम',
       deck: 'पिच डेक',
       detect: 'फॉरेन्सिक स्कैनर',
       vault: 'ओरिजिन वॉल्ट',
