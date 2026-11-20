@@ -4,25 +4,20 @@
   --font-display: "Space Grotesk", "Inter", system-ui, sans-serif;
   --font-sans: "Inter", system-ui, -apple-system, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
-
-  --color-obsidian: #070c18;
-  --color-surface: #0c1427;
-  --color-surface-elevated: #121c35;
-  --color-emerald-signal: #10d4a2;
-  --color-emerald-bright: #00e8ac;
-  --color-crimson-alert: #f43f5e;
-  --color-amber-cooling: #f59e0b;
 }
 
 @layer base {
   html {
-    color-scheme: dark;
     font-family: var(--font-sans);
-    background-color: #060b17;
     scroll-behavior: smooth;
+    font-size: 16px;
   }
 
-  h1, h2, h3, .font-display {
+  body {
+    min-height: 100vh;
+  }
+
+  h1, h2, h3, h4, h5, h6, .font-display {
     font-family: var(--font-display);
     letter-spacing: -0.02em;
   }
@@ -36,112 +31,289 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* Soothing, elegant ambient dark background with soft luminous glow */
-.bg-forensic-grid {
-  background-color: #060b17;
+/* ========================================================
+   LIGHT THEME (Poora Light Mode - Crisp High-Contrast)
+   ======================================================== */
+html.light {
+  color-scheme: light;
+  background-color: #f8fafc;
+  color: #0f172a;
+}
+
+html.light body {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+html.light h1,
+html.light h2,
+html.light h3,
+html.light h4,
+html.light h5,
+html.light h6,
+html.light .font-display {
+  color: #0f172a !important;
+}
+
+html.light .bg-forensic-grid {
+  background-color: #f8fafc !important;
+  background-image:
+    radial-gradient(circle at 18% 12%, rgba(37, 99, 235, 0.04), transparent 45%),
+    radial-gradient(circle at 82% 18%, rgba(5, 150, 105, 0.04), transparent 42%),
+    linear-gradient(to right, rgba(203, 213, 225, 0.45) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(203, 213, 225, 0.45) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 36px 36px, 36px 36px;
+}
+
+/* Turn dark containers & gradients to clean white cards */
+html.light .glass-panel,
+html.light .glass-panel-glow,
+html.light section[class*="bg-gradient-to-"],
+html.light div[class*="bg-gradient-to-"],
+html.light [class*="bg-[#050919]"],
+html.light [class*="bg-[#040816]"],
+html.light [class*="bg-[#060b17]"],
+html.light [class*="bg-[#060b1f]"],
+html.light [class*="bg-[#0b1229]"],
+html.light [class*="bg-[#0c1427]"],
+html.light [class*="bg-[#121c35]"],
+html.light [class*="bg-[#0d162d]"],
+html.light [class*="bg-[#070c18]"],
+html.light [class*="bg-[#030715]"],
+html.light [class*="bg-[#111b3a]"],
+html.light [class*="bg-[#0c1538]"],
+html.light [class*="bg-[#070e28]"],
+html.light [class*="bg-[#030718]"] {
+  background: #ffffff !important;
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.04), 0 2px 4px -2px rgba(0, 0, 0, 0.02) !important;
+  border-radius: 1.25rem;
+}
+
+/* Body and subtitle text in light mode */
+html.light p,
+html.light [class*="text-slate-100"],
+html.light [class*="text-slate-200"],
+html.light [class*="text-slate-300"] {
+  color: #1e293b !important;
+}
+
+html.light [class*="text-slate-400"],
+html.light [class*="text-slate-500"] {
+  color: #475569 !important;
+}
+
+html.light .text-white {
+  color: #0f172a !important;
+}
+
+/* In light mode, turn fluorescent accents into rich readable tones */
+html.light [class*="text-[#10D4A2]"],
+html.light [class*="text-[#00e8ac]"],
+html.light .text-emerald-400,
+html.light .text-emerald-300 {
+  color: #047857 !important;
+}
+
+html.light [class*="text-sky-400"],
+html.light [class*="text-sky-300"],
+html.light [class*="text-sky-200"],
+html.light [class*="text-cyan-400"] {
+  color: #0284c7 !important;
+}
+
+html.light [class*="text-amber-400"],
+html.light [class*="text-amber-300"],
+html.light [class*="text-yellow-400"] {
+  color: #b45309 !important;
+}
+
+html.light [class*="text-rose-400"],
+html.light [class*="text-rose-300"],
+html.light [class*="text-red-400"] {
+  color: #b91c1c !important;
+}
+
+html.light [class*="text-purple-400"],
+html.light [class*="text-purple-300"],
+html.light [class*="text-purple-200"] {
+  color: #6b21a8 !important;
+}
+
+/* Badge backgrounds in light mode */
+html.light [class*="bg-emerald-500/10"],
+html.light [class*="bg-emerald-500/20"],
+html.light [class*="bg-[#10D4A2]/10"],
+html.light [class*="bg-[#10D4A2]/20"] {
+  background-color: #ecfdf5 !important;
+  border-color: #a7f3d0 !important;
+}
+
+html.light [class*="bg-sky-500/10"],
+html.light [class*="bg-sky-500/20"] {
+  background-color: #f0f9ff !important;
+  border-color: #bae6fd !important;
+}
+
+html.light [class*="bg-amber-500/10"],
+html.light [class*="bg-amber-500/20"] {
+  background-color: #fffbeb !important;
+  border-color: #fde68a !important;
+}
+
+html.light [class*="bg-rose-500/10"],
+html.light [class*="bg-rose-500/20"] {
+  background-color: #fff1f2 !important;
+  border-color: #fecdd3 !important;
+}
+
+html.light [class*="bg-purple-500/10"],
+html.light [class*="bg-purple-500/20"] {
+  background-color: #faf5ff !important;
+  border-color: #e9d5ff !important;
+}
+
+html.light [class*="border-white/"] {
+  border-color: #e2e8f0 !important;
+}
+
+html.light [class*="bg-white/5"],
+html.light [class*="bg-white/10"] {
+  background-color: #f8fafc !important;
+}
+
+html.light input[type="text"],
+html.light input[type="file"],
+html.light select,
+html.light textarea {
+  background-color: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+html.light pre {
+  background-color: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+/* Buttons with white text in light mode */
+html.light button.bg-blue-600,
+html.light button.bg-blue-600 *,
+html.light a.bg-blue-600,
+html.light a.bg-blue-600 *,
+html.light .btn-neon-emerald,
+html.light .btn-neon-emerald * {
+  color: #ffffff !important;
+}
+
+html.light .btn-neon-emerald {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25) !important;
+  border-radius: 0.75rem;
+}
+
+/* Video & dark overlay badges must keep pure white text */
+html.light [class*="bg-black"] *,
+html.light [class*="bg-black/"] * {
+  color: #ffffff !important;
+}
+
+
+/* ========================================================
+   DARK THEME (Poora Dark Mode - Obsidian High-Contrast)
+   ======================================================== */
+html.dark {
+  color-scheme: dark;
+  background-color: #050919;
+  color: #f8fafc;
+}
+
+html.dark body {
+  background-color: #050919 !important;
+  color: #f8fafc !important;
+}
+
+/* Ensure ALL text in dark mode is high contrast white/light */
+html.dark h1,
+html.dark h2,
+html.dark h3,
+html.dark h4,
+html.dark h5,
+html.dark h6,
+html.dark .font-display {
+  color: #ffffff !important;
+}
+
+html.dark p,
+html.dark div,
+html.dark span {
+  color: #e2e8f0;
+}
+
+/* OVERRIDE ANY BLACK OR DARK SLATE TEXT IN DARK MODE */
+html.dark .text-slate-900,
+html.dark .text-slate-800,
+html.dark .text-slate-700,
+html.dark .text-black,
+html.dark [class*="text-[#0f172a]"],
+html.dark [class*="text-[#050919]"] {
+  color: #f8fafc !important;
+}
+
+html.dark .text-slate-400,
+html.dark .text-slate-500 {
+  color: #94a3b8 !important;
+}
+
+html.dark .bg-forensic-grid {
+  background-color: #060b17 !important;
   background-image:
     radial-gradient(circle at 18% 12%, rgba(16, 212, 162, 0.08), transparent 45%),
     radial-gradient(circle at 82% 18%, rgba(56, 189, 248, 0.07), transparent 42%),
     radial-gradient(circle at 50% 75%, rgba(129, 140, 248, 0.05), transparent 50%),
     linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
-  background-size: 100% 100%, 100% 100%, 100% 100%, 36px 36px, 36px 36px;
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px) !important;
+  background-size: 100% 100%, 100% 100%, 100% 100%, 36px 36px, 36px 36px !important;
 }
 
-/* Soothing glassmorphic panels — gentle rounded corners, elegant borders */
-.glass-panel {
-  background: rgba(12, 20, 39, 0.72);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 12px 36px -12px rgba(0, 0, 0, 0.45), inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
+html.dark .glass-panel {
+  background: rgba(12, 20, 39, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 12px 36px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 0 rgba(255, 255, 255, 0.06) !important;
+  border-radius: 1.25rem !important;
 }
 
-.glass-panel-glow {
-  background: rgba(12, 20, 39, 0.82);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(16, 212, 162, 0.28);
-  box-shadow: 0 12px 36px -10px rgba(0, 0, 0, 0.5), 0 0 24px -6px rgba(16, 212, 162, 0.12), inset 0 1px 0 0 rgba(16, 212, 162, 0.2);
+html.dark .glass-panel-glow {
+  background: rgba(12, 20, 39, 0.88) !important;
+  border: 1px solid rgba(16, 212, 162, 0.35) !important;
+  box-shadow: 0 12px 36px -10px rgba(0, 0, 0, 0.6), 0 0 24px -6px rgba(16, 212, 162, 0.2) !important;
+  border-radius: 1.25rem !important;
 }
 
-/* Soothing soft glow text */
-.text-glow-emerald {
-  text-shadow: 0 0 14px rgba(16, 212, 162, 0.35);
+html.dark input[type="text"],
+html.dark input[type="file"],
+html.dark select,
+html.dark textarea {
+  background-color: #0b132b !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: #f8fafc !important;
 }
 
-.text-glow-cyan {
-  text-shadow: 0 0 14px rgba(56, 189, 248, 0.35);
+html.dark pre {
+  background-color: #060b19 !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #f8fafc !important;
 }
 
-.text-glow-rose {
-  text-shadow: 0 0 14px rgba(244, 63, 94, 0.35);
-}
-
-/* Soothing, refined action buttons */
-.btn-neon-emerald {
-  background: linear-gradient(135deg, #10d4a2 0%, #059669 100%);
-  color: #04101e;
+html.dark .btn-neon-emerald {
+  background: linear-gradient(135deg, #10d4a2 0%, #059669 100%) !important;
+  color: #030715 !important;
   font-weight: 700;
-  box-shadow: 0 4px 16px rgba(16, 212, 162, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.25);
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 16px rgba(16, 212, 162, 0.35) !important;
+  border-radius: 0.75rem;
 }
-.btn-neon-emerald:hover {
-  transform: translateY(-1.5px);
-  box-shadow: 0 6px 24px rgba(16, 212, 162, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.3);
-  background: linear-gradient(135deg, #16e0ac 0%, #05a775 100%);
-}
-.btn-neon-emerald:active {
-  transform: translateY(0.5px);
-}
-
-/* Soft ambient border shimmer */
-@keyframes border-shimmer {
-  0%, 100% { border-color: rgba(16, 212, 162, 0.3); }
-  50% { border-color: rgba(56, 189, 248, 0.3); }
-}
-
-.animate-border-glow {
-  animation: border-shimmer 6s ease-in-out infinite;
-}
-
-/* Custom smooth scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: #060b17;
-}
-::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.2);
-  border-radius: 999px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(16, 212, 162, 0.5);
-}
-
-@keyframes pulse-ring {
-  0% { transform: scale(0.94); opacity: 0.6; }
-  70% { transform: scale(1.15); opacity: 0; }
-  100% { transform: scale(1.15); opacity: 0; }
-}
-
-.animate-pulse-ring {
-  animation: pulse-ring 3s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
-}
-
-/* Soothing 4-4-6 breathing pacing */
-@keyframes breathe-circle {
-  0%, 100% { transform: scale(0.9); opacity: 0.7; }
-  35% { transform: scale(1.18); opacity: 1; }
-  65% { transform: scale(1.18); opacity: 0.95; }
-}
-
-.animate-breathe {
-  animation: breathe-circle 12s ease-in-out infinite;
-}
-
-:focus-visible {
-  outline: 2px solid #10d4a2;
-  outline-offset: 2px;
+html.dark .btn-neon-emerald * {
+  color: #030715 !important;
 }

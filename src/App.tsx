@@ -7,12 +7,14 @@ import {
   HeartHandshake,
   HelpCircle,
   LayoutDashboard,
-  Presentation,
   ScanSearch,
-  Server,
   Shield,
   Sparkles,
   Wifi,
+  Download,
+  QrCode,
+  Moon,
+  Sun,
 } from 'lucide-react';
 import type {
   ApiInfoResponse,
@@ -31,26 +33,23 @@ import { VaultView } from './components/VaultView';
 import { DampenView } from './components/DampenView';
 import { HealLegalView } from './components/HealLegalView';
 import { SolutionsView } from './components/SolutionsView';
-import { PitchDeckView } from './components/PitchDeckView';
-import { SystemApiView } from './components/SystemApiView';
 
 const NAV_ITEMS: {
   id: NavTab;
   icon: React.ComponentType<{ className?: string }>;
 }[] = [
   { id: 'overview', icon: LayoutDashboard },
-  { id: 'deck', icon: Presentation },
   { id: 'detect', icon: ScanSearch },
   { id: 'vault', icon: Fingerprint },
   { id: 'dampen', icon: Flame },
   { id: 'heal', icon: HeartHandshake },
   { id: 'solutions', icon: Briefcase },
-  { id: 'system', icon: Server },
 ];
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<NavTab>('overview');
   const [lang, setLang] = useState<Language>('en');
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [baseUrl, setBaseUrl] = useState<string>(DEFAULT_BASE_URL);
   const [mode, setMode] = useState<ExecutionMode>('edge-demo');
   const [selectedDomain, setSelectedDomain] = useState<DomainId>('fintech');
@@ -67,6 +66,19 @@ export default function App() {
 
   const client = useMemo(() => new TruthLensClient(baseUrl, mode), [baseUrl, mode]);
   const tr = t(lang);
+
+  useEffect(() => {
+    const saved = localStorage.getItem('truthlens_theme') as 'light' | 'dark' | null;
+    if (saved) {
+      setTheme(saved);
+    }
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.classList.remove('light', 'dark');
+    document.documentElement.classList.add(theme);
+    localStorage.setItem('truthlens_theme', theme);
+  }, [theme]);
 
   const refreshHealth = useCallback(async () => {
     const [h, info] = await Promise.all([client.getHealth(), client.getApiInfo()]);
@@ -89,228 +101,201 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#050919] bg-forensic-grid text-slate-100 flex flex-col lg:flex-row">
-      {/* Desktop Sidebar */}
-      <aside className="hidden lg:flex lg:w-68 lg:flex-col lg:fixed lg:inset-y-0 border-r border-white/10 bg-[#060b1f]/95 backdrop-blur-xl z-30">
-        {/* Brand Emblem matching Pitch Deck */}
-        <div className="flex items-center gap-3.5 px-5 py-5 border-b border-white/10 bg-gradient-to-r from-[#0d162d] to-transparent">
-          <div className="relative flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-tr from-[#10D4A2] to-[#00e8ac] text-[#050919] font-display text-2xl font-extrabold shadow-[0_4px_16px_rgba(16,212,162,0.35)]">
-            T
-            <span className="absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full bg-[#030715] flex items-center justify-center">
-              <span className="h-2 w-2 rounded-full bg-[#10D4A2] animate-pulse" />
-            </span>
-          </div>
-          <div>
-            <div className="font-display text-base font-extrabold tracking-wider text-white flex items-center gap-1.5">
-              TRUTHLENS
-            </div>
-            <div className="font-mono text-[10px] text-[#10D4A2] font-semibold flex items-center gap-1">
-              <Shield className="h-3 w-3" />
-              v2.2.0 • SYSTEMS ENGINE
-            </div>
-          </div>
-        </div>
-
-        {/* Navigation Links */}
-        <nav className="flex-1 space-y-1.5 p-3.5 overflow-y-auto" aria-label="Primary navigation">
-          {NAV_ITEMS.map((item) => {
-            const Icon = item.icon;
-            const active = activeTab === item.id;
-            return (
-              <button
-                key={item.id}
-                onClick={() => setActiveTab(item.id)}
-                className={`w-full flex items-center gap-3.5 rounded-2xl px-3.5 py-3 text-left transition-all duration-200 cursor-pointer ${
-                  active
-                    ? 'bg-gradient-to-r from-[#10D4A2]/20 to-[#10D4A2]/5 text-white border border-[#10D4A2]/45 shadow-[0_4px_20px_rgba(16,212,162,0.15)] font-semibold'
-                    : 'text-slate-400 hover:bg-white/[0.04] hover:text-slate-100 border border-transparent'
-                }`}
-              >
-                <div
-                  className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl transition ${
-                    active
-                      ? 'bg-[#10D4A2] text-[#030715] shadow-[0_0_12px_rgba(16,212,162,0.4)]'
-                      : 'bg-white/5 text-slate-400'
-                  }`}
-                >
-                  <Icon className="h-4 w-4" />
-                </div>
-                <div className="min-w-0">
-                  <div className="text-sm font-semibold truncate leading-tight">{tr.nav[item.id]}</div>
-                  <div className="text-[10px] text-slate-400 truncate mt-0.5">
-                    {tr.navSub[item.id]}
-                  </div>
-                </div>
-              </button>
-            );
-          })}
-        </nav>
-
-        {/* Bottom Team & Status Footer */}
-        <div className="border-t border-white/10 p-4 space-y-2.5">
-          <div className="flex items-center justify-between text-[11px]">
-            <span className="text-slate-400">Engine Mode</span>
-            <button
-              onClick={() => setMode((m) => (m === 'live' ? 'edge-demo' : 'live'))}
-              className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 font-mono text-[10px] font-bold cursor-pointer ${
-                mode === 'live'
-                  ? 'bg-[#10D4A2]/20 text-[#10D4A2]'
-                  : 'bg-amber-500/20 text-amber-300'
-              }`}
-            >
-              <Wifi className="h-3 w-3" />
-              {mode === 'live' ? tr.liveMode : tr.edgeDemoMode}
-            </button>
-          </div>
-          <div className="text-[10px] text-slate-500">
-            Team: Gaurav Singh (Jaipur) &amp; Ankita Sinha
-          </div>
-        </div>
-      </aside>
-
-      {/* Main Content Area */}
-      <div className="flex-1 lg:pl-68 flex flex-col min-h-screen">
-        {/* Top Utility Bar */}
-        <header className="sticky top-0 z-20 border-b border-white/10 bg-[#050919]/85 backdrop-blur-md">
-          <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
-            {/* Mobile Brand */}
-            <div className="flex items-center gap-2.5 lg:hidden">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#10D4A2] text-[#050919] font-display text-base font-extrabold">
-                T
-              </div>
-              <span className="font-display text-sm font-bold tracking-wider text-white">
-                TRUTHLENS
+    <div className={`min-h-screen bg-forensic-grid flex flex-col transition-colors duration-200 ${theme === 'dark' ? 'bg-[#050919] text-slate-100' : 'bg-[#f8fafc] text-slate-900'}`}>
+      {/* Top Utility Header */}
+      <header className={`sticky top-0 z-40 border-b backdrop-blur-md shadow-xs transition-colors duration-200 ${theme === 'dark' ? 'border-slate-800 bg-[#060b1f]/90' : 'border-slate-200 bg-white/95'}`}>
+        <div className="mx-auto flex max-w-[1520px] items-center justify-between gap-3 px-4 py-3 sm:px-8">
+          {/* Brand Emblem */}
+          <div className="flex items-center gap-3">
+            <div className="relative flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-600 text-white font-display text-xl font-extrabold shadow-[0_2px_10px_rgba(37,99,235,0.3)]">
+              T
+              <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-white flex items-center justify-center shadow-xs">
+                <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
               </span>
             </div>
-
-            {/* Active Module Breadcrumb (Desktop) */}
-            <div className="hidden lg:flex items-center gap-2 text-xs">
-              <span className="h-2 w-2 rounded-full bg-[#10D4A2]" />
-              <span className="font-semibold text-white">{tr.nav[activeTab]}</span>
-              <span className="text-slate-500">/</span>
-              <span className="text-slate-400">{tr.navSub[activeTab]}</span>
-            </div>
-
-            {/* Right Utility Controls */}
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => setMode((m) => (m === 'live' ? 'edge-demo' : 'live'))}
-                className={`inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs font-semibold transition cursor-pointer ${
-                  mode === 'live'
-                    ? 'border-[#10D4A2]/40 bg-[#10D4A2]/10 text-[#10D4A2]'
-                    : 'border-amber-400/35 bg-amber-400/10 text-amber-300'
-                }`}
-                title="Toggle between live backend server and zero-latency local Edge Demo engine"
-              >
-                <span
-                  className={`h-1.5 w-1.5 rounded-full ${
-                    mode === 'live' ? 'bg-[#10D4A2]' : 'bg-amber-400'
-                  }`}
-                />
-                {mode === 'live' ? tr.liveMode : tr.edgeDemoMode}
-              </button>
-
-              <button
-                onClick={() => setLang((l) => (l === 'en' ? 'hi' : 'en'))}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1.5 text-xs font-semibold text-slate-200 hover:bg-white/10 cursor-pointer"
-                title="Switch between English and Hindi"
-              >
-                <Globe className="h-3.5 w-3.5 text-[#10D4A2]" />
-                {lang === 'en' ? 'हिंदी' : 'EN'}
-              </button>
+            <div>
+              <div className={`font-display text-base font-extrabold tracking-wider flex items-center gap-1.5 ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
+                TRUTHLENS
+                <span className="text-[10px] bg-blue-50 border border-blue-200 text-blue-700 px-2 py-0.5 rounded-full font-mono font-bold">
+                  v2.3.0
+                </span>
+              </div>
+              <div className={`font-mono text-[10.5px] font-medium flex items-center gap-1 ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>
+                <Shield className="h-3 w-3 text-emerald-600" />
+                Multimodal Systems Defense
+              </div>
             </div>
           </div>
-        </header>
 
-        {/* Page Container */}
-        <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6 pb-24 sm:px-6 lg:pb-10">
-          {activeTab === 'overview' && (
-            <OverviewView
-              lang={lang}
-              health={health}
-              apiInfo={apiInfo}
-              baseUrl={baseUrl}
-              onRefreshHealth={refreshHealth}
-              onNavigate={setActiveTab}
-              onOpenDomain={handleOpenDomain}
-            />
-          )}
+          {/* Active Module Indicator (Desktop) */}
+          <div className={`hidden md:flex items-center gap-2 text-xs font-semibold px-3 py-1.5 rounded-full border ${theme === 'dark' ? 'bg-slate-800/80 border-slate-700 text-slate-200' : 'bg-slate-100 border-slate-200 text-slate-700'}`}>
+            <span className="h-2 w-2 rounded-full bg-blue-600" />
+            <span>{tr.nav[activeTab]}</span>
+            <span className="text-slate-400">/</span>
+            <span className="text-slate-500 font-normal">{tr.navSub[activeTab]}</span>
+          </div>
 
-          {activeTab === 'deck' && (
-            <PitchDeckView lang={lang} onNavigate={setActiveTab} />
-          )}
+          {/* Right Action & Control Buttons */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            {/* Theme Toggle Button */}
+            <button
+              onClick={() => setTheme((t) => (t === 'light' ? 'dark' : 'light'))}
+              className={`inline-flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-bold transition cursor-pointer shadow-xs ${
+                theme === 'dark'
+                  ? 'border-slate-700 bg-slate-800 text-amber-300 hover:bg-slate-700'
+                  : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'
+              }`}
+              title="Toggle Light / Dark Mode"
+            >
+              {theme === 'dark' ? (
+                <>
+                  <Sun className="h-3.5 w-3.5 text-amber-300" />
+                  <span>Light</span>
+                </>
+              ) : (
+                <>
+                  <Moon className="h-3.5 w-3.5 text-slate-700" />
+                  <span>Dark</span>
+                </>
+              )}
+            </button>
 
-          {activeTab === 'detect' && (
-            <ForensicsView
-              client={client}
-              sharedMedia={sharedMedia}
-              onUpdateSharedMedia={setSharedMedia}
-              onNavigate={setActiveTab}
-              autoPresetId={autoPresetId}
-              onConsumedPreset={() => setAutoPresetId(null)}
-            />
-          )}
+            <a
+              href="https://lens.truthortrust.com/admin/whatsapp-pair"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden sm:inline-flex items-center gap-1.5 rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-bold text-emerald-700 hover:bg-emerald-100 transition shadow-xs"
+              title="WhatsApp Device Pairing Gateway"
+            >
+              <QrCode className="h-3.5 w-3.5" />
+              <span>WhatsApp Link</span>
+            </a>
 
-          {activeTab === 'vault' && (
-            <VaultView client={client} sharedMedia={sharedMedia} />
-          )}
+            <a
+              href="/download/truthlens.apk"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-blue-600 text-white px-3 py-1.5 text-xs font-bold hover:bg-blue-700 transition shadow-xs"
+              title="Download Standalone Android APK"
+            >
+              <Download className="h-3.5 w-3.5" />
+              <span>APK</span>
+            </a>
 
-          {activeTab === 'dampen' && (
-            <DampenView client={client} sharedMedia={sharedMedia} />
-          )}
-
-          {activeTab === 'heal' && (
-            <HealLegalView
-              client={client}
-              lang={lang}
-              sharedMedia={sharedMedia}
-            />
-          )}
-
-          {activeTab === 'solutions' && (
-            <SolutionsView
-              selectedDomain={selectedDomain}
-              onSelectDomain={setSelectedDomain}
-              onLaunchPresetInForensics={handleLaunchPresetInForensics}
-              onNavigate={setActiveTab}
-            />
-          )}
-
-          {activeTab === 'system' && (
-            <SystemApiView
-              client={client}
-              baseUrl={baseUrl}
-              mode={mode}
-              onChangeBaseUrl={setBaseUrl}
-              onChangeMode={setMode}
-            />
-          )}
-        </main>
-      </div>
-
-      {/* Mobile Material 3 Bottom Navigation Bar (matching GET /demo PWA spec) */}
-      <nav
-        className="fixed inset-x-0 bottom-0 z-30 border-t border-white/10 bg-[#060b1f]/95 backdrop-blur-lg lg:hidden"
-        aria-label="Mobile navigation"
-      >
-        <div className="grid grid-cols-7 gap-0.5 px-1 py-1.5">
-          {NAV_ITEMS.slice(0, 7).map((item) => {
-            const Icon = item.icon;
-            const active = activeTab === item.id;
-            return (
-              <button
-                key={item.id}
-                onClick={() => setActiveTab(item.id)}
-                className={`flex flex-col items-center justify-center rounded-xl py-1.5 text-[10px] font-medium transition cursor-pointer ${
-                  active ? 'bg-[#10D4A2]/15 text-[#10D4A2]' : 'text-slate-400'
+            <button
+              onClick={() => setMode((m) => (m === 'live' ? 'edge-demo' : 'live'))}
+              className={`inline-flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-bold transition cursor-pointer shadow-xs ${
+                mode === 'live'
+                  ? 'border-emerald-300 bg-emerald-50 text-emerald-700'
+                  : 'border-amber-300 bg-amber-50 text-amber-800'
+              }`}
+              title="Toggle between live backend server and zero-latency local Edge Demo engine"
+            >
+              <span
+                className={`h-2 w-2 rounded-full ${
+                  mode === 'live' ? 'bg-emerald-600' : 'bg-amber-500'
                 }`}
-              >
-                <Icon className="h-4 w-4 mb-0.5" />
-                <span className="truncate max-w-[56px]">{tr.nav[item.id].split(' ')[0]}</span>
-              </button>
-            );
-          })}
+              />
+              {mode === 'live' ? tr.liveMode : tr.edgeDemoMode}
+            </button>
+
+            <button
+              onClick={() => setLang((l) => (l === 'en' ? 'hi' : 'en'))}
+              className={`inline-flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-bold transition cursor-pointer shadow-xs ${
+                theme === 'dark'
+                  ? 'border-slate-700 bg-slate-800 text-slate-200 hover:bg-slate-700'
+                  : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'
+              }`}
+              title="Switch between English and Hindi"
+            >
+              <Globe className="h-3.5 w-3.5 text-blue-600" />
+              {lang === 'en' ? 'हिंदी' : 'EN'}
+            </button>
+          </div>
         </div>
+      </header>
+
+      {/* Main Full-Width Page Area */}
+      <main className="mx-auto w-full max-w-[1520px] flex-1 px-4 sm:px-8 py-6 pb-32">
+        {activeTab === 'overview' && (
+          <OverviewView
+            lang={lang}
+            health={health}
+            apiInfo={apiInfo}
+            baseUrl={baseUrl}
+            onRefreshHealth={refreshHealth}
+            onNavigate={setActiveTab}
+            onOpenDomain={handleOpenDomain}
+          />
+        )}
+
+        {activeTab === 'detect' && (
+          <ForensicsView
+            client={client}
+            sharedMedia={sharedMedia}
+            onUpdateSharedMedia={setSharedMedia}
+            onNavigate={setActiveTab}
+            autoPresetId={autoPresetId}
+            onConsumedPreset={() => setAutoPresetId(null)}
+          />
+        )}
+
+        {activeTab === 'vault' && (
+          <VaultView client={client} sharedMedia={sharedMedia} />
+        )}
+
+        {activeTab === 'dampen' && (
+          <DampenView client={client} sharedMedia={sharedMedia} />
+        )}
+
+        {activeTab === 'heal' && (
+          <HealLegalView
+            client={client}
+            lang={lang}
+            sharedMedia={sharedMedia}
+          />
+        )}
+
+        {activeTab === 'solutions' && (
+          <SolutionsView
+            selectedDomain={selectedDomain}
+            onSelectDomain={setSelectedDomain}
+            onLaunchPresetInForensics={handleLaunchPresetInForensics}
+            onNavigate={setActiveTab}
+          />
+        )}
+      </main>
+
+      {/* Viewport Sticky Floating Bottom Navigation Bar */}
+      <nav
+        className={`fixed bottom-4 left-1/2 -translate-x-1/2 z-50 backdrop-blur-2xl border shadow-[0_16px_40px_-6px_rgba(0,0,0,0.25),0_4px_12px_rgba(0,0,0,0.1)] rounded-full p-1.5 flex items-center gap-1 max-w-[calc(100vw-24px)] overflow-x-auto scrollbar-none transition-all duration-200 ${
+          theme === 'dark'
+            ? 'bg-[#080e23]/92 border-slate-700/80 shadow-black/40'
+            : 'bg-white/95 border-slate-300/85'
+        }`}
+        aria-label="Floating Module Selector"
+      >
+        {NAV_ITEMS.map((item) => {
+          const Icon = item.icon;
+          const active = activeTab === item.id;
+          return (
+            <button
+              key={item.id}
+              onClick={() => {
+                setActiveTab(item.id);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className={`flex items-center gap-2 rounded-full px-4 py-2.5 text-xs font-bold transition-all duration-200 cursor-pointer whitespace-nowrap ${
+                active
+                  ? 'bg-blue-600 text-white shadow-[0_4px_14px_rgba(37,99,235,0.4)]'
+                  : theme === 'dark'
+                  ? 'text-slate-400 hover:bg-slate-800/80 hover:text-slate-100'
+                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+              }`}
+            >
+              <Icon className={`h-4 w-4 ${active ? 'text-white' : theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`} />
+              <span>{tr.nav[item.id]}</span>
+            </button>
+          );
+        })}
       </nav>
     </div>
   );
