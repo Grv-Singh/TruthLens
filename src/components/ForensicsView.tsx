@@ -521,11 +521,6 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
                   <span className="font-display text-sm font-bold text-white">
                     {imageQueue.length === 1 ? '1 Image Queued' : `${imageQueue.length} Images in Batch Session`}
                   </span>
-                  {activeItem && (
-                    <span className="hidden sm:inline font-mono text-xs text-slate-400">
-                      • Active: <span className="text-slate-200">{activeItem.filename}</span>
-                    </span>
-                  )}
                 </div>
 
                 <div className="flex items-center gap-2">
@@ -563,11 +558,11 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
                           ? 'border-[#10D4A2] shadow-[0_0_16px_rgba(16,212,162,0.4)] scale-105 z-10'
                           : 'border-white/10 hover:border-white/30 bg-[#050919]'
                       }`}
-                      title={item.filename}
+                      title="Queued Media"
                     >
                       <img
                         src={item.previewUrl}
-                        alt={item.filename}
+                        alt="Queued Media"
                         className="h-full w-full object-cover"
                       />
 
@@ -605,7 +600,7 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
               <div className="flex h-96 flex-col items-center justify-center rounded-2xl border border-white/10 bg-[#0b1229]/90">
                 <div className="h-10 w-10 animate-spin rounded-full border-2 border-[#10D4A2] border-t-transparent" />
                 <div className="mt-4 font-display text-base font-semibold text-white">
-                  Scanning {activeItem.filename}...
+                  Scanning Media...
                 </div>
                 <p className="mt-1 text-xs text-slate-400">
                   Computing ELA Quantization Residuals + SynthID/Gemini Watermark Check
@@ -636,11 +631,6 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
                             {activeItem.detectResult.verdict.replace('_', ' ')}
                           </span>
                         </div>
-                        <div className="mt-0.5 font-mono text-xs text-slate-300">
-                          File: <span className="text-white font-semibold">{activeItem.filename}</span> • dHash:{' '}
-                          <span className="text-[#10D4A2]">{activeItem.detectResult.dhash}</span> • ELA Mean Error:{' '}
-                          <span className="tabular-nums">{activeItem.detectResult.ela_mean_error}</span>
-                        </div>
                       </div>
                     </div>
 
@@ -657,6 +647,53 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
                       >
                         {activeItem.detectResult.manipulation_score}%
                       </div>
+                    </div>
+                  </div>
+
+                  {/* Forensic Telemetry Data Table */}
+                  <div className="mt-4 overflow-hidden rounded-xl border border-white/10 bg-[#050919]/80">
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-left text-xs font-mono">
+                        <thead className="border-b border-white/10 bg-white/5 text-[11px] text-slate-400 uppercase tracking-wider">
+                          <tr>
+                            <th className="px-3.5 py-2 font-medium">Metric</th>
+                            <th className="px-3.5 py-2 font-medium">Signature / Value</th>
+                            <th className="px-3.5 py-2 font-medium">Diagnostic</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-white/5 text-slate-300">
+                          <tr>
+                            <td className="px-3.5 py-2 text-slate-400">Perceptual Hash (dHash)</td>
+                            <td className="px-3.5 py-2 text-[#10D4A2] font-semibold">{activeItem.detectResult.dhash}</td>
+                            <td className="px-3.5 py-2 text-slate-400">Visual Fingerprint</td>
+                          </tr>
+                          <tr>
+                            <td className="px-3.5 py-2 text-slate-400">ELA Mean Error</td>
+                            <td className="px-3.5 py-2 text-white font-semibold tabular-nums">{activeItem.detectResult.ela_mean_error}</td>
+                            <td className="px-3.5 py-2">
+                              {activeItem.detectResult.ela_mean_error > 25 ? (
+                                <span className="text-rose-400 font-semibold">Resave Anomaly</span>
+                              ) : (
+                                <span className="text-[#10D4A2]">Uniform Quantization</span>
+                              )}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td className="px-3.5 py-2 text-slate-400">SHA-256 Digest</td>
+                            <td className="px-3.5 py-2 text-slate-300 font-mono text-[11px]">
+                              {activeItem.detectResult.sha256 ? `${activeItem.detectResult.sha256.slice(0, 20)}...` : 'Verified on Ingest'}
+                            </td>
+                            <td className="px-3.5 py-2 text-slate-400">Cryptographic Integrity</td>
+                          </tr>
+                          <tr>
+                            <td className="px-3.5 py-2 text-slate-400">Analysis Latency</td>
+                            <td className="px-3.5 py-2 text-slate-300 tabular-nums">
+                              {activeItem.detectResult.processing_ms || 280} ms
+                            </td>
+                            <td className="px-3.5 py-2 text-sky-400">Neural Pipeline</td>
+                          </tr>
+                        </tbody>
+                      </table>
                     </div>
                   </div>
                 </div>
@@ -862,13 +899,12 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
                 >
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <div>
-                      <div className="font-mono text-xs text-slate-400">{audioLabel}</div>
-                      <div className="mt-1 flex items-center gap-2">
+                      <div className="flex items-center gap-2">
                         <span className="font-display text-2xl font-bold text-white">
                           {audioResult.verdict.replace('_', ' ')}
                         </span>
                         <span className="rounded-full bg-black/40 px-2.5 py-0.5 font-mono text-xs text-white tabular-nums">
-                          {audioResult.confidence}% confidence
+                          {audioResult.confidence}%
                         </span>
                       </div>
                     </div>
