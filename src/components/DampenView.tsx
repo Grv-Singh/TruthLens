@@ -16,7 +16,6 @@ import type {
   TelemetryResponse,
 } from '../types/truthlens';
 import type { TruthLensClient } from '../lib/api';
-import { WorkflowProgress } from './WorkflowProgress';
 
 interface DampenViewProps {
   client: TruthLensClient;
@@ -59,13 +58,6 @@ export const DampenView: React.FC<DampenViewProps> = ({ client, sharedMedia, onN
 
   return (
     <div className="space-y-6">
-      {/* Connected 3-Step Workflow Header */}
-      <WorkflowProgress
-        currentTab="dampen"
-        onNavigate={onNavigate}
-        hasScanResult={Boolean(sharedMedia.verdict || sharedMedia.file || sharedMedia.text)}
-      />
-
       {/* Linked Media Badge from Step 1 */}
       {sharedMedia.verdict && (
         <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-sky-500/30 bg-sky-500/10 px-4 py-2.5 text-xs">

@@ -421,56 +421,11 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
             <div className="flex flex-wrap items-center gap-3 pt-1">
               <button
                 onClick={() => onNavigate('detect')}
-                className="btn-neon-emerald inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 sm:px-5 sm:py-3 text-xs sm:text-sm font-bold whitespace-nowrap cursor-pointer shadow-lg"
+                className="btn-neon-emerald inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-bold whitespace-nowrap cursor-pointer shadow-lg"
               >
-                <ScanSearch className="h-4 w-4 text-[#030715]" />
-                <span>Launch Live Forensics</span>
+                <span className="material-symbols-rounded notranslate text-base align-middle text-[#030715]" translate="no">arrow_forward</span>
+                <span>Get Started</span>
               </button>
-              <button
-                onClick={() => setShowVideoModal(true)}
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-sky-400/40 bg-sky-500/10 px-4 py-2.5 sm:px-5 sm:py-3 text-xs sm:text-sm font-bold text-sky-200 transition hover:bg-sky-500/20 hover:border-sky-300 shadow-[0_0_20px_rgba(56,189,248,0.2)] whitespace-nowrap cursor-pointer"
-              >
-                <Video className="h-4 w-4 text-sky-400 animate-pulse" />
-                <span>Watch 25s Demo Video</span>
-              </button>
-              <button
-                onClick={() => onNavigate('dampen')}
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-amber-500/40 bg-amber-500/10 px-4 py-2.5 sm:px-5 sm:py-3 text-xs sm:text-sm font-bold text-amber-200 transition hover:bg-amber-500/20 hover:border-amber-400 shadow-[0_0_15px_rgba(245,158,11,0.15)] whitespace-nowrap cursor-pointer"
-              >
-                <Flame className="h-4 w-4 text-amber-400" />
-                <span>15s Virality Friction</span>
-              </button>
-            </div>
-
-            {/* Instant Real-World Test Scenarios */}
-            <div className="pt-2 flex flex-col gap-2">
-              <div className="text-[11px] font-mono uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-                <Zap className="h-3.5 w-3.5 text-amber-400 animate-pulse" />
-                <span>Instant Test Scenarios (1-Click Run):</span>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                <button
-                  onClick={() => onNavigate('detect')}
-                  className="inline-flex items-center gap-1.5 rounded-xl border border-rose-500/35 bg-rose-500/10 px-3 py-1.5 text-xs font-semibold text-rose-300 hover:bg-rose-500/20 hover:border-rose-400 transition cursor-pointer"
-                >
-                  <span><span className="material-symbols-rounded notranslate text-xs align-middle" translate="no">photo_camera</span> Priya: Morphed Photo Blackmail</span>
-                  <ArrowRight className="h-3 w-3 text-rose-400" />
-                </button>
-                <button
-                  onClick={() => onNavigate('detect')}
-                  className="inline-flex items-center gap-1.5 rounded-xl border border-amber-500/35 bg-amber-500/10 px-3 py-1.5 text-xs font-semibold text-amber-300 hover:bg-amber-500/20 hover:border-amber-400 transition cursor-pointer"
-                >
-                  <span><span className="material-symbols-rounded notranslate text-xs align-middle" translate="no">mic</span> Vikram: ₹18L CFO Voice Clone</span>
-                  <ArrowRight className="h-3 w-3 text-amber-400" />
-                </button>
-                <button
-                  onClick={() => onNavigate('dampen')}
-                  className="inline-flex items-center gap-1.5 rounded-xl border border-[#10D4A2]/35 bg-[#10D4A2]/10 px-3 py-1.5 text-xs font-semibold text-[#10D4A2] hover:bg-[#10D4A2]/20 hover:border-[#10D4A2] transition cursor-pointer"
-                >
-                  <span><span className="material-symbols-rounded notranslate text-xs align-middle" translate="no">stop_circle</span> Throttling WhatsApp Virality</span>
-                  <ArrowRight className="h-3 w-3 text-[#10D4A2]" />
-                </button>
-              </div>
             </div>
 
             {/* 4 Punchy Pitch Metrics directly under Headline */}

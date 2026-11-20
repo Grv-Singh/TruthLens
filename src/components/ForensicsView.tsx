@@ -47,7 +47,6 @@ import {
   runLocalTextDetect,
   runLocalWatermarkCheck,
 } from '../lib/forensics';
-import { WorkflowProgress } from './WorkflowProgress';
 
 export interface ImageBatchItem {
   id: string;
@@ -352,13 +351,6 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
 
   return (
     <div className="space-y-6">
-      {/* Connected 3-Step Workflow Header */}
-      <WorkflowProgress
-        currentTab="detect"
-        onNavigate={onNavigate}
-        hasScanResult={Boolean(activeItem?.detectResult || audioResult || textResult)}
-      />
-
       {/* Hidden Multi-file input */}
       <input
         ref={fileInputRef}

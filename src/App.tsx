@@ -31,12 +31,13 @@ import { SolutionsView } from './components/SolutionsView';
 
 const NAV_ITEMS: {
   id: NavTab;
+  step?: number;
   icon: React.ComponentType<{ className?: string }>;
 }[] = [
     { id: 'overview', icon: LayoutDashboard },
-    { id: 'detect', icon: ScanSearch },
-    { id: 'dampen', icon: Flame },
-    { id: 'heal', icon: Gavel },
+    { id: 'detect', step: 1, icon: ScanSearch },
+    { id: 'dampen', step: 2, icon: Flame },
+    { id: 'heal', step: 3, icon: Gavel },
   ];
 
 export default function App() {
@@ -266,20 +267,34 @@ export default function App() {
           const Icon = item.icon;
           const active = activeTab === item.id;
           return (
-            <button
-              key={item.id}
-              onClick={() => {
-                setActiveTab(item.id);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-              className={`flex items-center gap-2 rounded-full px-4 py-2.5 text-xs font-bold transition-all duration-200 cursor-pointer whitespace-nowrap ${active
-                  ? 'bg-blue-600 text-white shadow-[0_4px_14px_rgba(37,99,235,0.4)]'
-                  : 'text-slate-400 hover:bg-slate-800/80 hover:text-slate-100'
-                }`}
-            >
-              <Icon className={`h-4 w-4 ${active ? "text-white" : "text-slate-400"}`} />
-              <span>{tr.nav[item.id]}</span>
-            </button>
+            <React.Fragment key={item.id}>
+              {item.step === 1 && (
+                <div className="h-4 w-px bg-white/15 mx-0.5" />
+              )}
+              <button
+                onClick={() => {
+                  setActiveTab(item.id);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                className={`flex items-center gap-2 rounded-full px-4 py-2.5 text-xs font-bold transition-all duration-200 cursor-pointer whitespace-nowrap ${active
+                    ? 'bg-blue-600 text-white shadow-[0_4px_14px_rgba(37,99,235,0.4)]'
+                    : 'text-slate-400 hover:bg-slate-800/80 hover:text-slate-100'
+                  }`}
+              >
+                {item.step ? (
+                  <span
+                    className={`flex h-4 w-4 items-center justify-center rounded-full text-[10px] font-mono font-bold ${
+                      active ? 'bg-white text-blue-600' : 'bg-white/10 text-slate-300'
+                    }`}
+                  >
+                    {item.step}
+                  </span>
+                ) : (
+                  <Icon className={`h-4 w-4 ${active ? "text-white" : "text-slate-400"}`} />
+                )}
+                <span>{tr.nav[item.id]}</span>
+              </button>
+            </React.Fragment>
           );
         })}
       </nav>

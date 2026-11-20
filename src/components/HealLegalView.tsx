@@ -20,7 +20,6 @@ import type {
 } from '../types/truthlens';
 import type { TruthLensClient } from '../lib/api';
 import { t } from '../lib/i18n';
-import { WorkflowProgress } from './WorkflowProgress';
 
 interface HealLegalViewProps {
   client: TruthLensClient;
@@ -133,13 +132,6 @@ export const HealLegalView: React.FC<HealLegalViewProps> = ({
 
   return (
     <div className="space-y-6">
-      {/* Connected 3-Step Workflow Header */}
-      <WorkflowProgress
-        currentTab="heal"
-        onNavigate={onNavigate || (() => {})}
-        hasScanResult={Boolean(sharedMedia.verdict || sharedMedia.file || sharedMedia.text)}
-      />
-
       {/* Linked Media Badge from Previous Steps */}
       {sharedMedia.verdict && (
         <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-2.5 text-xs">
