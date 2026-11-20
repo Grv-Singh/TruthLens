@@ -47,6 +47,7 @@ import {
   runLocalTextDetect,
   runLocalWatermarkCheck,
 } from '../lib/forensics';
+import { WorkflowProgress } from './WorkflowProgress';
 
 export interface ImageBatchItem {
   id: string;
@@ -351,6 +352,13 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
 
   return (
     <div className="space-y-6">
+      {/* Connected 3-Step Workflow Header */}
+      <WorkflowProgress
+        currentTab="detect"
+        onNavigate={onNavigate}
+        hasScanResult={Boolean(activeItem?.detectResult || audioResult || textResult)}
+      />
+
       {/* Hidden Multi-file input */}
       <input
         ref={fileInputRef}
@@ -823,21 +831,25 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
                   </div>
                 </div>
 
-                {/* Action Handoff Bar */}
-                <div className="flex flex-wrap gap-2.5 rounded-xl border border-white/10 bg-[#0b1229]/80 p-3">
+                {/* Workflow Step 1 -> Step 2 Connector */}
+                <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[#10D4A2]/30 bg-[#10D4A2]/10 p-4">
+                  <div>
+                    <div className="text-xs uppercase tracking-wider font-bold text-[#10D4A2]">
+                      Step 1 Complete • Threat Forensics Locked
+                    </div>
+                    <p className="text-xs text-slate-300">
+                      Simulate viral propagation and apply contagion throttling for this media.
+                    </p>
+                  </div>
                   <button
-                    onClick={() => onNavigate('dampen')}
-                    className="inline-flex items-center gap-1.5 rounded-lg bg-amber-500/15 px-3 py-2 text-xs font-semibold text-amber-300 hover:bg-amber-500/25 cursor-pointer"
+                    onClick={() => {
+                      onNavigate('dampen');
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    className="inline-flex items-center gap-2 rounded-xl bg-[#10D4A2] px-5 py-2.5 text-xs font-bold text-[#050919] hover:bg-[#10D4A2]/90 transition cursor-pointer shadow-lg"
                   >
-                    <TrendingDown className="h-3.5 w-3.5" />
-                    Simulate 24h Virality Spread (L2)
-                  </button>
-                  <button
-                    onClick={() => onNavigate('heal')}
-                    className="inline-flex items-center gap-1.5 rounded-lg bg-rose-500/15 px-3 py-2 text-xs font-semibold text-rose-300 hover:bg-rose-500/25 cursor-pointer"
-                  >
-                    <Gavel className="h-3.5 w-3.5" />
-                    Generate Debunk Sticker &amp; BSA 63 Dossier (L3)
+                    <span>Proceed to Step 2: Virality Control</span>
+                    <span className="material-symbols-rounded notranslate text-base align-middle" translate="no">arrow_forward</span>
                   </button>
                 </div>
               </div>
@@ -1008,6 +1020,28 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
                       <strong className="text-white">{audioResult.vocoder_shelf_khz} kHz</strong>
                     </span>
                   </div>
+                </div>
+
+                {/* Workflow Step 1 -> Step 2 Connector */}
+                <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[#10D4A2]/30 bg-[#10D4A2]/10 p-4">
+                  <div>
+                    <div className="text-xs uppercase tracking-wider font-bold text-[#10D4A2]">
+                      Step 1 Complete • Voice Note Forensics Locked
+                    </div>
+                    <p className="text-xs text-slate-300">
+                      Simulate viral propagation and apply contagion throttling for this audio.
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => {
+                      onNavigate('dampen');
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    className="inline-flex items-center gap-2 rounded-xl bg-[#10D4A2] px-5 py-2.5 text-xs font-bold text-[#050919] hover:bg-[#10D4A2]/90 transition cursor-pointer shadow-lg"
+                  >
+                    <span>Proceed to Step 2: Virality Control</span>
+                    <span className="material-symbols-rounded notranslate text-base align-middle" translate="no">arrow_forward</span>
+                  </button>
                 </div>
               </>
             )}
@@ -1310,21 +1344,25 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
                 </div>
               </div>
 
-              {/* Action Handoff Bar */}
-              <div className="flex flex-wrap gap-2.5 rounded-xl border border-white/10 bg-[#0b1229]/80 p-3">
+              {/* Workflow Step 1 -> Step 2 Connector */}
+              <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[#10D4A2]/30 bg-[#10D4A2]/10 p-4">
+                <div>
+                  <div className="text-xs uppercase tracking-wider font-bold text-[#10D4A2]">
+                    Step 1 Complete • Claim Fact-Check Locked
+                  </div>
+                  <p className="text-xs text-slate-300">
+                    Simulate forwarded rumor contagion and apply safety friction cooling.
+                  </p>
+                </div>
                 <button
-                  onClick={() => onNavigate('dampen')}
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-amber-500/15 px-3 py-2 text-xs font-semibold text-amber-300 hover:bg-amber-500/25 cursor-pointer"
+                  onClick={() => {
+                    onNavigate('dampen');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  className="inline-flex items-center gap-2 rounded-xl bg-[#10D4A2] px-5 py-2.5 text-xs font-bold text-[#050919] hover:bg-[#10D4A2]/90 transition cursor-pointer shadow-lg"
                 >
-                  <TrendingDown className="h-3.5 w-3.5" />
-                  Simulate 24h Virality Spread (L2)
-                </button>
-                <button
-                  onClick={() => onNavigate('heal')}
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-rose-500/15 px-3 py-2 text-xs font-semibold text-rose-300 hover:bg-rose-500/25 cursor-pointer"
-                >
-                  <Gavel className="h-3.5 w-3.5" />
-                  Generate Debunk Sticker &amp; BSA 63 Dossier (L3)
+                  <span>Proceed to Step 2: Virality Control</span>
+                  <span className="material-symbols-rounded notranslate text-base align-middle" translate="no">arrow_forward</span>
                 </button>
               </div>
             </div>

@@ -14,17 +14,20 @@ import type {
   DebunkStickerResult,
   EvidenceDossierResult,
   Language,
+  NavTab,
   SharedMediaContext,
   TakedownNoticeResult,
 } from '../types/truthlens';
 import type { TruthLensClient } from '../lib/api';
 import { t } from '../lib/i18n';
+import { WorkflowProgress } from './WorkflowProgress';
 
 interface HealLegalViewProps {
   client: TruthLensClient;
   lang: Language;
   sharedMedia: SharedMediaContext;
   initialSubTab?: HealSubTab;
+  onNavigate?: (tab: NavTab) => void;
 }
 
 type HealSubTab = 'debunk' | 'dossier' | 'takedown' | 'helpline';
@@ -44,6 +47,7 @@ export const HealLegalView: React.FC<HealLegalViewProps> = ({
   lang,
   sharedMedia,
   initialSubTab = 'debunk',
+  onNavigate,
 }) => {
   const tr = t(lang);
   const [activeTab, setActiveTab] = useState<HealSubTab>(initialSubTab);
@@ -129,15 +133,38 @@ export const HealLegalView: React.FC<HealLegalViewProps> = ({
 
   return (
     <div className="space-y-6">
+      {/* Connected 3-Step Workflow Header */}
+      <WorkflowProgress
+        currentTab="heal"
+        onNavigate={onNavigate || (() => {})}
+        hasScanResult={Boolean(sharedMedia.verdict || sharedMedia.file || sharedMedia.text)}
+      />
+
+      {/* Linked Media Badge from Previous Steps */}
+      {sharedMedia.verdict && (
+        <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-2.5 text-xs">
+          <div className="flex items-center gap-2">
+            <span className="material-symbols-rounded notranslate text-rose-400 text-sm align-middle" translate="no">verified</span>
+            <span className="text-slate-200">
+              Evidence Subject: <strong className="text-white">{sharedMedia.verdict.replace('_', ' ')}</strong>
+              {sharedMedia.dhash ? ` • dHash: ${sharedMedia.dhash}` : ''}
+            </span>
+          </div>
+          <span className="font-mono text-[10px] text-rose-300 font-bold uppercase bg-rose-500/20 px-2 py-0.5 rounded">
+            Forensic Custody Chain Active
+          </span>
+        </div>
+      )}
+
       {/* Header */}
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div>
-          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-rose-400">
-            <ShieldAlert className="h-4 w-4" />
-            L3 — Legal Defense &amp; Grassroots Debunk
+          <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-rose-400">
+            <span className="material-symbols-rounded notranslate text-base align-middle" translate="no">gavel</span>
+            <span>Legal Shield &amp; Evidence</span>
           </div>
           <h2 className="mt-1 font-display text-2xl font-bold text-white">
-            Grassroots Debunk, Court-Ready BSA 63 Dossier &amp; 24h Legal Takedowns
+            Court-Ready Section 63 BSA Dossier &amp; Cybercrime Notice
           </h2>
         </div>
 
@@ -592,6 +619,30 @@ export const HealLegalView: React.FC<HealLegalViewProps> = ({
               </div>
             </div>
           )}
+
+          {/* Workflow Step 3 Navigation */}
+          <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-white/10 bg-[#0b1229]/90 p-4">
+            <button
+              onClick={() => {
+                onNavigate?.('dampen');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className="inline-flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-xs font-semibold text-slate-300 hover:text-white transition cursor-pointer"
+            >
+              <span className="material-symbols-rounded notranslate text-base align-middle" translate="no">arrow_back</span>
+              <span>Back to Step 2: Virality</span>
+            </button>
+            <button
+              onClick={() => {
+                onNavigate?.('detect');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 px-5 py-2.5 text-xs font-bold text-white transition cursor-pointer shadow-lg"
+            >
+              <span className="material-symbols-rounded notranslate text-base align-middle" translate="no">restart_alt</span>
+              <span>Start New Forensic Scan</span>
+            </button>
+          </div>
         </div>
       );
 };

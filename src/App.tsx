@@ -236,7 +236,7 @@ export default function App() {
         )}
 
         {activeTab === 'dampen' && (
-          <DampenView client={client} sharedMedia={sharedMedia} />
+          <DampenView client={client} sharedMedia={sharedMedia} onNavigate={setActiveTab} />
         )}
 
         {activeTab === 'heal' && (
@@ -244,6 +244,7 @@ export default function App() {
             client={client}
             lang={lang}
             sharedMedia={sharedMedia}
+            onNavigate={setActiveTab}
           />
         )}
 

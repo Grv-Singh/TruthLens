@@ -10,18 +10,21 @@ import {
   YAxis,
 } from 'recharts';
 import type {
+  NavTab,
   SharedMediaContext,
   SimulationResponse,
   TelemetryResponse,
 } from '../types/truthlens';
 import type { TruthLensClient } from '../lib/api';
+import { WorkflowProgress } from './WorkflowProgress';
 
 interface DampenViewProps {
   client: TruthLensClient;
   sharedMedia: SharedMediaContext;
+  onNavigate: (tab: NavTab) => void;
 }
 
-export const DampenView: React.FC<DampenViewProps> = ({ client }) => {
+export const DampenView: React.FC<DampenViewProps> = ({ client, sharedMedia, onNavigate }) => {
   const [telemetry, setTelemetry] = useState<TelemetryResponse | null>(null);
 
   // Simulator controls
@@ -56,6 +59,29 @@ export const DampenView: React.FC<DampenViewProps> = ({ client }) => {
 
   return (
     <div className="space-y-6">
+      {/* Connected 3-Step Workflow Header */}
+      <WorkflowProgress
+        currentTab="dampen"
+        onNavigate={onNavigate}
+        hasScanResult={Boolean(sharedMedia.verdict || sharedMedia.file || sharedMedia.text)}
+      />
+
+      {/* Linked Media Badge from Step 1 */}
+      {sharedMedia.verdict && (
+        <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-sky-500/30 bg-sky-500/10 px-4 py-2.5 text-xs">
+          <div className="flex items-center gap-2">
+            <span className="material-symbols-rounded notranslate text-sky-400 text-sm align-middle" translate="no">link</span>
+            <span className="text-slate-200">
+              Scanned Threat: <strong className="text-white">{sharedMedia.verdict.replace('_', ' ')}</strong>
+              {sharedMedia.dhash ? ` • dHash: ${sharedMedia.dhash}` : ''}
+            </span>
+          </div>
+          <span className="font-mono text-[10px] text-sky-300 font-bold uppercase bg-sky-500/20 px-2 py-0.5 rounded">
+            Step 1 Telemetry Linked
+          </span>
+        </div>
+      )}
+
       {/* Title */}
       <div>
         <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-amber-400">
@@ -273,6 +299,30 @@ export const DampenView: React.FC<DampenViewProps> = ({ client }) => {
             <span>Automatically isolates coordinated bot accounts from retweeting rumors.</span>
           </div>
         </div>
+      </div>
+
+      {/* Workflow Step 2 -> Step 3 Connector */}
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-white/10 bg-[#0b1229]/90 p-4">
+        <button
+          onClick={() => {
+            onNavigate('detect');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+          className="inline-flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-xs font-semibold text-slate-300 hover:text-white transition cursor-pointer"
+        >
+          <span className="material-symbols-rounded notranslate text-base align-middle" translate="no">arrow_back</span>
+          <span>Back to Step 1: Forensics</span>
+        </button>
+        <button
+          onClick={() => {
+            onNavigate('heal');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+          className="inline-flex items-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-500 px-5 py-2.5 text-xs font-bold text-white transition cursor-pointer shadow-lg"
+        >
+          <span>Proceed to Step 3: Legal Shield</span>
+          <span className="material-symbols-rounded notranslate text-base align-middle" translate="no">arrow_forward</span>
+        </button>
       </div>
     </div>
   );
