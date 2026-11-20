@@ -662,7 +662,7 @@ export async function runLocalAudioDetect(
       };
 }
 
-// Donella Meadows Stock-and-Flow 24-Hour Virality Simulator
+// Stock-and-flow 24-Hour Virality Simulator
 export function runLocalViralitySimulation(params: {
   hours: number;
   p_forward: number;

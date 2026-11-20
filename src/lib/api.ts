@@ -691,7 +691,7 @@ const DEFAULT_API_INFO: ApiInfoResponse = {
       id: 'L2',
       stage: 'At Amplification',
       title: 'Cognitive Cooling & Outrage Damping',
-      mechanism: '15s WhatsApp pre-share friction + Donella Meadows stock-and-flow simulation',
+      mechanism: '15s WhatsApp pre-share friction + Stock-and-flow simulation',
     },
     {
       id: 'L3',

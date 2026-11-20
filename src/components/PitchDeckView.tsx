@@ -55,7 +55,7 @@ const SLIDES = [
   {
     id: 3,
     title: 'Leverage Points, Not Whack-a-Mole',
-    subtitle: 'Donella Meadows: Change the structure, not the symptom.',
+    subtitle: 'Systems Principle: Change the structure, not the symptom.',
     badge: 'Leverage Points Architecture',
     image: '/deck/slide3.png',
     keyPoints: [

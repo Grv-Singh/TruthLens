@@ -239,9 +239,9 @@ const USE_CASE_STORIES = [
         num: '03',
         title: 'WhatsApp 15s Cognitive Cooling Friction',
         stage: 'L2 Amplification Guardrail',
-        tech: 'Donella Meadows Systems Engine',
+        tech: 'Dynamic Systems Engine',
         detail:
-          'OpenWA gateway injects a 15-second behavioral pause before group forwards. The Donella Meadows stock-and-flow virality curve causes an 82% abandonment rate, dropping R₀ from 3.4 to 0.65.',
+          'OpenWA gateway injects a 15-second behavioral pause before group forwards. The Stock-and-flow virality curve causes an 82% abandonment rate, dropping R₀ from 3.4 to 0.65.',
         targetTab: 'dampen' as NavTab,
         cta: 'Simulate Virality Friction in Dampen',
       },
@@ -339,7 +339,7 @@ const USE_CASE_STORIES = [
       },
       {
         num: '02',
-        title: 'Donella Meadows 24h Amplification Forecaster',
+        title: '24h Amplification Forecaster',
         stage: 'L2 Outrage Modeling',
         tech: 'Stock-and-Flow Virality Differential Equation',
         detail:
@@ -948,7 +948,7 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
               Engineered for Enterprise Defense &amp; Court Proof
             </h2>
             <p className="mt-1 text-sm text-slate-300">
-              Inspect Donella Meadows leverage points, our 6 enterprise battlegrounds, or the Google AI &amp; telemetry hub.
+              Inspect Systems Thinking leverage points, our 6 enterprise battlegrounds, or the Google AI &amp; telemetry hub.
             </p>
           </div>
 
@@ -986,14 +986,14 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
           </div>
         </div>
 
-        {/* Tab 1: Donella Meadows Causal Intervention Graph */}
+        {/* Tab 1: Systems Dynamics Causal Intervention Graph */}
         {moatTab === 'causal' && (
           <div className="space-y-6">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#10D4A2]">
                   <Layers className="h-4 w-4" />
-                  Donella Meadows Systems Law — Stop Whacking Moles. Change the Structure.
+                  Systems Law — Stop Whacking Moles. Change the Structure.
                 </div>
                 <h3 className="mt-1 font-display text-xl font-bold text-white">
                   Causal Intervention Graph: Strike at the Source of Virality

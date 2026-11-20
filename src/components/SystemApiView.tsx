@@ -51,7 +51,7 @@ const ENDPOINT_GROUPS = [
       { method: 'POST', path: '/api/amplify/pre-share-check', desc: 'JSON: chat_id, message_text, forward_count, has_media, media_hash. Evaluates velocity and triggers 15s cognitive cooling friction.' },
       { method: 'POST', path: '/api/amplify/log-decision', desc: 'JSON: check_id, decision (abandon | shared_anyway), seconds_paused. Behavioral friction telemetry.' },
       { method: 'GET', path: '/api/amplify/telemetry', desc: 'Aggregated telemetry metrics: abandonment rate, dampening factor, total interventions.' },
-      { method: 'POST', path: '/api/simulate', desc: 'JSON: hours, p_forward, friction_enabled, cooling_delay_seconds. Donella Meadows stock-and-flow 24-hour virality curve.' },
+      { method: 'POST', path: '/api/simulate', desc: 'JSON: hours, p_forward, friction_enabled, cooling_delay_seconds. Stock-and-flow 24-hour virality curve.' },
     ],
   },
   {

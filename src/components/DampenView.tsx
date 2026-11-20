@@ -49,7 +49,7 @@ export const DampenView: React.FC<DampenViewProps> = ({ client, sharedMedia }) =
   const [decisionBanner, setDecisionBanner] = useState<string | null>(null);
   const [telemetry, setTelemetry] = useState<TelemetryResponse | null>(null);
 
-  // Donella Meadows 24h Simulator state
+  // 24h Simulator state
   const [hours, setHours] = useState(24);
   const [pForward, setPForward] = useState(0.42);
   const [frictionEnabled, setFrictionEnabled] = useState(true);
@@ -180,7 +180,7 @@ export const DampenView: React.FC<DampenViewProps> = ({ client, sharedMedia }) =
         </div>
       )}
 
-      {/* Main Grid: WhatsApp 15s Pre-Share Friction + Donella Meadows 24h Curve */}
+      {/* Main Grid: WhatsApp 15s Pre-Share Friction + 24h Curve */}
       <div className="grid gap-6 lg:grid-cols-12">
         {/* WhatsApp Pre-Share Cognitive Cooling Simulator */}
         <div className="rounded-2xl border border-white/10 bg-[#0b1229]/90 p-5 lg:col-span-5 space-y-4">
@@ -314,13 +314,13 @@ export const DampenView: React.FC<DampenViewProps> = ({ client, sharedMedia }) =
           )}
         </div>
 
-        {/* Donella Meadows Stock-and-Flow 24-Hour Virality Simulator */}
+        {/* Stock-and-flow 24-Hour Virality Simulator */}
         <div className="rounded-2xl border border-white/10 bg-[#0b1229]/90 p-5 lg:col-span-7 space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div>
               <h3 className="font-display text-base font-bold text-white flex items-center gap-2">
                 <TrendingDown className="h-4 w-4 text-[#10D4A2]" />
-                Donella Meadows Stock-and-Flow 24h Virality Simulator
+                Stock-and-flow 24h Virality Simulator
               </h3>
               <p className="text-xs text-slate-400">
                 &ldquo;What if I share this?&rdquo; — 24h harm if 100 people share •{' '}
