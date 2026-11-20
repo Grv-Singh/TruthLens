@@ -237,11 +237,11 @@ const USE_CASE_STORIES = [
       },
       {
         num: '03',
-        title: 'WhatsApp 15s Cognitive Cooling Friction',
+        title: '15-Second Cognitive Cooling Friction',
         stage: 'L2 Amplification Guardrail',
         tech: 'Donella Meadows Systems Engine',
         detail:
-          'OpenWA gateway injects a 15-second behavioral pause before group forwards. The Donella Meadows stock-and-flow virality curve causes an 82% abandonment rate, dropping R₀ from 3.4 to 0.65.',
+          'TruthLens injects a 15-second behavioral pause before viral forwards. The Donella Meadows stock-and-flow virality curve causes an 82% abandonment rate, dropping R₀ from 3.4 to 0.65.',
         targetTab: 'dampen' as NavTab,
         cta: 'Simulate Virality Friction in Dampen',
       },
@@ -1308,7 +1308,7 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
                 { label: 'Postgres Case & Telemetry DB', val: health?.services.postgres ?? 'ready' },
                 { label: 'Qdrant Vector Vault (:6333)', val: health?.services.qdrant ?? 'truthlens_vault' },
                 { label: 'Multimodal Edge Workers', val: health?.services.edge_workers ?? 'active' },
-                { label: 'OpenWA WhatsApp Gateway', val: health?.services.openwa_gateway ?? 'ready (:2785)' },
+                { label: 'Counter-Virality Engine', val: health?.services.openwa_gateway ?? 'ready (:2785)' },
               ].map((svc) => (
                 <div
                   key={svc.label}
@@ -1328,15 +1328,9 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
                 Team: <span className="text-slate-200 font-semibold">Gaurav Singh &amp; Ankita Sinha</span>
                 {apiInfo && <span className="ml-2 font-mono text-[#10D4A2]">v{apiInfo.version}</span>}
               </div>
-              <a
-                href={`${baseUrl}/download/truthlens.apk`}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-1.5 rounded-xl border border-[#10D4A2]/40 bg-[#10D4A2]/15 px-3 py-1.5 text-xs font-bold text-[#10D4A2] hover:bg-[#10D4A2]/25"
-              >
-                <Download className="h-3.5 w-3.5" />
-                {tr.downloadApk}
-              </a>
+              <div className="text-[11px] font-mono text-[#10D4A2] bg-[#10D4A2]/10 border border-[#10D4A2]/30 px-3 py-1 rounded-full">
+                Full Production Cloud Stack Active
+              </div>
             </div>
           </div>
         </div>

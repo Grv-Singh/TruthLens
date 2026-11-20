@@ -11,8 +11,6 @@ import {
   Shield,
   Sparkles,
   Wifi,
-  Download,
-  QrCode,
   Moon,
   Sun,
 } from 'lucide-react';
@@ -158,26 +156,6 @@ export default function App() {
                 </>
               )}
             </button>
-
-            <a
-              href="https://lens.truthortrust.com/admin/whatsapp-pair"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hidden sm:inline-flex items-center gap-1.5 rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-bold text-emerald-700 hover:bg-emerald-100 transition shadow-xs"
-              title="WhatsApp Device Pairing Gateway"
-            >
-              <QrCode className="h-3.5 w-3.5" />
-              <span>WhatsApp Link</span>
-            </a>
-
-            <a
-              href="/download/truthlens.apk"
-              className="inline-flex items-center gap-1.5 rounded-xl bg-blue-600 text-white px-3 py-1.5 text-xs font-bold hover:bg-blue-700 transition shadow-xs"
-              title="Download Standalone Android APK"
-            >
-              <Download className="h-3.5 w-3.5" />
-              <span>APK</span>
-            </a>
 
             <button
               onClick={() => setLang((l) => (l === 'en' ? 'hi' : 'en'))}
