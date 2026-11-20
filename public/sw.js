@@ -64,7 +64,9 @@ self.addEventListener('fetch', (event) => {
           console.error('[TruthLens SW] Share Target capture failed:', err);
         }
 
-        return Response.redirect('/?shared=1&tab=detect', 303);
+                const isAudio = (mediaFile && (mediaFile.type.startsWith('audio/') || /\.(opus|wav|mp3|m4a|ogg)$/i.test(mediaFile.name)));
+        const targetUrl = isAudio ? '/?shared=1&tab=detect&mode=audio' : '/?shared=1&tab=detect&mode=image';
+        return Response.redirect(targetUrl, 303);
       })()
     );
     return;

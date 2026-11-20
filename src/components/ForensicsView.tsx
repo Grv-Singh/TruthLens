@@ -69,7 +69,14 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
   autoPresetId,
   onConsumedPreset,
 }) => {
-  const [subMode, setSubMode] = useState<'image' | 'audio'>('image');
+  const [subMode, setSubMode] = useState<'image' | 'audio'>(() => {
+    if (typeof window !== 'undefined') {
+      const p = new URLSearchParams(window.location.search);
+      const m = p.get('mode');
+      if (m === 'audio' || m === 'voice') return 'audio';
+    }
+    return 'image';
+  });
   const [elaSplit, setElaSplit] = useState(50);
   const [linkInput, setLinkInput] = useState('');
   const [linkError, setLinkError] = useState<string | null>(null);
@@ -240,10 +247,22 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [autoPresetId]);
 
-  // Handle external shared media (Web Share Target / WhatsApp)
+  // Auto-route based on kind of shared media (Photos vs Voice Notes)
   useEffect(() => {
-    if (sharedMedia.file && imageQueue.length === 0) {
-      handleAddFiles([sharedMedia.file]);
+    if (sharedMedia.file) {
+      const isAudio =
+        sharedMedia.file.type.startsWith('audio/') ||
+        /\.(opus|wav|mp3|m4a|ogg|aac)$/i.test(sharedMedia.file.name);
+
+      if (isAudio) {
+        setSubMode('audio');
+        handleAudioFile(sharedMedia.file);
+      } else {
+        setSubMode('image');
+        if (imageQueue.length === 0) {
+          handleAddFiles([sharedMedia.file]);
+        }
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sharedMedia.file]);
@@ -367,7 +386,15 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
                 onDragOver={(e) => e.preventDefault()}
                 onDrop={(e) => {
                   e.preventDefault();
-                  if (e.dataTransfer.files) handleAddFiles(e.dataTransfer.files);
+                  if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                    const first = e.dataTransfer.files[0];
+                    if (first.type.startsWith('audio/') || /\.(opus|wav|mp3|m4a|ogg|aac)$/i.test(first.name)) {
+                      setSubMode('audio');
+                      handleAudioFile(first);
+                    } else {
+                      handleAddFiles(e.dataTransfer.files);
+                    }
+                  }
                 }}
                 className="group cursor-pointer rounded-2xl border-2 border-dashed border-white/15 bg-[#0b1229]/80 p-8 text-center transition hover:border-[#10D4A2]/60 hover:bg-[#111b3a]/70 h-full flex flex-col items-center justify-center min-h-[280px]"
               >
@@ -761,9 +788,12 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
                 <Mic className="h-6 w-6" />
               </div>
               <div className="mt-3 font-display text-base font-semibold text-white">
-                Upload Voice Note (.opus / .wav / .mp3)
+                Upload Voice Note
               </div>
-              <p className="mt-1 text-xs text-slate-400">
+              <div className="mt-1 font-mono text-[11px] text-slate-400">
+                opus, wav, mp3, m4a
+              </div>
+              <p className="mt-1.5 text-xs text-slate-500">
                 Detects AI voice clones and synthetic speech
               </p>
             </div>
