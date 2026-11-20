@@ -316,18 +316,8 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
         }}
       />
 
-      {/* Header + Sub-mode Switch */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#10D4A2]">
-            <ShieldCheck className="h-4 w-4" />
-            Instant Deepfake &amp; AI Scanner
-          </div>
-          <h2 className="mt-1 font-display text-2xl font-bold text-white">
-            Check Photos &amp; Voice Notes for AI or Editing
-          </h2>
-        </div>
-
+      {/* Mode Switcher Bar */}
+      <div className="flex items-center justify-between pb-2">
         <div className="inline-flex rounded-xl border border-white/10 bg-[#0b1229] p-1">
           <button
             onClick={() => setSubMode('image')}
@@ -352,6 +342,16 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
             Voice Notes
           </button>
         </div>
+
+        {subMode === 'image' && imageQueue.length > 0 && (
+          <button
+            onClick={handleClearQueue}
+            className="inline-flex items-center gap-1.5 rounded-xl border border-rose-500/30 bg-rose-500/10 px-3.5 py-2 text-xs font-semibold text-rose-300 hover:bg-rose-500/20 transition cursor-pointer"
+          >
+            <span className="material-symbols-rounded notranslate text-sm align-middle" translate="no">restart_alt</span>
+            <span>New Scan</span>
+          </button>
+        )}
       </div>
 
       {subMode === 'image' ? (
@@ -430,6 +430,16 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
           /* STAGE 2: FORENSICS CARD TAKES OVER (UPLOAD CARDS HIDDEN) */
           /* ======================================================== */
           <div className="space-y-5">
+            {/* Forensics Title Appears Only After Upload */}
+            <div className="rounded-2xl border border-white/10 bg-[#0b1229]/90 p-5">
+              <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#10D4A2]">
+                <ShieldCheck className="h-4 w-4" />
+                Instant Deepfake &amp; AI Scanner
+              </div>
+              <h2 className="mt-1 font-display text-2xl font-bold text-white">
+                Forensics &amp; Provenance Report
+              </h2>
+            </div>
             {/* Top Toolbar: Multi-image selector + Actions */}
             <div className="rounded-2xl border border-white/10 bg-[#0b1229]/90 p-4">
               <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-white/10">
