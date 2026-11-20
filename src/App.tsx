@@ -71,13 +71,14 @@ export default function App() {
           const fileResp = await cache.match('/_shared_file');
           if (fileResp) {
             const blob = await fileResp.blob();
-            const fileName = decodeURIComponent(fileResp.headers.get('X-File-Name') || 'whatsapp_shared.jpg');
-            const file = new File([blob], fileName, { type: blob.type || 'image/jpeg' });
+            const fileName = decodeURIComponent(fileResp.headers.get('X-File-Name') || 'image.jpg');
+            const ext = (fileName.split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g, '') || 'jpg';
+            const file = new File([blob], `image_1.${ext}`, { type: blob.type || 'image/jpeg' });
             const previewUrl = URL.createObjectURL(file);
             setSharedMedia({
               file,
               previewUrl,
-              filename: file.name,
+              filename: 'Image 1',
             });
             setActiveTab('detect');
             await cache.delete('/_shared_file');

@@ -140,7 +140,7 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
           return;
         }
       } catch {}
-      const fallbackNote = `[Uploaded Document: ${file.name}] Attached circular claiming urgent public warning.`;
+      const fallbackNote = `[Uploaded Document: Document 1] Attached circular claiming urgent public warning.`;
       setTextContent(fallbackNote);
       handleAnalyzeText(fallbackNote);
     }
@@ -196,13 +196,20 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
     const fileList = Array.from(files).filter((f) => f.type.startsWith('image/'));
     if (fileList.length === 0) return;
 
-    const newItems: ImageBatchItem[] = fileList.map((file) => ({
-      id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-      file,
-      previewUrl: URL.createObjectURL(file),
-      filename: file.name,
-      status: 'pending',
-    }));
+    const baseIndex = imageQueue.length;
+    const newItems: ImageBatchItem[] = fileList.map((file, idx) => {
+      const ext = (file.name.split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g, '') || 'jpg';
+      const itemNumber = baseIndex + idx + 1;
+      const cleanName = `Image ${itemNumber}`;
+      const renamedFile = new File([file], `image_${itemNumber}.${ext}`, { type: file.type });
+      return {
+        id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        file: renamedFile,
+        previewUrl: URL.createObjectURL(renamedFile),
+        filename: cleanName,
+        status: 'pending',
+      };
+    });
 
     setImageQueue((prev) => {
       const updated = [...prev, ...newItems];
@@ -330,9 +337,11 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
   // Audio Handlers
   const handleAudioFile = async (file: File) => {
     setAudioLoading(true);
-    setAudioLabel(file.name);
+    const ext = (file.name.split('.').pop() || 'wav').toLowerCase().replace(/[^a-z0-9]/g, '') || 'wav';
+    const renamedAudio = new File([file], `audio_1.${ext}`, { type: file.type });
+    setAudioLabel('Audio 1');
     try {
-      const res = await client.detectAudio(file);
+      const res = await client.detectAudio(renamedAudio);
       setAudioResult(res);
     } finally {
       setAudioLoading(false);
@@ -626,9 +635,6 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
                           <span className="font-display text-xl font-bold text-white">
                             {activeItem.detectResult.verdict.replace('_', ' ')}
                           </span>
-                          <span className="rounded-full bg-black/40 px-2.5 py-0.5 font-mono text-xs text-slate-200 tabular-nums">
-                            {activeItem.detectResult.confidence}% confidence
-                          </span>
                         </div>
                         <div className="mt-0.5 font-mono text-xs text-slate-300">
                           File: <span className="text-white font-semibold">{activeItem.filename}</span> • dHash:{' '}
@@ -649,7 +655,7 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
                             : 'text-[#10D4A2]'
                         }`}
                       >
-                        {activeItem.detectResult.manipulation_score}/100
+                        {activeItem.detectResult.manipulation_score}%
                       </div>
                     </div>
                   </div>
@@ -1115,9 +1121,6 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
                           AUTHENTIC / VERIFIED FACT
                         </span>
                       )}
-                      <span className="font-mono text-xs text-slate-400">
-                        {Math.round(textResult.confidence * 100)}% confidence
-                      </span>
                     </div>
                     <h3 className="mt-2 font-display text-xl font-bold text-white">
                       {textResult.verdict === 'FABRICATED_RUMOR'
@@ -1143,7 +1146,7 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
                             : 'text-[#10D4A2]'
                         }`}
                       >
-                        {textResult.risk_score}/100
+                        {textResult.risk_score}%
                       </div>
                     </div>
                     <div className="rounded-xl border border-white/10 bg-[#050919]/80 px-4 py-2.5">
