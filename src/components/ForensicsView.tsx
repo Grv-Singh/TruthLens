@@ -89,7 +89,6 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
   const [audioLoading, setAudioLoading] = useState(false);
   const [audioResult, setAudioResult] = useState<AudioDetectResult | null>(null);
   const [audioLabel, setAudioLabel] = useState<string>('');
-  const [isPlayingTone, setIsPlayingTone] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const audioInputRef = useRef<HTMLInputElement>(null);
@@ -279,46 +278,6 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
     }
   };
 
-  const playDemoSynthAudio = (mode: 'clone' | 'human') => {
-    try {
-      const ctx = new AudioContext();
-      const now = ctx.currentTime;
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = mode === 'clone' ? 'sawtooth' : 'sine';
-      osc.frequency.setValueAtTime(mode === 'clone' ? 195 : 155, now);
-      osc.frequency.exponentialRampToValueAtTime(mode === 'clone' ? 210 : 190, now + 0.6);
-      gain.gain.setValueAtTime(0.08, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.7);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      setIsPlayingTone(true);
-      osc.start(now);
-      osc.stop(now + 0.7);
-      osc.onended = () => {
-        setIsPlayingTone(false);
-        ctx.close();
-      };
-    } catch {
-      setIsPlayingTone(false);
-    }
-  };
-
-  const runAudioPreset = async (mode: 'clone' | 'human') => {
-    setAudioLoading(true);
-    setAudioLabel(
-      mode === 'clone'
-        ? 'wire_transfer_cfo_voice_clone.opus (Synthetic Demo)'
-        : 'authentic_whatsapp_voice_note.wav (Human Demo)'
-    );
-    playDemoSynthAudio(mode);
-    try {
-      const res = await client.detectAudio(null, mode);
-      setAudioResult(res);
-    } finally {
-      setAudioLoading(false);
-    }
-  };
 
   return (
     <div className="space-y-6">
@@ -362,9 +321,15 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
           </button>
         </div>
 
-        {subMode === 'image' && imageQueue.length > 0 && (
+        {((subMode === 'image' && imageQueue.length > 0) || (subMode === 'audio' && audioResult)) && (
           <button
-            onClick={handleClearQueue}
+            onClick={() => {
+              if (subMode === 'image') handleClearQueue();
+              else {
+                setAudioResult(null);
+                setAudioLabel('');
+              }
+            }}
             className="inline-flex items-center gap-1.5 rounded-xl border border-rose-500/30 bg-rose-500/10 px-3.5 py-2 text-xs font-semibold text-rose-300 hover:bg-rose-500/20 transition cursor-pointer"
           >
             <span className="material-symbols-rounded notranslate text-sm align-middle" translate="no">restart_alt</span>
@@ -767,82 +732,50 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
           </div>
         )
       ) : (
-        /* VOICE NOTE FFT FORENSICS */
-        <div className="grid gap-6 lg:grid-cols-12">
-          <div className="space-y-4 lg:col-span-4">
+        /* VOICE NOTE FORENSICS */
+        !audioResult && !audioLoading ? (
+          <div className="mx-auto max-w-2xl">
             <div
               onClick={() => audioInputRef.current?.click()}
-              className="cursor-pointer rounded-2xl border-2 border-dashed border-white/15 bg-[#0b1229]/80 p-6 text-center transition hover:border-[#10D4A2]/60"
+              className="group cursor-pointer rounded-2xl border-2 border-dashed border-white/15 bg-[#0b1229]/80 p-10 text-center transition hover:border-[#10D4A2]/60 hover:bg-[#111b3a]/70 flex flex-col items-center justify-center min-h-[300px]"
             >
               <input
                 ref={audioInputRef}
                 type="file"
-                accept=".opus,.wav,.mp3,audio/*"
+                accept=".opus,.wav,.mp3,.m4a,audio/*"
                 className="hidden"
                 onChange={(e) => {
                   const file = e.target.files?.[0];
                   if (file) handleAudioFile(file);
                 }}
               />
-              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-sky-500/15 text-sky-400">
-                <Mic className="h-6 w-6" />
+              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-sky-500/15 text-sky-400 group-hover:scale-105 transition shadow-[0_0_24px_rgba(56,189,248,0.2)]">
+                <Mic className="h-8 w-8" />
               </div>
-              <div className="mt-3 font-display text-base font-semibold text-white">
+              <div className="mt-4 font-display text-lg font-bold text-white">
                 Upload Voice Note
               </div>
               <div className="mt-1 font-mono text-[11px] text-slate-400">
                 opus, wav, mp3, m4a
               </div>
-              <p className="mt-1.5 text-xs text-slate-500">
+              <p className="mt-2 text-xs text-slate-400">
                 Detects AI voice clones and synthetic speech
               </p>
             </div>
-
-            <div className="rounded-2xl border border-white/10 bg-[#0b1229]/90 p-4 space-y-2.5">
-              <div className="text-xs font-bold uppercase tracking-wider text-[#10D4A2]">
-                Try Voice Samples
-              </div>
-              <button
-                onClick={() => runAudioPreset('clone')}
-                disabled={audioLoading}
-                className="flex w-full items-center justify-between rounded-xl border border-rose-500/25 bg-rose-500/10 p-3.5 text-left hover:bg-rose-500/20 cursor-pointer"
-              >
-                <div>
-                  <div className="text-sm font-semibold text-white">
-                    AI Voice Clone
-                  </div>
-                  <div className="text-[11px] text-rose-200/80">
-                    High-frequency AI voice cutoff detected
-                  </div>
-                </div>
-                <Play className="h-4 w-4 text-rose-300" />
-              </button>
-
-              <button
-                onClick={() => runAudioPreset('human')}
-                disabled={audioLoading}
-                className="flex w-full items-center justify-between rounded-xl border border-[#10D4A2]/25 bg-[#10D4A2]/10 p-3.5 text-left hover:bg-[#10D4A2]/20 cursor-pointer"
-              >
-                <div>
-                  <div className="text-sm font-semibold text-white">
-                    Real Human Voice
-                  </div>
-                  <div className="text-[11px] text-[#10D4A2]/90">
-                    Natural human vocal flow confirmed
-                  </div>
-                </div>
-                <Play className="h-4 w-4 text-[#10D4A2]" />
-              </button>
-              {isPlayingTone && (
-                <div className="text-[11px] font-mono text-sky-300">
-                  Playing WebAudio sample tone...
-                </div>
-              )}
-            </div>
           </div>
-
-          <div className="space-y-4 lg:col-span-8">
-            {audioResult ? (
+        ) : audioLoading ? (
+          <div className="flex h-96 flex-col items-center justify-center rounded-2xl border border-white/10 bg-[#0b1229]/90">
+            <div className="h-10 w-10 animate-spin rounded-full border-2 border-[#10D4A2] border-t-transparent" />
+            <div className="mt-4 font-display text-base font-semibold text-white">
+              Analyzing Voice Note Waveform...
+            </div>
+            <p className="mt-1 text-xs text-slate-400">
+              Inspecting Vocoder Shelf Cutoff + Glottal Pulse Naturalness
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {audioResult && (
               <>
                 <div
                   className={`rounded-2xl border p-5 ${
@@ -965,19 +898,9 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
                   </div>
                 </div>
               </>
-            ) : (
-              <div className="flex h-full min-h-[380px] flex-col items-center justify-center rounded-2xl border border-white/10 bg-[#0b1229]/60 p-8 text-center">
-                <Mic className="h-12 w-12 text-slate-600" />
-                <h3 className="mt-3 font-display text-lg font-bold text-white">
-                  Awaiting Audio Waveform Input
-                </h3>
-                <p className="mt-1 max-w-md text-xs text-slate-400">
-                  Upload any WhatsApp voice note, wire-transfer instruction, or synthetic speech sample.
-                </p>
-              </div>
             )}
           </div>
-        </div>
+        )
       )}
     </div>
   );
