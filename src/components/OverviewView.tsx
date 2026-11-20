@@ -237,16 +237,6 @@ const USE_CASE_STORIES = [
       },
       {
         num: '03',
-        title: 'WhatsApp 15s Cognitive Cooling Friction',
-        stage: 'L2 Amplification Guardrail',
-        tech: 'Dynamic Systems Engine',
-        detail:
-          'OpenWA gateway injects a 15-second behavioral pause before group forwards. The Stock-and-flow virality curve causes an 82% abandonment rate, dropping R₀ from 3.4 to 0.65.',
-        targetTab: 'dampen' as NavTab,
-        cta: 'Simulate Virality Friction in Dampen',
-      },
-      {
-        num: '04',
         title: 'Section 63 BSA 2023 Certificate & 1930 Cyber Cell Filing',
         stage: 'L3 Statutory Legal Enforcement',
         tech: 'Sec 63 BSA + Sec 67C IT Act / Sec 94 BNSS',

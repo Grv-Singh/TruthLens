@@ -33,10 +33,6 @@ export const DampenView: React.FC<DampenViewProps> = ({ client, sharedMedia, onN
   const [coolingSeconds, setCoolingSeconds] = useState(15);
   const [simResult, setSimResult] = useState<SimulationResponse | null>(null);
 
-  // Wellbeing & Bot Shields
-  const [outrageStreak, setOutrageStreak] = useState(4);
-  const [botLikelihood, setBotLikelihood] = useState(86);
-
   useEffect(() => {
     client.getTelemetry().then(setTelemetry);
   }, [client]);
@@ -199,91 +195,6 @@ export const DampenView: React.FC<DampenViewProps> = ({ client, sharedMedia, onN
             </ResponsiveContainer>
           )}
         </div>
-      </div>
-
-      {/* 2 Interactive Protection Features */}
-      <div className="grid gap-4 sm:grid-cols-2">
-        {/* Outrage Feed Guard */}
-        <div className="rounded-2xl border border-white/10 bg-[#0b1229]/90 p-4 space-y-3">
-          <div className="flex items-center justify-between">
-            <h4 className="font-display text-sm font-bold text-white flex items-center gap-1.5">
-              <span className="material-symbols-rounded notranslate text-rose-400 text-base align-middle" translate="no">health_and_safety</span>
-              <span>Feed Auto-Cool Guard</span>
-            </h4>
-            <span className="rounded-full bg-rose-500/20 px-2 py-0.5 text-[10px] font-mono text-rose-300">
-              ACTIVE
-            </span>
-          </div>
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-slate-400">Sensitivity Trigger:</span>
-            <span className="font-mono text-amber-300 font-bold">{outrageStreak} toxic posts</span>
-          </div>
-          <input
-            type="range"
-            min={1}
-            max={8}
-            value={outrageStreak}
-            onChange={(e) => setOutrageStreak(Number(e.target.value))}
-            className="w-full accent-rose-400 cursor-pointer"
-          />
-          <div className="rounded-lg bg-[#050919] p-2.5 text-xs text-slate-300 flex items-center gap-2">
-            <span className="material-symbols-rounded notranslate text-[#10D4A2] text-sm" translate="no">timer</span>
-            <span>Pauses feed auto-play for 15m after {outrageStreak} consecutive rage posts.</span>
-          </div>
-        </div>
-
-        {/* Bot Cluster Blocker */}
-        <div className="rounded-2xl border border-white/10 bg-[#0b1229]/90 p-4 space-y-3">
-          <div className="flex items-center justify-between">
-            <h4 className="font-display text-sm font-bold text-white flex items-center gap-1.5">
-              <span className="material-symbols-rounded notranslate text-sky-400 text-base align-middle" translate="no">smart_toy</span>
-              <span>Bot Network Shield</span>
-            </h4>
-            <span className="rounded-full bg-sky-500/20 px-2 py-0.5 text-[10px] font-mono text-sky-300">
-              SHIELD ON
-            </span>
-          </div>
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-slate-400">Bot Detection Threshold:</span>
-            <span className="font-mono text-rose-400 font-bold">{botLikelihood}%</span>
-          </div>
-          <input
-            type="range"
-            min={10}
-            max={99}
-            value={botLikelihood}
-            onChange={(e) => setBotLikelihood(Number(e.target.value))}
-            className="w-full accent-sky-400 cursor-pointer"
-          />
-          <div className="rounded-lg bg-[#050919] p-2.5 text-xs text-slate-300 flex items-center gap-2">
-            <span className="material-symbols-rounded notranslate text-[#10D4A2] text-sm" translate="no">shield</span>
-            <span>Automatically isolates coordinated bot accounts from retweeting rumors.</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Workflow Step 2 -> Step 3 Connector */}
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-white/10 bg-[#0b1229]/90 p-4">
-        <button
-          onClick={() => {
-            onNavigate('detect');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }}
-          className="inline-flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-xs font-semibold text-slate-300 hover:text-white transition cursor-pointer"
-        >
-          <span className="material-symbols-rounded notranslate text-base align-middle" translate="no">arrow_back</span>
-          <span>Back to Step 1: Forensics</span>
-        </button>
-        <button
-          onClick={() => {
-            onNavigate('heal');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }}
-          className="inline-flex items-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-500 px-5 py-2.5 text-xs font-bold text-white transition cursor-pointer shadow-lg"
-        >
-          <span>Proceed to Step 3: Legal Shield</span>
-          <span className="material-symbols-rounded notranslate text-base align-middle" translate="no">arrow_forward</span>
-        </button>
       </div>
     </div>
   );

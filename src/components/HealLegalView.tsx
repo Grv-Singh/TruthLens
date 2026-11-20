@@ -611,30 +611,6 @@ export const HealLegalView: React.FC<HealLegalViewProps> = ({
               </div>
             </div>
           )}
-
-          {/* Workflow Step 3 Navigation */}
-          <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-white/10 bg-[#0b1229]/90 p-4">
-            <button
-              onClick={() => {
-                onNavigate?.('dampen');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-xs font-semibold text-slate-300 hover:text-white transition cursor-pointer"
-            >
-              <span className="material-symbols-rounded notranslate text-base align-middle" translate="no">arrow_back</span>
-              <span>Back to Step 2: Virality</span>
-            </button>
-            <button
-              onClick={() => {
-                onNavigate?.('detect');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-              className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 px-5 py-2.5 text-xs font-bold text-white transition cursor-pointer shadow-lg"
-            >
-              <span className="material-symbols-rounded notranslate text-base align-middle" translate="no">restart_alt</span>
-              <span>Start New Forensic Scan</span>
-            </button>
-          </div>
         </div>
       );
 };
