@@ -6,14 +6,9 @@ import {
   ExternalLink,
   FileText,
   Gavel,
-  HeartHandshake,
   PhoneCall,
-  Send,
   ShieldAlert,
-  Sparkles,
   Sticker,
-  Volume2,
-  Wind,
 } from 'lucide-react';
 import type {
   DebunkStickerResult,
@@ -32,12 +27,7 @@ interface HealLegalViewProps {
   initialSubTab?: HealSubTab;
 }
 
-type HealSubTab = 'coach' | 'debunk' | 'dossier' | 'takedown';
-
-interface CoachMessage {
-  role: 'coach' | 'user';
-  text: string;
-}
+type HealSubTab = 'debunk' | 'dossier' | 'takedown' | 'helpline';
 
 function downloadTextFile(filename: string, content: string) {
   const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
@@ -53,17 +43,10 @@ export const HealLegalView: React.FC<HealLegalViewProps> = ({
   client,
   lang,
   sharedMedia,
-  initialSubTab = 'coach',
+  initialSubTab = 'debunk',
 }) => {
   const tr = t(lang);
   const [activeTab, setActiveTab] = useState<HealSubTab>(initialSubTab);
-
-  // Crisis Coach state
-  const [messages, setMessages] = useState<CoachMessage[]>([
-    { role: 'coach', text: tr.crisisWelcome },
-  ]);
-  const [coachInput, setCoachInput] = useState('');
-  const [breathingActive, setBreathingActive] = useState(false);
 
   // Debunk Sticker state
   const [stickerLoading, setStickerLoading] = useState(false);
@@ -91,46 +74,6 @@ export const HealLegalView: React.FC<HealLegalViewProps> = ({
     navigator.clipboard.writeText(text);
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 1800);
-  };
-
-  const speakCoachReply = (text: string) => {
-    if (!('speechSynthesis' in window)) return;
-    window.speechSynthesis.cancel();
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.lang = lang === 'hi' ? 'hi-IN' : 'en-IN';
-    utter.rate = 0.94;
-    window.speechSynthesis.speak(utter);
-  };
-
-  const sendCoachMessage = (promptText?: string) => {
-    const text = (promptText ?? coachInput).trim();
-    if (!text) return;
-    setCoachInput('');
-
-    let reply: string;
-    const lower = text.toLowerCase();
-    if (lang === 'hi') {
-      if (lower.includes('शांत') || lower.includes('घबरा')) {
-        reply =
-          'आप बिल्कुल अकेले नहीं हैं। मेरे साथ 4 सेकंड सांस अंदर लें, 4 सेकंड रोकें, और 6 सेकंड धीरे बाहर छोड़ें। इसके बाद हम "Debunk Sticker" और "BSA 63 Dossier" टैब से तुरंत क़ानूनी सबूत सुरक्षित कर लेंगे।';
-      } else {
-        reply =
-          'यह आपकी गलती नहीं है। 3 तुरंत कदम उठाएं: (1) स्क्रीनशॉट या मीडिया सुरक्षित रखें — डिलीट न करें; (2) TruthLens से Section 63 BSA प्रमाणपत्र और Rule 3(2)(b) 24-घंटे का टेकडाउन नोटिस बनाएं; (3) राष्ट्रीय साइबर हेल्पलाइन 1930 या cybercrime.gov.in पर तुरंत दर्ज करें।';
-      }
-    } else {
-      if (lower.includes('calm') || lower.includes('panic')) {
-        reply =
-          'Pause everything for 15 seconds. Drop your shoulders and follow the breathing ring beside me: inhale 4s, hold 4s, exhale 6s. Your reputation is not defined by a synthetic file — we have cryptographic proof and statutory 24-hour Indian takedown law on your side.';
-      } else if (lower.includes('cyber') || lower.includes('complaint') || lower.includes('file')) {
-        reply =
-          'Here is your fastest action path: (1) Open the "BSA 63 Dossier" tab to seal the SHA-256 hash and generate your Cyber Cell complaint + Sec 67C CGNAT preservation notice; (2) Call 1930 or file on cybercrime.gov.in; (3) Send the Rule 3(2)(b) 24-hour removal notice to the platform Grievance Officer.';
-      } else {
-        reply =
-          'First, this is NOT your fault. Do not engage or pay extortion demands. Keep the original file/URL intact, generate a high-contrast WhatsApp Debunk Sticker to stop group rumors immediately, and build your court-ready BSA 2023 Section 63 dossier in one click.';
-      }
-    }
-
-    setMessages((prev) => [...prev, { role: 'user', text }, { role: 'coach', text: reply }]);
   };
 
   const handleGenerateSticker = async () => {
@@ -190,20 +133,20 @@ export const HealLegalView: React.FC<HealLegalViewProps> = ({
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div>
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-rose-400">
-            <HeartHandshake className="h-4 w-4" />
-            L3 — At Victim • Mental Health Balancing Loop, Grassroots Debunk &amp; Court-Ready Law
+            <ShieldAlert className="h-4 w-4" />
+            L3 — Legal Defense &amp; Grassroots Debunk
           </div>
           <h2 className="mt-1 font-display text-2xl font-bold text-white">
-            Heal, Debunk in Groups &amp; Enforce 24-Hour Indian Legal Takedowns
+            Grassroots Debunk, Court-Ready BSA 63 Dossier &amp; 24h Legal Takedowns
           </h2>
         </div>
 
         <div className="flex flex-wrap gap-1.5 rounded-xl border border-white/10 bg-[#0b1229] p-1">
           {[
-            { id: 'coach' as HealSubTab, label: 'Gemini Crisis Coach', icon: HeartHandshake },
-            { id: 'debunk' as HealSubTab, label: 'WhatsApp Sticker', icon: Sticker },
-            { id: 'dossier' as HealSubTab, label: 'BSA 63 Dossier', icon: FileText },
-            { id: 'takedown' as HealSubTab, label: '24h Takedown', icon: Gavel },
+            { id: 'debunk' as HealSubTab, label: 'WhatsApp Sticker Debunk', icon: Sticker },
+            { id: 'dossier' as HealSubTab, label: 'BSA 63 Evidence Dossier', icon: FileText },
+            { id: 'takedown' as HealSubTab, label: '24h Legal Takedown Notice', icon: Gavel },
+            { id: 'helpline' as HealSubTab, label: 'National Cyber Crime 1930', icon: PhoneCall },
           ].map((item) => {
             const Icon = item.icon;
             return (
@@ -223,177 +166,95 @@ export const HealLegalView: React.FC<HealLegalViewProps> = ({
         </div>
       </div>
 
-      {/* SUB-TAB 1: GEMINI LIVE CRISIS COACH */}
-      {activeTab === 'coach' && (
-        <div className="grid gap-6 lg:grid-cols-12">
-          <div className="rounded-2xl border border-white/10 bg-[#0b1229]/90 p-5 lg:col-span-7 flex flex-col justify-between min-h-[440px]">
-            <div className="space-y-3">
-              <div className="flex items-center justify-between border-b border-white/10 pb-3">
-                <div>
-                  <div className="font-display text-base font-bold text-white flex items-center gap-2">
-                    <Sparkles className="h-4 w-4 text-[#10D4A2]" />
-                    Gemini Live Crisis Companion ({lang === 'hi' ? 'हिंदी' : 'English'})
-                  </div>
-                  <div className="text-xs text-slate-400">
-                    Trauma-informed voice &amp; text companion to break the Anxiety/Shame loop
-                  </div>
+      {/* SUB-TAB: NATIONAL CYBER CRIME & EMERGENCY HELPLINES */}
+      {activeTab === 'helpline' && (
+        <div className="space-y-6">
+          <div className="rounded-2xl border border-rose-500/30 bg-rose-950/20 p-6 space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-white/10 pb-4">
+              <div>
+                <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-rose-300">
+                  <PhoneCall className="h-5 w-5 text-rose-400" />
+                  National Cyber Crime Reporting &amp; Statutory Authorities
                 </div>
-                <button
-                  onClick={() => speakCoachReply(messages[messages.length - 1]?.text ?? tr.crisisWelcome)}
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-[#10D4A2]/30 bg-[#10D4A2]/10 px-3 py-1.5 text-xs font-semibold text-[#10D4A2] hover:bg-[#10D4A2]/20 cursor-pointer"
-                >
-                  <Volume2 className="h-3.5 w-3.5" />
-                  Speak Aloud
-                </button>
+                <div className="text-xs text-slate-300 mt-1">
+                  Direct official Indian government reporting portals and 24x7 emergency response coordinators for synthetic media crimes.
+                </div>
               </div>
-
-              <div className="max-h-64 space-y-2.5 overflow-y-auto pr-1">
-                {messages.map((m, idx) => (
-                  <div
-                    key={idx}
-                    className={`rounded-xl p-3 text-xs leading-relaxed ${m.role === 'coach'
-                        ? 'border border-[#10D4A2]/25 bg-[#10D4A2]/[0.07] text-slate-100'
-                        : 'ml-8 border border-white/10 bg-white/5 text-slate-200'
-                      }`}
-                  >
-                    <div className="mb-1 font-mono text-[10px] uppercase text-slate-400">
-                      {m.role === 'coach' ? 'TruthLens Crisis Coach' : 'You'}
-                    </div>
-                    {m.text}
-                  </div>
-                ))}
-              </div>
+              <span className="inline-flex items-center gap-1.5 text-xs font-mono text-[#10D4A2] bg-[#10D4A2]/10 px-3 py-1 rounded-full border border-[#10D4A2]/30 w-fit">
+                <span className="h-2 w-2 rounded-full bg-[#10D4A2] animate-pulse" />
+                24x7 Active Emergency Grid
+              </span>
             </div>
 
-            <div className="mt-4 space-y-2.5">
-              <div className="flex flex-wrap gap-1.5">
-                {tr.crisisPrompts.map((p) => (
-                  <button
-                    key={p}
-                    onClick={() => sendCoachMessage(p)}
-                    className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] text-slate-300 hover:border-[#10D4A2]/50 hover:text-white cursor-pointer"
-                  >
-                    {p}
-                  </button>
-                ))}
-              </div>
-              <div className="flex gap-2">
-                <input
-                  value={coachInput}
-                  onChange={(e) => setCoachInput(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && sendCoachMessage()}
-                  placeholder={
-                    lang === 'hi'
-                      ? 'अपनी बात लिखें — हम साथ मिलकर हल निकालेंगे...'
-                      : 'Type what happened — we will walk through it calmly...'
-                  }
-                  className="flex-1 rounded-xl border border-white/10 bg-[#050919] px-3.5 py-2.5 text-xs text-white"
-                />
-                <button
-                  onClick={() => sendCoachMessage()}
-                  className="inline-flex items-center gap-1.5 rounded-xl bg-[#10D4A2] px-4 py-2.5 text-xs font-bold text-[#050919] hover:bg-[#00e8ac] cursor-pointer"
-                >
-                  <Send className="h-3.5 w-3.5" />
-                  Send
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Grounding Breathing Ring + Verified India Helplines */}
-          <div className="space-y-4 lg:col-span-5">
-            <div className="rounded-2xl border border-[#10D4A2]/25 bg-[#0b1229]/90 p-5 text-center">
-              <div className="flex items-center justify-center gap-2 text-xs font-bold uppercase tracking-wider text-[#10D4A2]">
-                <Wind className="h-4 w-4" />
-                Guided 4-4-6 Grounding Breath
-              </div>
-              <div className="my-5 flex justify-center">
+            <div className="grid gap-4 md:grid-cols-2">
+              {[
+                {
+                  name: 'National Cyber Crime Helpline (MHA)',
+                  detail: 'Toll-Free: 1930',
+                  actionLabel: 'Call 1930',
+                  href: 'tel:1930',
+                  badge: 'Immediate Response',
+                  desc: 'Direct line to Indian National Cyber Crime coordinator. Activates immediate financial freeze, digital footprint tracking, and emergency IO dispatch.',
+                  color: 'border-rose-500/40 bg-rose-500/10 text-rose-300 hover:bg-rose-500/20',
+                },
+                {
+                  name: 'National Cyber Crime Reporting Portal (NCRP)',
+                  detail: 'cybercrime.gov.in',
+                  actionLabel: 'Open NCRP Portal',
+                  href: 'https://cybercrime.gov.in',
+                  badge: 'Official FIR Portal',
+                  desc: 'Ministry of Home Affairs statutory portal dedicated to filing cyber crime complaints, specially fast-tracked for non-consensual deepfakes.',
+                  color: 'border-[#10D4A2]/40 bg-[#10D4A2]/10 text-[#10D4A2] hover:bg-[#10D4A2]/20',
+                },
+                {
+                  name: 'National Commission for Women (NCW)',
+                  detail: '7827170170',
+                  actionLabel: 'Contact NCW',
+                  href: 'tel:7827170170',
+                  badge: 'Women Cyber Cell',
+                  desc: 'Special cell for non-consensual deepfakes, cyber blackmail, and extortion targeting women across India.',
+                  color: 'border-sky-500/40 bg-sky-500/10 text-sky-300 hover:bg-sky-500/20',
+                },
+                {
+                  name: 'CERT-In Incident Reporting',
+                  detail: 'incident@cert-in.org.in',
+                  actionLabel: 'Report to CERT-In',
+                  href: 'https://www.cert-in.org.in',
+                  badge: 'Indian Computer Emergency',
+                  desc: 'National nodal agency for responding to computer security incidents under Section 70B of the IT Act 2000.',
+                  color: 'border-purple-500/40 bg-purple-500/10 text-purple-300 hover:bg-purple-500/20',
+                },
+              ].map((h) => (
                 <div
-                  className={`flex h-28 w-28 items-center justify-center rounded-full border-2 border-[#10D4A2]/60 bg-[#10D4A2]/10 ${breathingActive ? 'animate-breathe' : ''
-                    }`}
+                  key={h.name}
+                  className="rounded-xl border border-white/10 bg-[#050919]/90 p-4 space-y-2.5 transition hover:border-white/20"
                 >
-                  <span className="font-display text-xs font-bold text-[#10D4A2]">
-                    {breathingActive ? 'Breathe Slowly' : 'Tap to Calm'}
-                  </span>
-                </div>
-              </div>
-              <button
-                onClick={() => setBreathingActive((b) => !b)}
-                className="rounded-xl border border-[#10D4A2]/40 bg-[#10D4A2]/15 px-4 py-2 text-xs font-semibold text-[#10D4A2] hover:bg-[#10D4A2]/25 cursor-pointer"
-              >
-                {breathingActive ? 'Pause Breathing Guide' : 'Start 60s Calm Breathing'}
-              </button>
-            </div>
-
-            <div className="rounded-2xl border border-rose-500/25 bg-rose-950/20 p-5 space-y-2.5">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-rose-300">
-                    <PhoneCall className="h-4 w-4" />
-                    National Cyber Crime Reporting &amp; Crisis Helplines
-                  </div>
-                  <span className="text-[10px] font-mono text-[#10D4A2] bg-[#10D4A2]/10 px-2 py-0.5 rounded-full border border-[#10D4A2]/30">
-                    24x7 Active
-                  </span>
-                </div>
-                <div className="space-y-2">
-                  {[
-                    {
-                      name: 'National Cyber Crime Helpline',
-                      detail: 'Dial 1930',
-                      actionLabel: 'Call 1930',
-                      href: 'tel:1930',
-                      desc: 'Direct call to Indian National Cyber Crime coordinator (immediate bank freeze & emergency IO dispatch)',
-                      color: 'border-rose-500/40 bg-rose-500/10 text-rose-300 hover:bg-rose-500/20',
-                    },
-                    {
-                      name: 'NCRP Cyber Crime Portal',
-                      detail: 'cybercrime.gov.in',
-                      actionLabel: 'Open NCRP Portal',
-                      href: 'https://cybercrime.gov.in',
-                      desc: 'Ministry of Home Affairs official portal for women/child non-consensual deepfake complaints',
-                      color: 'border-[#10D4A2]/40 bg-[#10D4A2]/10 text-[#10D4A2] hover:bg-[#10D4A2]/20',
-                    },
-                    {
-                      name: 'Tele-MANAS Mental Health',
-                      detail: 'Dial 14416',
-                      actionLabel: 'Call 14416',
-                      href: 'tel:14416',
-                      desc: 'Free 24x7 trauma counselors across Hindi, English, and 20 Indian languages',
-                      color: 'border-sky-500/40 bg-sky-500/10 text-sky-300 hover:bg-sky-500/20',
-                    },
-                    {
-                      name: 'iCall Psychosocial Helpline',
-                      detail: '9152987821',
-                      actionLabel: 'Call Helpline',
-                      href: 'tel:9152987821',
-                      desc: 'Tata Institute of Social Sciences (TISS) trauma counseling for online harassment victims',
-                      color: 'border-amber-500/40 bg-amber-500/10 text-amber-300 hover:bg-amber-500/20',
-                    },
-                  ].map((h) => (
-                    <div
-                      key={h.name}
-                      className="rounded-xl border border-white/10 bg-[#050919]/90 p-3 text-xs space-y-1.5"
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className="font-bold text-white text-sm">{h.name}</span>
-                        <a
-                          href={h.href}
-                          target={h.href.startsWith('http') ? '_blank' : '_self'}
-                          rel="noreferrer"
-                          className={`inline-flex items-center gap-1 rounded-lg border px-2.5 py-1 text-xs font-bold transition ${h.color}`}
-                        >
-                          {h.actionLabel}
-                          <ExternalLink className="h-3 w-3" />
-                        </a>
-                      </div>
-                      <div className="font-mono text-[11px] text-[#10D4A2]">{h.detail}</div>
-                      <p className="text-[11px] text-slate-400 leading-relaxed">{h.desc}</p>
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <div className="font-bold text-white text-sm">{h.name}</div>
+                      <div className="font-mono text-xs text-[#10D4A2] mt-0.5">{h.detail}</div>
                     </div>
-                  ))}
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-white/5 border border-white/10 text-slate-300">
+                      {h.badge}
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-400 leading-relaxed">{h.desc}</p>
+                  <div className="pt-1">
+                    <a
+                      href={h.href}
+                      target={h.href.startsWith('http') ? '_blank' : '_self'}
+                      rel="noreferrer"
+                      className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-bold transition ${h.color}`}
+                    >
+                      {h.actionLabel}
+                      <ExternalLink className="h-3.5 w-3.5" />
+                    </a>
+                  </div>
                 </div>
-              </div>
+              ))}
             </div>
           </div>
+        </div>
       )}
 
           {/* SUB-TAB 2: WHATSAPP DEBUNK STICKER CARD */}

@@ -3,8 +3,8 @@ import {
   Briefcase,
   Fingerprint,
   Flame,
+  Gavel,
   Globe,
-  HeartHandshake,
   HelpCircle,
   LayoutDashboard,
   ScanSearch,
@@ -38,20 +38,20 @@ const NAV_ITEMS: {
   id: NavTab;
   icon: React.ComponentType<{ className?: string }>;
 }[] = [
-  { id: 'overview', icon: LayoutDashboard },
-  { id: 'detect', icon: ScanSearch },
-  { id: 'vault', icon: Fingerprint },
-  { id: 'dampen', icon: Flame },
-  { id: 'heal', icon: HeartHandshake },
-  { id: 'solutions', icon: Briefcase },
-];
+    { id: 'overview', icon: LayoutDashboard },
+    { id: 'detect', icon: ScanSearch },
+    { id: 'vault', icon: Fingerprint },
+    { id: 'dampen', icon: Flame },
+    { id: 'heal', icon: Gavel },
+    { id: 'solutions', icon: Briefcase },
+  ];
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<NavTab>('overview');
   const [lang, setLang] = useState<Language>('en');
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [baseUrl, setBaseUrl] = useState<string>(DEFAULT_BASE_URL);
-  const [mode, setMode] = useState<ExecutionMode>('edge-demo');
+  const [mode] = useState<ExecutionMode>('live');
   const [selectedDomain, setSelectedDomain] = useState<DomainId>('fintech');
   const [autoPresetId, setAutoPresetId] = useState<string | null>(null);
 
@@ -140,11 +140,10 @@ export default function App() {
             {/* Theme Toggle Button */}
             <button
               onClick={() => setTheme((t) => (t === 'light' ? 'dark' : 'light'))}
-              className={`inline-flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-bold transition cursor-pointer shadow-xs ${
-                theme === 'dark'
+              className={`inline-flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-bold transition cursor-pointer shadow-xs ${theme === 'dark'
                   ? 'border-slate-700 bg-slate-800 text-amber-300 hover:bg-slate-700'
                   : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'
-              }`}
+                }`}
               title="Toggle Light / Dark Mode"
             >
               {theme === 'dark' ? (
@@ -181,29 +180,11 @@ export default function App() {
             </a>
 
             <button
-              onClick={() => setMode((m) => (m === 'live' ? 'edge-demo' : 'live'))}
-              className={`inline-flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-bold transition cursor-pointer shadow-xs ${
-                mode === 'live'
-                  ? 'border-emerald-300 bg-emerald-50 text-emerald-700'
-                  : 'border-amber-300 bg-amber-50 text-amber-800'
-              }`}
-              title="Toggle between live backend server and zero-latency local Edge Demo engine"
-            >
-              <span
-                className={`h-2 w-2 rounded-full ${
-                  mode === 'live' ? 'bg-emerald-600' : 'bg-amber-500'
-                }`}
-              />
-              {mode === 'live' ? tr.liveMode : tr.edgeDemoMode}
-            </button>
-
-            <button
               onClick={() => setLang((l) => (l === 'en' ? 'hi' : 'en'))}
-              className={`inline-flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-bold transition cursor-pointer shadow-xs ${
-                theme === 'dark'
+              className={`inline-flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-bold transition cursor-pointer shadow-xs ${theme === 'dark'
                   ? 'border-slate-700 bg-slate-800 text-slate-200 hover:bg-slate-700'
                   : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'
-              }`}
+                }`}
               title="Switch between English and Hindi"
             >
               <Globe className="h-3.5 w-3.5 text-blue-600" />
@@ -266,11 +247,10 @@ export default function App() {
 
       {/* Viewport Sticky Floating Bottom Navigation Bar */}
       <nav
-        className={`fixed bottom-4 left-1/2 -translate-x-1/2 z-50 backdrop-blur-2xl border shadow-[0_16px_40px_-6px_rgba(0,0,0,0.25),0_4px_12px_rgba(0,0,0,0.1)] rounded-full p-1.5 flex items-center gap-1 max-w-[calc(100vw-24px)] overflow-x-auto scrollbar-none transition-all duration-200 ${
-          theme === 'dark'
+        className={`fixed bottom-4 left-1/2 -translate-x-1/2 z-50 backdrop-blur-2xl border shadow-[0_16px_40px_-6px_rgba(0,0,0,0.25),0_4px_12px_rgba(0,0,0,0.1)] rounded-full p-1.5 flex items-center gap-1 max-w-[calc(100vw-24px)] overflow-x-auto scrollbar-none transition-all duration-200 ${theme === 'dark'
             ? 'bg-[#080e23]/92 border-slate-700/80 shadow-black/40'
             : 'bg-white/95 border-slate-300/85'
-        }`}
+          }`}
         aria-label="Floating Module Selector"
       >
         {NAV_ITEMS.map((item) => {
@@ -283,13 +263,12 @@ export default function App() {
                 setActiveTab(item.id);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              className={`flex items-center gap-2 rounded-full px-4 py-2.5 text-xs font-bold transition-all duration-200 cursor-pointer whitespace-nowrap ${
-                active
+              className={`flex items-center gap-2 rounded-full px-4 py-2.5 text-xs font-bold transition-all duration-200 cursor-pointer whitespace-nowrap ${active
                   ? 'bg-blue-600 text-white shadow-[0_4px_14px_rgba(37,99,235,0.4)]'
                   : theme === 'dark'
-                  ? 'text-slate-400 hover:bg-slate-800/80 hover:text-slate-100'
-                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-              }`}
+                    ? 'text-slate-400 hover:bg-slate-800/80 hover:text-slate-100'
+                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                }`}
             >
               <Icon className={`h-4 w-4 ${active ? 'text-white' : theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`} />
               <span>{tr.nav[item.id]}</span>

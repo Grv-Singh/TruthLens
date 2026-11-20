@@ -6,6 +6,22 @@
 
 ---
 
+## 🎬 25-Second Investor Pitch Video & Funding Demo
+
+TruthLens features an in-app **720p HD Product Demo & Pitch Walkthrough** (`/truthlens_demo_walkthrough.mp4`) with synchronized Indian-English voice narration and an ambient cybernetic tech score:
+
+- **Hook:** *"What if a viral deepfake destroyed your reputation before you even woke up?"*
+- **Problem Asymmetry:** Damage spreads in 2 hours; legal takedowns take 2 whole days.
+- **Breakthrough:** Systems leverage points (Donella Meadows) + Google Gemini multimodal reasoning.
+- **Forensics & Action:** Zero-cloud Error Level Analysis (ELA) <2s, Origin Vault (Qdrant), 15s Cognitive Cooling friction, Section 63 BSA 2023 court certificates, and 1-click Cyber Cell (`1930` / `cybercrime.gov.in`) reporting.
+
+> **Accessing the Video in App:**
+> 1. In the **Overview** tab, click **"Watch 25s Pitch Video"** or play the embedded theater.
+> 2. Direct download button for the **720p MP4 Video** is available right on the page.
+> *(Official slide presentation is submitted as a separate PPT to judges).*
+
+---
+
 ## Why TruthLens?
 
 Deepfakes do not fail because of a missing classifier — they ride **three reinforcing feedback loops** where damage goes viral in **2 hours** while manual takedowns take **2 days**:
@@ -207,45 +223,81 @@ Download the APK on an Android phone that is connected to Tailscale: <http://100
 
 ```text
 ├── public/
-│   ├── manifest.json          # Standalone PWA manifest
-│   └── sw.js                  # Offline shell Service Worker
+│   ├── truthlens_demo_walkthrough.mp4 # 720p HD pitch video with synchronized narration & soundtrack
+│   ├── deck/                          # 5-Slide pitch deck PNGs + official PDF download
+│   │   ├── slide1.png ... slide5.png
+│   │   └── truthlens_pitch_deck.pdf
+│   ├── reactions/                     # High-res illustrated reaction & causal graph artwork
+│   │   ├── hero_forensic_scanner.png  # Biometric laser split-scanner hero artwork
+│   │   ├── loop1_virality.png ... loop3_trust_collapse.png
+│   │   ├── node1_creator.png ... node4_victim.png
+│   │   ├── domain1_fintech.png ... domain6_legal.png
+│   │   ├── google_ai_constellation.png
+│   │   └── server_telemetry_hub.png
+│   ├── manifest.json                  # Standalone PWA manifest
+│   └── sw.js                          # Offline shell Service Worker
 ├── src/
 │   ├── components/
-│   │   ├── OverviewView.tsx   # Systems Map, 3 Loops, Causal Graph & Health
-│   │   ├── ForensicsView.tsx  # ELA Split Viewer, SynthID/C2PA & 11.2 kHz Audio FFT
-│   │   ├── VaultView.tsx      # Qdrant Origin Vault & 64-bit Hamming Matrix
-│   │   ├── DampenView.tsx     # 15s Cognitive Cooling, 24h Simulator & Wellbeing
-│   │   ├── HealLegalView.tsx  # Crisis Coach, WhatsApp Sticker, BSA 63 & Rule 3(2)(b)
-│   │   ├── SolutionsView.tsx  # 6 Industry Verticals & Live Policy Gate Simulators
-│   │   └── SystemApiView.tsx  # Live 18-Endpoint API Probe Console & Gateways
+│   │   ├── OverviewView.tsx           # Hero split-scanner, 25s Video Theater, 3 Loops, Causal Graph & Health
+│   │   ├── PitchDeckView.tsx          # 5-Slide interactive carousel + 25s Pitch Video stage + PDF/MP4 download
+│   │   ├── ForensicsView.tsx          # ELA Split Viewer, URL scanning, SynthID/C2PA & 11.2 kHz Audio FFT
+│   │   ├── VaultView.tsx              # Qdrant Origin Vault & 64-bit Hamming Matrix
+│   │   ├── DampenView.tsx             # 15s Cognitive Cooling, 24h Simulator & Outrage Guardrail
+│   │   ├── HealLegalView.tsx          # 1-Click Cyber Cell (1930 / cybercrime.gov.in), BSA 63 & Rule 3(2)(b)
+│   │   ├── SolutionsView.tsx          # 6 Industry Verticals & Live Policy Gate Simulators
+│   │   └── SystemApiView.tsx          # Live 18-Endpoint API Probe Console & Gateways
 │   ├── lib/
-│   │   ├── api.ts             # TruthLens v2.2.0 Client (Live API + Edge Fallback)
-│   │   ├── forensics.ts       # Client-side ELA, dHash, SHA-256, Sticker & Legal Engine
-│   │   └── i18n.ts            # English & Hindi (हिंदी) localization
-│   ├── types/truthlens.ts     # Strict TypeScript domain & API contracts
-│   ├── App.tsx                # Responsive Sidebar + Mobile Material 3 Shell
-│   └── main.tsx               # App entry & Service Worker registration
+│   │   ├── api.ts                     # TruthLens v2.2.0 Client (Live API + Edge Fallback)
+│   │   ├── forensics.ts               # Client-side ELA, dHash, SHA-256, Sticker & Legal Engine
+│   │   └── i18n.ts                    # English & Hindi (हिंदी) localization
+│   ├── types/truthlens.ts             # Strict TypeScript domain & API contracts
+│   ├── App.tsx                        # Responsive Cybernetic Sidebar + Mobile Material 3 Shell
+│   └── main.tsx                       # App entry & Service Worker registration
+├── BACKEND_API_REQUESTS.md            # Backend developer specifications & mock schema
 └── package.json
 ```
 
 ---
 
+## 🚀 Live Demo & Investor Walkthrough Guide
+
+To test or present TruthLens live to judges and investors:
+
+1. **Watch the Pitch Video:**
+   - Go to **Overview** → Click **"Watch 25s Pitch Video"** or switch to the **Pitch Deck** view.
+   - Enjoy the synchronized narration and soundtrack explaining the core systems thesis.
+2. **How to Upload & Scan Media:**
+   - Navigate to **Detect & Heatmap** (`/detect`).
+   - **Option A (Instant 1-Click Presets):** Click *"Shocking Morph (AI Deepfake)"* or *"C2PA Signed (Authentic Camera)"* under Nano Banana Presets to see instantaneous ELA heatmap generation and metadata badges without uploading local files.
+   - **Option B (Drag & Drop):** Drag any suspect image directly onto the dropzone.
+   - **Option C (Image URL):** Paste any direct image link (`http(s)://...jpg`) into the URL bar and click **Analyze Link**.
+   - **Option D (Voice Notes):** Toggle to **Voice Note FFT** to test synthetic voice vocoder cutoff at 11.2 kHz.
+3. **Simulate WhatsApp Virality Damping:**
+   - Navigate to **Amplify & Dampen** (`/dampen`).
+   - Trigger the **15-second Cognitive Cooling** countdown and inspect the Donella Meadows 24h harm reduction curve.
+4. **Generate Court-Ready Legal Dossiers:**
+   - Navigate to **Heal & Legal** (`/heal`).
+   - Fill in victim details to auto-generate a **Section 63 BSA 2023** certificate, an **Indian Cyber Cell Complaint Letter**, and direct emergency links to **1930** and **cybercrime.gov.in**.
+
+---
+
 ## Roadmap (from the pitch deck)
 
-- [x] Detect: upload an image **or paste a link** → Real / AI / Manipulated score in about 2 seconds, with a heatmap
-- [x] Protect: Origin Vault invisible fingerprint ("My Real Vault")
-- [x] Heal: AI companion, evidence kit, takedown draft, counselor helplines
-- [x] Simulate: "What if I share this?", showing 24h harm if 100 people share
-- [x] **Pitch Deck Interactive Viewer**: All 5 slides embedded in-app with high-res PNG previews + direct PDF download
-- [ ] **Chrome extension** (not started)
-- [ ] **Hindi + 8 Indian languages** (EN + HI done; the other 8 need backend support, see `BACKEND_API_REQUESTS.md` B9)
-- [ ] Real Gemini Live voice coach (the UI uses scripted replies until `POST /api/coach/chat` ships)
+- [x] **Detect:** upload an image **or paste a link** → Real / AI / Manipulated score in <2 seconds, with an ELA heatmap
+- [x] **Protect:** Origin Vault invisible fingerprint ("My Real Vault" with Qdrant vector distance)
+- [x] **Heal & Enforce:** AI companion, evidence kit, takedown draft, Section 63 BSA certificate, and direct Cyber Cell (`1930` / `cybercrime.gov.in` / Tele-MANAS `14416`) integration
+- [x] **Simulate:** "What if I share this?", showing 24h harm if 100 people share with Donella Meadows stock-and-flow curves
+- [x] **Video Pitch Theater:** 25s synced video walkthrough with audio score & voice narration (Slide deck submitted separately as official PPT)
+- [x] **Dual Localization:** Full English & Hindi (हिंदी) UI with soothing cybernetic glow theme
+- [ ] **Chrome extension** (manifest prepared; standalone extension in progress)
+- [ ] **8 Additional Indian languages** (EN + HI completed; regional language pack pending backend tokenization)
+- [ ] Direct Gemini Live WebSocket streaming for real-time crisis audio coaching
 
-**Methods:** Causal Inference (Erica) • Systems Dynamics (Schemo) • Gemini
+**Methods:** Causal Inference (Erica) • Systems Dynamics (Schemo) • Gemini Multimodal
 
 ---
 
 ## Team
 
-- **Gaurav Singh** (Jaipur)
-- **Ankita Sinha** (Bengaluru - Remote)
+- **Gaurav Singh** (Jaipur) — *Systems Architecture, Backend APIs & Forensic Algorithms*
+- **Ankita Sinha** (Bengaluru - Remote) — *Frontend UI/UX, Legal Compliance & AI Integration*

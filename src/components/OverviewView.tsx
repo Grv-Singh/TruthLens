@@ -6,6 +6,8 @@ import {
   Brain,
   Building2,
   CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
   Cpu,
   Download,
   Eye,
@@ -19,6 +21,7 @@ import {
   Landmark,
   Layers,
   Lock,
+  MapPin,
   MessageSquare,
   Newspaper,
   Play,
@@ -29,10 +32,12 @@ import {
   Shield,
   ShieldAlert,
   ShieldCheck,
+  ShieldQuestion,
   ShoppingBag,
   Sparkles,
   TrendingDown,
   UploadCloud,
+  UserCheck,
   Users,
   Video,
   Volume2,
@@ -195,6 +200,177 @@ const VERTICAL_SUMMARY: {
   },
 ];
 
+const USE_CASE_STORIES = [
+  {
+    id: 'priya',
+    persona: 'Priya Sharma (Age 21)',
+    role: 'University Student & Creator',
+    location: 'New Delhi, India',
+    badge: 'Social & Harassment Defense',
+    badgeColor: 'border-rose-500/40 bg-rose-500/15 text-rose-300',
+    accentColor: '#f43f5e',
+    crisisTitle: 'Non-Consensual Morphed Deepfake in 8 WhatsApp Groups',
+    crisisDesc:
+      'A cyber-blackmailer uses an AI face-swap app to morph Priya’s college photo onto explicit media, broadcasting it into student WhatsApp groups with extortion demands.',
+    impactWithout: 'Victim deletes social media, suffers acute trauma & panic, police complaint delayed by 3 weeks.',
+    impactWith: 'Fake debunked in 2 minutes, R₀ virality collapsed below 1.0, court-ready BSA 63 certificate filed to 1930 Cyber Cell within the hour.',
+    steps: [
+      {
+        num: '01',
+        title: 'Instant Zero-Cloud ELA Heatmap Scan',
+        stage: 'L0 Forensics',
+        tech: 'Gemma On-Device + Error Level Analysis',
+        detail:
+          'Priya drags the screenshot into TruthLens. Within 1.4 seconds, pixel recompression quantization reveals a 94% splice seam anomaly around the facial jawline. Photo never leaves her phone.',
+        targetTab: 'detect' as NavTab,
+        cta: 'Launch ELA Scanner in Detect',
+      },
+      {
+        num: '02',
+        title: 'Generate WhatsApp Debunk Sticker Card',
+        stage: 'L3 Victim Counter-Narrative',
+        tech: 'PNG-8 Base64 Generator',
+        detail:
+          'TruthLens instantly creates a 512×512 high-contrast debunk sticker: "⚠️ TRUTHLENS VERIFIED DEEPFAKE • DO NOT FORWARD". Friends forward the sticker into group chats, killing rumor momentum.',
+        targetTab: 'heal' as NavTab,
+        cta: 'Generate Debunk Sticker in Heal',
+      },
+      {
+        num: '03',
+        title: 'WhatsApp 15s Cognitive Cooling Friction',
+        stage: 'L2 Amplification Guardrail',
+        tech: 'Donella Meadows Systems Engine',
+        detail:
+          'OpenWA gateway injects a 15-second behavioral pause before group forwards. The Donella Meadows stock-and-flow virality curve causes an 82% abandonment rate, dropping R₀ from 3.4 to 0.65.',
+        targetTab: 'dampen' as NavTab,
+        cta: 'Simulate Virality Friction in Dampen',
+      },
+      {
+        num: '04',
+        title: 'Section 63 BSA 2023 Certificate & 1930 Cyber Cell Filing',
+        stage: 'L3 Statutory Legal Enforcement',
+        tech: 'Sec 63 BSA + Sec 67C IT Act / Sec 94 BNSS',
+        detail:
+          'TruthLens auto-compiles a court-admissible Section 63 BSA digital certificate with SHA-256 hash, generates a Jamtara/Mewat ISP CGNAT preservation notice, and opens direct filing to 1930.',
+        targetTab: 'heal' as NavTab,
+        cta: 'Inspect BSA 63 Dossier in Heal',
+      },
+    ],
+  },
+  {
+    id: 'vikram',
+    persona: 'Vikram Malhotra',
+    role: 'VP Finance & Treasury',
+    location: 'Mumbai, India',
+    badge: 'Fintech & BEC 2.0 Defense',
+    badgeColor: 'border-sky-500/40 bg-sky-500/15 text-sky-300',
+    accentColor: '#38bdf8',
+    crisisTitle: 'Executive Audio Deepfake ₹18 Lakh Wire Transfer Attack',
+    crisisDesc:
+      'A cyber-criminal generates a voice clone of the Managing Director using 30 seconds of YouTube interview audio, calling the accounts desk to authorize an urgent vendor payment.',
+    impactWithout: '₹18,00,000 lost to mule accounts in 4 minutes; funds laundered via UPI before bank alerts trigger.',
+    impactWith: '11.2 kHz vocoder cutoff detected in 800ms; Qdrant vector mismatch freezes wire transfer at the policy gate.',
+    steps: [
+      {
+        num: '01',
+        title: 'SciPy 11.2 kHz FFT Neural Vocoder Shelf Detection',
+        stage: 'L0 Audio FFT',
+        tech: 'Glottal Pulse Kurtosis + FFT Spectrum',
+        detail:
+          'The voice note is fed through TruthLens audio forensics. The FFT spectrum shows a distinct steep shelf cutoff at 11.2 kHz and an abnormal glottal crest factor, characteristic of ElevenLabs voice models.',
+        targetTab: 'detect' as NavTab,
+        cta: 'Run Audio Voice Note FFT',
+      },
+      {
+        num: '02',
+        title: 'Qdrant Origin Vault Biometric Distance Check',
+        stage: 'L1 Pre-Creation Seal',
+        tech: 'Perceptual 64-bit dHash Vector Search',
+        detail:
+          'The call audio vector is compared against the Executive Director’s registered voice profile in Qdrant collection truthlens_vault. Hamming distance is 34 (threshold ≤ 10), failing authenticity.',
+        targetTab: 'vault' as NavTab,
+        cta: 'Inspect Origin Vault in Vault',
+      },
+      {
+        num: '03',
+        title: 'Automated Wire Transfer Policy Gate Freeze',
+        stage: 'L1 Transaction Gate',
+        tech: 'Fintech / Banking Policy Gate Simulator',
+        detail:
+          'TruthLens triggers an automated webhook that blocks RTGS execution, flags the target account, and prompts for multi-factor in-person biometric challenge.',
+        targetTab: 'solutions' as NavTab,
+        cta: 'Test Fintech Domain Gate',
+      },
+      {
+        num: '04',
+        title: 'Emergency Sec 94 BNSS Telecom Preservation Order',
+        stage: 'L3 Compliance & Legal',
+        tech: 'Sec 67C IT Act Preservation Notice',
+        detail:
+          'Generates a statutory preservation notice ordering the VoIP gateway carrier to freeze IP logs, CGNAT allocations, and call-detail records for the National Cyber Crime Reporting Portal.',
+        targetTab: 'heal' as NavTab,
+        cta: 'Generate Telecom Preservation Notice',
+      },
+    ],
+  },
+  {
+    id: 'ananya',
+    persona: 'Ananya Deshmukh',
+    role: 'Senior Fact-Checking Editor',
+    location: 'Bengaluru, India',
+    badge: 'Journalism & Civic Integrity',
+    badgeColor: 'border-purple-500/40 bg-purple-500/15 text-purple-300',
+    accentColor: '#a855f7',
+    crisisTitle: 'Election Eve UGC Video Forgery with Synced Speech',
+    crisisDesc:
+      'At 11 PM on election eve, an unverified breaking-news UGC video showing an election candidate supposedly withdrawing from the race is forwarded across WhatsApp political groups.',
+    impactWithout: 'Misinformation causes thousands of confused voters to stay home; retractions the next morning are useless.',
+    impactWith: 'Newsroom validates C2PA cryptographic signature mismatch in 2s, publishes verified debunk ticker before broadcast.',
+    steps: [
+      {
+        num: '01',
+        title: 'Sub-2s Direct URL Provenance Ingestion',
+        stage: 'L0 Provenance',
+        tech: 'Google SynthID + C2PA Manifest Reader',
+        detail:
+          'Ananya pastes the breaking video URL into TruthLens. The system inspects C2PA digital credentials and IPTC generative metadata, confirming the media lacks authentic hardware camera signatures.',
+        targetTab: 'detect' as NavTab,
+        cta: 'Analyze Direct URL in Detect',
+      },
+      {
+        num: '02',
+        title: 'Donella Meadows 24h Amplification Forecaster',
+        stage: 'L2 Outrage Modeling',
+        tech: 'Stock-and-Flow Virality Differential Equation',
+        detail:
+          'The systems engine simulates 100 seed forwards across 24 hours, alerting the newsroom that unmitigated spread will reach 140,000 citizens within 4 hours if not counteracted.',
+        targetTab: 'dampen' as NavTab,
+        cta: 'Open 24h Virality Simulator',
+      },
+      {
+        num: '03',
+        title: 'Rule 3(2)(b) 24h Emergency Intermediary Takedown',
+        stage: 'L3 Platform Compliance',
+        tech: 'IT Rules 2021 Statutory Notice Generator',
+        detail:
+          'TruthLens automatically drafts formal Rule 3(2)(b) removal notices citing Indian election media guidelines, addressed directly to Meta & YouTube Grievance Officers.',
+        targetTab: 'heal' as NavTab,
+        cta: 'Draft 24h Takedown Notice',
+      },
+      {
+        num: '04',
+        title: 'Live Newsroom Provenance Ticker Broadcast',
+        stage: 'L0 Civic Verification',
+        tech: 'Newsrooms & UGC Domain Playbook',
+        detail:
+          'The TV channel runs an on-screen TruthLens verified debunk badge with ELA heatmap proof, halting the political weaponization of the deepfake.',
+        targetTab: 'solutions' as NavTab,
+        cta: 'Open Journalism Domain Playbook',
+      },
+    ],
+  },
+];
+
 export const OverviewView: React.FC<OverviewViewProps> = ({
   lang,
   health,
@@ -207,6 +383,12 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
   const tr = t(lang);
   const [selectedNodeId, setSelectedNodeId] = useState<string>('sharers');
   const [showVideoModal, setShowVideoModal] = useState<boolean>(false);
+  const [activeStoryId, setActiveStoryId] = useState<string>('priya');
+  const [activeStoryStep, setActiveStoryStep] = useState<number>(0);
+  const [flowViewMode, setFlowViewMode] = useState<'story' | 'diagram'>('story');
+
+  const activeStory = USE_CASE_STORIES.find((s) => s.id === activeStoryId) ?? USE_CASE_STORIES[0];
+  const activeStepData = activeStory.steps[activeStoryStep] ?? activeStory.steps[0];
   const activeNode = CAUSAL_NODES.find((n) => n.id === selectedNodeId) ?? CAUSAL_NODES[2];
 
   return (
@@ -237,30 +419,32 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
             </h1>
 
             <p className="text-base leading-relaxed text-slate-300 sm:text-xl font-normal max-w-lg">
-              {tr.subtitle}
+              {lang === 'en'
+                ? 'Deepfakes go viral in 2 hours. Takedowns take 2 days. TruthLens stops synthetic outrage before it spreads — powered by Google Gemini and Donella Meadows systems leverage points.'
+                : tr.subtitle}
             </p>
 
-            <div className="flex flex-wrap gap-3 pt-2">
+            <div className="flex flex-wrap items-center gap-3 pt-2">
               <button
                 onClick={() => onNavigate('detect')}
-                className="btn-neon-emerald inline-flex items-center gap-2.5 rounded-xl px-5 py-3 text-sm cursor-pointer"
+                className="btn-neon-emerald inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 sm:px-5 sm:py-3 text-xs sm:text-sm font-bold whitespace-nowrap cursor-pointer shadow-lg"
               >
                 <ScanSearch className="h-4 w-4 text-[#030715]" />
                 {tr.quickActions.scanNow}
               </button>
               <button
                 onClick={() => setShowVideoModal(true)}
-                className="inline-flex items-center gap-2.5 rounded-xl border border-sky-400/40 bg-sky-500/10 px-5 py-3 text-sm font-bold text-sky-200 transition hover:bg-sky-500/20 hover:border-sky-300 shadow-[0_0_20px_rgba(56,189,248,0.2)] cursor-pointer"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-sky-400/40 bg-sky-500/10 px-4 py-2.5 sm:px-5 sm:py-3 text-xs sm:text-sm font-bold text-sky-200 transition hover:bg-sky-500/20 hover:border-sky-300 shadow-[0_0_20px_rgba(56,189,248,0.2)] whitespace-nowrap cursor-pointer"
               >
                 <Video className="h-4 w-4 text-sky-400 animate-pulse" />
-                <span>Watch 25s Pitch Video</span>
+                <span>Watch 25s Demo Video</span>
               </button>
               <button
-                onClick={() => onNavigate('deck')}
-                className="inline-flex items-center gap-2.5 rounded-xl border border-purple-500/40 bg-purple-500/10 px-5 py-3 text-sm font-bold text-purple-200 transition hover:bg-purple-500/20 hover:border-purple-300 shadow-[0_0_15px_rgba(168,85,247,0.15)] cursor-pointer"
+                onClick={() => onNavigate('dampen')}
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-amber-500/40 bg-amber-500/10 px-4 py-2.5 sm:px-5 sm:py-3 text-xs sm:text-sm font-bold text-amber-200 transition hover:bg-amber-500/20 hover:border-amber-400 shadow-[0_0_15px_rgba(245,158,11,0.15)] whitespace-nowrap cursor-pointer"
               >
-                <Presentation className="h-4 w-4 text-purple-400" />
-                <span>5-Slide Pitch Deck</span>
+                <Flame className="h-4 w-4 text-amber-400" />
+                <span>15s Virality Friction</span>
               </button>
             </div>
           </div>
@@ -289,21 +473,25 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
 
             {/* Quick KPI Strip Beneath Hero Graphic */}
             <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-2.5 w-full">
-              <div className="rounded-xl border border-white/10 bg-[#050919]/80 p-2.5 text-center">
-                <div className="text-[10px] text-slate-400 uppercase font-semibold">Damage Speed</div>
-                <div className="font-display text-base font-bold text-rose-400">2h viral</div>
+              <div className="rounded-xl border border-rose-500/25 bg-rose-500/10 p-2.5 text-center">
+                <div className="text-[10px] text-rose-300 uppercase font-bold tracking-wider">The Asymmetry</div>
+                <div className="font-display text-base font-extrabold text-rose-400">2h vs 2 Days</div>
+                <div className="text-[9px] text-slate-400">Viral in 2h &bull; Takedown in 2d</div>
               </div>
-              <div className="rounded-xl border border-white/10 bg-[#050919]/80 p-2.5 text-center">
-                <div className="text-[10px] text-slate-400 uppercase font-semibold">Edge Scan</div>
-                <div className="font-display text-base font-bold text-[#10D4A2]">&lt;2.0s</div>
+              <div className="rounded-xl border border-emerald-500/25 bg-emerald-500/10 p-2.5 text-center">
+                <div className="text-[10px] text-emerald-300 uppercase font-bold tracking-wider">Edge Forensics</div>
+                <div className="font-display text-base font-extrabold text-[#10D4A2]">&lt;1.8s Real-Time</div>
+                <div className="text-[9px] text-slate-400">Zero-Cloud ELA Heatmap</div>
               </div>
-              <div className="rounded-xl border border-white/10 bg-[#050919]/80 p-2.5 text-center">
-                <div className="text-[10px] text-slate-400 uppercase font-semibold">Friction Pause</div>
-                <div className="font-display text-base font-bold text-amber-300">15s cooling</div>
+              <div className="rounded-xl border border-amber-500/25 bg-amber-500/10 p-2.5 text-center">
+                <div className="text-[10px] text-amber-300 uppercase font-bold tracking-wider">Cognitive Pause</div>
+                <div className="font-display text-base font-extrabold text-amber-300">15s Friction</div>
+                <div className="text-[9px] text-slate-400">Drops R₀ Virality by 82%</div>
               </div>
-              <div className="rounded-xl border border-white/10 bg-[#050919]/80 p-2.5 text-center">
-                <div className="text-[10px] text-slate-400 uppercase font-semibold">Deployments</div>
-                <div className="font-display text-base font-bold text-sky-400">6 Domains</div>
+              <div className="rounded-xl border border-sky-500/25 bg-sky-500/10 p-2.5 text-center">
+                <div className="text-[10px] text-sky-300 uppercase font-bold tracking-wider">Court Proof</div>
+                <div className="font-display text-base font-extrabold text-sky-400">Sec 63 BSA</div>
+                <div className="text-[9px] text-slate-400">1-Click 1930 Cyber Cell</div>
               </div>
             </div>
           </div>
@@ -316,13 +504,13 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
           <div>
             <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-sky-400">
               <Video className="h-4 w-4" />
-              <span>Product Pitch Walkthrough &bull; Investor Demo</span>
+              <span>25-Second Investor Pitch Trailer &bull; Systems Thesis</span>
             </div>
             <h2 className="mt-1 font-display text-2xl font-bold text-white sm:text-3xl">
-              What TruthLens Does &amp; How to Upload for Live Demos
+              Watch 25 Seconds That Break the Deepfake Loop
             </h2>
             <p className="mt-1 text-sm text-slate-300">
-              High-impact 25-second investor pitch video, plus the 4-step real-time upload and multimodal forensic scanning pipeline.
+              Detection alone is dead on arrival. See how TruthLens intercepts synthetic outrage from creation to courtroom.
             </p>
           </div>
 
@@ -336,11 +524,11 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
               <span>Download MP4</span>
             </a>
             <button
-              onClick={() => onNavigate('deck')}
-              className="inline-flex items-center gap-2 rounded-xl border border-purple-500/30 bg-purple-500/10 px-3.5 py-2 text-xs font-semibold text-purple-300 hover:bg-purple-500/20 transition cursor-pointer"
+              onClick={() => onNavigate('solutions')}
+              className="inline-flex items-center gap-2 rounded-xl border border-sky-500/30 bg-sky-500/10 px-3.5 py-2 text-xs font-semibold text-sky-300 hover:bg-sky-500/20 transition cursor-pointer"
             >
-              <Presentation className="h-4 w-4" />
-              <span>View 5-Slide Deck</span>
+              <Building2 className="h-4 w-4" />
+              <span>Explore 6 Domains</span>
             </button>
             <button
               onClick={() => onNavigate('detect')}
@@ -468,34 +656,36 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
               <ShieldAlert className="h-4 w-4" /> Systems Failure Modes
             </div>
             <h2 className="mt-0.5 font-display text-2xl font-bold text-white">
-              The Problem is a System: 3 Reinforcing Loops
+              The Asymmetry: Why Detection Alone is Dead on Arrival
             </h2>
             <p className="text-sm text-slate-400">
-              Deepfakes exploit human psychology and platform algorithms. Detection alone is always too late.
+              Deepfakes exploit human fear and algorithmic outrage. If you only detect, you&apos;ve already lost.
             </p>
           </div>
           <span className="hidden sm:inline-flex rounded-full bg-white/5 border border-white/10 px-3 py-1 text-xs text-slate-300">
-            Slide 2 • Buildathon 2026
+            Causal Systems Architecture
           </span>
         </div>
 
         <div className="grid gap-5 md:grid-cols-3">
           {[
             {
-              title: '1. Virality Loop',
+              title: '1. The Outrage Firehose',
+              punchline: 'Lies sprint across India in 2 hours while truth is still tying its shoelaces.',
               icon: Flame,
               image: '/reactions/loop1_virality.png',
               alt: 'Reaction: WhatsApp forward storm radiating to groups',
               flow: 'AI Tool → Shocking Fake → Algorithm Boosts → More Shares',
               detail:
-                'Outrage-optimized feeds and WhatsApp forwards achieve exponential reach within 2 hours, long before manual moderation can respond.',
+                'Outrage-optimized feeds and WhatsApp forwards achieve exponential reach within 2 hours, long before manual platform moderation can respond.',
               accent: 'border-amber-500/35 bg-gradient-to-b from-amber-950/20 to-[#0b1229]/80 shadow-[0_0_25px_rgba(245,158,11,0.1)]',
               badge: 'text-amber-300 bg-amber-500/15 border-amber-500/30',
               iconColor: 'text-amber-400',
               reactionCaption: 'Forwarded 5x+ • Rapid group virality',
             },
             {
-              title: '2. Mental Health Loop',
+              title: '2. The Shame & Silence Spiral',
+              punchline: 'Extortionists monetize panic. TruthLens arms victims with instant proof.',
               icon: HeartHandshake,
               image: '/reactions/loop2_mental_health.png',
               alt: 'Reaction: Victim overwhelmed by notifications in distress',
@@ -508,7 +698,8 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
               reactionCaption: 'Acute distress & panic • Isolation cycle',
             },
             {
-              title: '3. Trust Collapse Loop',
+              title: '3. The Liar’s Dividend',
+              punchline: 'When any video can be faked, genuine crimes get dismissed in court.',
               icon: ShieldAlert,
               image: '/reactions/loop3_trust_collapse.png',
               alt: 'Reaction: Shattered trust shield dividing society and victims',
@@ -551,6 +742,9 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
                     <Icon className={`h-5 w-5 ${loop.iconColor}`} />
                     {loop.title}
                   </h3>
+                  <div className="mt-1 text-[11px] font-semibold text-slate-300 italic">
+                    &ldquo;{loop.punchline}&rdquo;
+                  </div>
                   <div className="mt-2.5 rounded-xl bg-black/40 p-2.5 font-mono text-[11px] text-slate-200 border border-white/5">
                     {loop.flow}
                   </div>
@@ -562,16 +756,298 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
         </div>
       </section>
 
+      {/* Interactive Story Explorer: How TruthLens Operates in the Real World */}
+      <section className="relative overflow-hidden rounded-3xl border border-sky-500/30 bg-[#08102e]/95 p-6 sm:p-8 shadow-2xl backdrop-blur-md space-y-6">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 border-b border-white/10 pb-5">
+          <div>
+            <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#10D4A2]">
+              <Sparkles className="h-4 w-4" />
+              <span>🔥 From Panic to Justice &bull; 4-Stage Crisis Interceptor</span>
+            </div>
+            <h2 className="mt-1 font-display text-2xl font-bold text-white sm:text-3xl">
+              3 Real-World Attacks. 3 Instant Takedowns.
+            </h2>
+            <p className="mt-1 text-sm text-slate-300 max-w-2xl">
+              See how Priya, Vikram, and Ananya stopped viral blackmail, &rupee;18L CFO audio scams, and election disinformation in under 2 minutes flat.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <div className="inline-flex rounded-xl border border-white/10 bg-[#050919] p-1">
+              <button
+                onClick={() => setFlowViewMode('story')}
+                className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition cursor-pointer ${
+                  flowViewMode === 'story'
+                    ? 'bg-[#10D4A2] text-[#050919]'
+                    : 'text-slate-300 hover:text-white'
+                }`}
+              >
+                <Users className="h-3.5 w-3.5" />
+                Swipe Crisis Deck
+              </button>
+              <button
+                onClick={() => setFlowViewMode('diagram')}
+                className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition cursor-pointer ${
+                  flowViewMode === 'diagram'
+                    ? 'bg-sky-400 text-[#050919]'
+                    : 'text-slate-300 hover:text-white'
+                }`}
+              >
+                <Layers className="h-3.5 w-3.5" />
+                Architecture Map
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {flowViewMode === 'diagram' ? (
+          /* High-Resolution Pipeline Architecture Flowchart Display */
+          <div className="space-y-4">
+            <div className="group relative overflow-hidden rounded-2xl border border-white/15 bg-black/60 shadow-2xl">
+              <img
+                src="/reactions/interactive_usecase_flow.png"
+                alt="TruthLens End-to-End Forensics and Systems Leverage Pipeline"
+                className="w-full object-contain transition group-hover:scale-[1.01] duration-300"
+              />
+              <div className="absolute top-3 left-3 inline-flex items-center gap-2 rounded-xl bg-black/80 px-3 py-1.5 text-xs font-semibold text-[#10D4A2] border border-[#10D4A2]/30 backdrop-blur-md">
+                <span className="h-2 w-2 rounded-full bg-[#10D4A2] animate-pulse" />
+                <span>4-Stage Causal Intervention Architecture</span>
+              </div>
+            </div>
+
+            <div className="grid gap-3 sm:grid-cols-4 pt-1">
+              <div className="rounded-xl border border-sky-500/20 bg-[#050919] p-3">
+                <div className="text-[10px] font-mono text-sky-400 uppercase">Stage 01: Ingestion</div>
+                <div className="text-sm font-semibold text-white mt-0.5">&lt; 50ms Sandbox</div>
+                <p className="text-xs text-slate-400 mt-1">Zero PII isolation &bull; SHA-256 + 64-bit dHash calculated.</p>
+              </div>
+              <div className="rounded-xl border border-emerald-500/20 bg-[#050919] p-3">
+                <div className="text-[10px] font-mono text-[#10D4A2] uppercase">Stage 02: Edge Forensics</div>
+                <div className="text-sm font-semibold text-white mt-0.5">&lt; 1.8s ELA Scan</div>
+                <p className="text-xs text-slate-400 mt-1">Error Level Analysis heatmap + SciPy 11.2 kHz voice FFT.</p>
+              </div>
+              <div className="rounded-xl border border-amber-500/20 bg-[#050919] p-3">
+                <div className="text-[10px] font-mono text-amber-300 uppercase">Stage 03: Amplification</div>
+                <div className="text-sm font-semibold text-white mt-0.5">15s Cooling Friction</div>
+                <p className="text-xs text-slate-400 mt-1">R₀ virality reproduction drops from 3.4 to 0.65.</p>
+              </div>
+              <div className="rounded-xl border border-rose-500/20 bg-[#050919] p-3">
+                <div className="text-[10px] font-mono text-rose-300 uppercase">Stage 04: Legal Proof</div>
+                <div className="text-sm font-semibold text-white mt-0.5">Court Certificate</div>
+                <p className="text-xs text-slate-400 mt-1">Section 63 BSA + 1930 Cyber Cell + Sec 67C ISP freeze.</p>
+              </div>
+            </div>
+          </div>
+        ) : (
+          /* Sleek Card Layout Swipe / Deck Carousel */
+          <div className="space-y-6">
+            {/* Persona Switcher Tabs */}
+            <div className="grid gap-3 sm:grid-cols-3">
+              {USE_CASE_STORIES.map((story) => {
+                const isSelected = story.id === activeStory.id;
+                return (
+                  <button
+                    key={story.id}
+                    onClick={() => {
+                      setActiveStoryId(story.id);
+                      setActiveStoryStep(0);
+                    }}
+                    className={`rounded-2xl border p-4 text-left transition duration-200 cursor-pointer ${
+                      isSelected
+                        ? 'border-[#10D4A2] bg-[#10D4A2]/15 shadow-[0_0_25px_rgba(16,212,162,0.25)] ring-1 ring-[#10D4A2]/50'
+                        : 'border-white/10 bg-[#050919]/70 hover:border-white/20 hover:bg-[#07112d]'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className={`rounded-full border px-2 py-0.5 text-[10px] font-bold ${story.badgeColor}`}>
+                        {story.badge}
+                      </span>
+                      <span className="flex items-center gap-1 text-[11px] text-slate-400">
+                        <MapPin className="h-3 w-3 text-slate-400" />
+                        {story.location}
+                      </span>
+                    </div>
+                    <div className="mt-2.5 font-display text-base font-bold text-white flex items-center gap-1.5">
+                      <UserCheck className="h-4 w-4 text-[#10D4A2]" />
+                      {story.persona}
+                    </div>
+                    <div className="text-xs text-slate-300">{story.role}</div>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Crisis Incident Context Card */}
+            <div className="rounded-2xl border border-white/10 bg-[#050919]/90 p-5 space-y-4 shadow-xl">
+              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+                <div className="space-y-1">
+                  <div className="text-xs font-bold uppercase tracking-wider text-rose-400 flex items-center gap-1.5">
+                    <ShieldAlert className="h-4 w-4" /> Real-World Attack Crisis
+                  </div>
+                  <h3 className="font-display text-lg font-bold text-white">
+                    {activeStory.crisisTitle}
+                  </h3>
+                  <p className="text-xs leading-relaxed text-slate-300">
+                    {activeStory.crisisDesc}
+                  </p>
+                </div>
+              </div>
+
+              {/* Before vs After Impact Comparison Strip */}
+              <div className="grid gap-3 sm:grid-cols-2 pt-2 border-t border-white/10">
+                <div className="rounded-xl border border-rose-500/25 bg-rose-500/5 p-3">
+                  <div className="text-[11px] font-bold uppercase tracking-wider text-rose-400">
+                    Without TruthLens (Whack-a-Mole)
+                  </div>
+                  <p className="mt-1 text-xs text-rose-200/90 leading-relaxed">
+                    {activeStory.impactWithout}
+                  </p>
+                </div>
+                <div className="rounded-xl border border-emerald-500/25 bg-emerald-500/5 p-3">
+                  <div className="text-[11px] font-bold uppercase tracking-wider text-[#10D4A2]">
+                    With TruthLens (Systems Intervention)
+                  </div>
+                  <p className="mt-1 text-xs text-emerald-200/90 leading-relaxed">
+                    {activeStory.impactWith}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Sleek Card Layout Swipe Deck */}
+            <div className="space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-1">
+                <div className="flex items-center gap-2">
+                  <span className="font-display text-sm font-bold text-white">
+                    Resolution Card Deck:
+                  </span>
+                  <span className="text-xs text-slate-400">
+                    Step {activeStoryStep + 1} of 4 &bull; {activeStepData.stage}
+                  </span>
+                </div>
+
+                {/* Swipe / Card Navigation Controls */}
+                <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1.5 bg-black/40 px-2 py-1 rounded-xl border border-white/10">
+                    {activeStory.steps.map((_, dotIdx) => (
+                      <button
+                        key={dotIdx}
+                        onClick={() => setActiveStoryStep(dotIdx)}
+                        className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
+                          dotIdx === activeStoryStep
+                            ? 'w-6 bg-[#10D4A2] shadow-[0_0_8px_rgba(16,212,162,0.6)]'
+                            : 'w-2 bg-white/20 hover:bg-white/40'
+                        }`}
+                        aria-label={`Jump to step ${dotIdx + 1}`}
+                      />
+                    ))}
+                  </div>
+
+                  <div className="flex items-center gap-1">
+                    <button
+                      onClick={() => setActiveStoryStep((prev) => (prev > 0 ? prev - 1 : 3))}
+                      className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-[#050919] text-slate-300 hover:text-white hover:border-white/25 transition cursor-pointer"
+                      aria-label="Previous Journey Card"
+                    >
+                      <ChevronLeft className="h-4 w-4" />
+                    </button>
+                    <button
+                      onClick={() => setActiveStoryStep((prev) => (prev < 3 ? prev + 1 : 0))}
+                      className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-[#10D4A2]/40 bg-[#10D4A2]/15 text-[#10D4A2] hover:bg-[#10D4A2]/25 transition cursor-pointer"
+                      aria-label="Next Journey Card"
+                    >
+                      <ChevronRight className="h-4 w-4" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Horizontally Swipeable Card Deck Track */}
+              <div className="flex gap-4 overflow-x-auto pb-3 pt-1 snap-x snap-mandatory scroll-smooth no-scrollbar">
+                {activeStory.steps.map((st, idx) => {
+                  const isCurrent = idx === activeStoryStep;
+                  return (
+                    <div
+                      key={st.num}
+                      onClick={() => setActiveStoryStep(idx)}
+                      className={`min-w-[280px] sm:min-w-[330px] flex-1 max-w-[380px] flex-shrink-0 snap-center rounded-2xl border p-5 flex flex-col justify-between transition-all duration-300 cursor-pointer select-none ${
+                        isCurrent
+                          ? 'border-[#10D4A2] bg-gradient-to-b from-[#0a1c42] to-[#050f29] shadow-[0_0_30px_rgba(16,212,162,0.25)] scale-[1.02] ring-1 ring-[#10D4A2]/50'
+                          : 'border-white/10 bg-[#060d24]/75 opacity-75 hover:opacity-100 hover:border-white/25'
+                      }`}
+                    >
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <span className={`inline-flex items-center justify-center rounded-lg px-2.5 py-1 font-mono text-xs font-bold ${
+                            isCurrent
+                              ? 'bg-[#10D4A2] text-[#050919] shadow-[0_0_12px_rgba(16,212,162,0.4)]'
+                              : 'bg-white/10 text-slate-300'
+                          }`}>
+                            STEP {st.num}
+                          </span>
+                          <span className="font-mono text-[10px] uppercase tracking-wider text-slate-400 bg-black/40 px-2 py-0.5 rounded-md border border-white/5">
+                            {st.stage}
+                          </span>
+                        </div>
+
+                        <div>
+                          <div className="text-[11px] font-mono text-[#10D4A2] font-semibold">
+                            {st.tech}
+                          </div>
+                          <h4 className="mt-1 font-display text-base font-bold text-white leading-snug">
+                            {st.title}
+                          </h4>
+                        </div>
+
+                        <p className="text-xs leading-relaxed text-slate-300">
+                          {st.detail}
+                        </p>
+                      </div>
+
+                      <div className="mt-5 pt-3 border-t border-white/10 flex items-center justify-between gap-2">
+                        <span className="text-[11px] text-slate-400 flex items-center gap-1">
+                          <CheckCircle2 className="h-3.5 w-3.5 text-[#10D4A2]" />
+                          Verified
+                        </span>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onNavigate(st.targetTab);
+                          }}
+                          className={`inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold transition shadow-md cursor-pointer ${
+                            isCurrent
+                              ? 'bg-[#10D4A2] text-[#050919] hover:bg-[#00e8ac] shadow-[0_0_15px_rgba(16,212,162,0.3)]'
+                              : 'bg-white/10 text-slate-200 hover:bg-white/20'
+                          }`}
+                        >
+                          <span>{st.cta}</span>
+                          <ArrowRight className="h-3 w-3" />
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="flex items-center justify-between text-[11px] text-slate-400 px-1 pt-1">
+                <span>👈 Swipe or click cards to step through {activeStory.persona.split(' ')[0]}&apos;s crisis resolution</span>
+                <span className="hidden sm:inline">Use Prev/Next buttons for guided walkthrough</span>
+              </div>
+            </div>
+          </div>
+        )}
+      </section>
+
       {/* Interactive Donella Meadows Causal Graph & Leverage Points */}
       <section className="glass-panel rounded-3xl p-6 sm:p-8 space-y-6">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#10D4A2]">
               <Layers className="h-4 w-4" />
-              Donella Meadows Systems Engine — Change the Structure, Not the Symptom
+              Donella Meadows Systems Law — Stop Whacking Moles. Change the Structure.
             </div>
             <h2 className="mt-1 font-display text-2xl font-bold text-white">
-              Interactive Causal Intervention Graph
+              Causal Intervention Graph: Strike at the Source of Virality
             </h2>
           </div>
           <span className="text-xs text-slate-400 bg-white/5 border border-white/10 px-3 py-1.5 rounded-xl">
@@ -660,13 +1136,13 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
           <div>
             <div className="text-xs font-bold uppercase tracking-wider text-[#10D4A2] flex items-center gap-1.5">
-              <Building2 className="h-4 w-4" /> Real-World Impact
+              <Building2 className="h-4 w-4" /> 6 Real-World Battlegrounds
             </div>
             <h2 className="mt-0.5 font-display text-2xl font-bold text-white">
-              Deployable Across 6 High-Impact Domains
+              Where Synthetic Media Meets High-Stakes Reality
             </h2>
             <p className="text-sm text-slate-400">
-              Real-time synthetic media forensics, identity liveness, and algorithmic content hygiene.
+              From WhatsApp student extortion to ₹18L CFO voice clones &mdash; battle-tested policy gates ready for deployment.
             </p>
           </div>
           <button
@@ -740,9 +1216,14 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
           </div>
 
           <div className="p-6 space-y-4">
-            <h3 className="font-display text-xl font-bold text-white">
-              Gemini Detects. Our Systems Engine Understands.
-            </h3>
+            <div>
+              <h3 className="font-display text-xl font-bold text-white">
+                Gemini Detects. Our Systems Engine Understands.
+              </h3>
+              <p className="mt-1 text-xs text-slate-300">
+                Sub-2s edge speed meets multimodal reasoning &mdash; zero cloud egress for user privacy, sovereign to India in asia-south1.
+              </p>
+            </div>
             <div className="grid gap-3 sm:grid-cols-2">
               {[
                 {
@@ -872,10 +1353,10 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
                 </span>
                 <div>
                   <h3 className="font-display text-base sm:text-lg font-bold text-white">
-                    TruthLens 25-Second Funding Pitch Walkthrough
+                    TruthLens Product Demo Walkthrough
                   </h3>
                   <p className="text-xs text-slate-400">
-                    Google AI Startup Buildathon 2026 &bull; India &bull; Hypothetica
+                    Multimodal Synthetic Media Defense &amp; Counter-Virality Platform
                   </p>
                 </div>
               </div>
@@ -926,11 +1407,11 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
                 <button
                   onClick={() => {
                     setShowVideoModal(false);
-                    onNavigate('deck');
+                    onNavigate('solutions');
                   }}
                   className="rounded-lg border border-white/15 bg-white/5 px-3 py-1.5 font-semibold text-white hover:bg-white/10 transition cursor-pointer"
                 >
-                  Inspect Pitch Deck
+                  Explore 6 Domains
                 </button>
               </div>
             </div>

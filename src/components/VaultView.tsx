@@ -21,7 +21,7 @@ interface VaultViewProps {
 
 export const VaultView: React.FC<VaultViewProps> = ({ client, sharedMedia }) => {
   const [ownerId, setOwnerId] = useState('ankita.sinha@creator.in');
-  const [title, setTitle] = useState('Verified Official Portrait — Buildathon 2026');
+  const [title, setTitle] = useState('Verified Official Portrait — Origin Vault Proof');
   const [registerFile, setRegisterFile] = useState<File | null>(sharedMedia.file);
   const [registering, setRegistering] = useState(false);
   const [vaultItems, setVaultItems] = useState<VaultItem[]>(() => client.getLocalVaultItems());
