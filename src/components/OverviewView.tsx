@@ -231,7 +231,7 @@ const USE_CASE_STORIES = [
         stage: 'L3 Victim Counter-Narrative',
         tech: 'PNG-8 Base64 Generator',
         detail:
-          'TruthLens instantly creates a 512×512 high-contrast debunk sticker: "<span class="material-symbols-rounded notranslate text-xs align-middle" translate="no">warning</span> TRUTHLENS VERIFIED DEEPFAKE • DO NOT FORWARD". Friends forward the sticker into group chats, killing rumor momentum.',
+          'TruthLens instantly creates a 512×512 high-contrast debunk sticker: "<span className="material-symbols-rounded notranslate text-xs align-middle" translate="no">warning</span> TRUTHLENS VERIFIED DEEPFAKE • DO NOT FORWARD". Friends forward the sticker into group chats, killing rumor momentum.',
         targetTab: 'heal' as NavTab,
         cta: 'Generate Debunk Sticker in Heal',
       },
@@ -403,7 +403,7 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
             <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-500"></span>
           </span>
           <span className="font-mono font-extrabold text-rose-400 uppercase tracking-wider text-[11px] shrink-0">
-            <span class="material-symbols-rounded notranslate text-sm align-middle mr-1" translate="no">crisis_alert</span> LIVE DEFENSE RADAR
+            <span className="material-symbols-rounded notranslate text-sm align-middle mr-1" translate="no">crisis_alert</span> LIVE DEFENSE RADAR
           </span>
           <span className="text-slate-500 hidden sm:inline">•</span>
           <span className="text-slate-200 font-medium truncate">
@@ -477,21 +477,21 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
                   onClick={() => onNavigate('detect')}
                   className="inline-flex items-center gap-1.5 rounded-xl border border-rose-500/35 bg-rose-500/10 px-3 py-1.5 text-xs font-semibold text-rose-300 hover:bg-rose-500/20 hover:border-rose-400 transition cursor-pointer"
                 >
-                  <span><span class="material-symbols-rounded notranslate text-xs align-middle" translate="no">photo_camera</span> Priya: Morphed Photo Blackmail</span>
+                  <span><span className="material-symbols-rounded notranslate text-xs align-middle" translate="no">photo_camera</span> Priya: Morphed Photo Blackmail</span>
                   <ArrowRight className="h-3 w-3 text-rose-400" />
                 </button>
                 <button
                   onClick={() => onNavigate('detect')}
                   className="inline-flex items-center gap-1.5 rounded-xl border border-amber-500/35 bg-amber-500/10 px-3 py-1.5 text-xs font-semibold text-amber-300 hover:bg-amber-500/20 hover:border-amber-400 transition cursor-pointer"
                 >
-                  <span><span class="material-symbols-rounded notranslate text-xs align-middle" translate="no">mic</span> Vikram: ₹18L CFO Voice Clone</span>
+                  <span><span className="material-symbols-rounded notranslate text-xs align-middle" translate="no">mic</span> Vikram: ₹18L CFO Voice Clone</span>
                   <ArrowRight className="h-3 w-3 text-amber-400" />
                 </button>
                 <button
                   onClick={() => onNavigate('dampen')}
                   className="inline-flex items-center gap-1.5 rounded-xl border border-[#10D4A2]/35 bg-[#10D4A2]/10 px-3 py-1.5 text-xs font-semibold text-[#10D4A2] hover:bg-[#10D4A2]/20 hover:border-[#10D4A2] transition cursor-pointer"
                 >
-                  <span><span class="material-symbols-rounded notranslate text-xs align-middle" translate="no">stop_circle</span> Throttling WhatsApp Virality</span>
+                  <span><span className="material-symbols-rounded notranslate text-xs align-middle" translate="no">stop_circle</span> Throttling WhatsApp Virality</span>
                   <ArrowRight className="h-3 w-3 text-[#10D4A2]" />
                 </button>
               </div>
@@ -534,7 +534,7 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
                     }`}
                 >
                   <Video className="h-3.5 w-3.5" />
-                  <span class="material-symbols-rounded notranslate text-xs align-middle" translate="no">movie</span> 25s Pitch Video
+                  <span className="material-symbols-rounded notranslate text-xs align-middle" translate="no">movie</span> 25s Pitch Video
                 </button>
                 <button
                   onClick={() => setHeroMediaMode('scanner')}
@@ -544,7 +544,7 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
                     }`}
                 >
                   <ScanSearch className="h-3.5 w-3.5" />
-                  <span class="material-symbols-rounded notranslate text-xs align-middle" translate="no">biotech</span> Forensic Scanner
+                  <span className="material-symbols-rounded notranslate text-xs align-middle" translate="no">biotech</span> Forensic Scanner
                 </button>
               </div>
 
@@ -706,7 +706,7 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
           <div>
             <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#10D4A2]">
               <Sparkles className="h-4 w-4" />
-              <span><span class="material-symbols-rounded notranslate text-xs align-middle" translate="no">local_fire_department</span> From Panic to Justice &bull; 4-Stage Crisis Interceptor</span>
+              <span><span className="material-symbols-rounded notranslate text-xs align-middle" translate="no">local_fire_department</span> From Panic to Justice &bull; 4-Stage Crisis Interceptor</span>
             </div>
             <h2 className="mt-1 font-display text-2xl font-bold text-white sm:text-3xl">
               3 Real-World Attacks. 3 Instant Takedowns.
@@ -967,7 +967,7 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
               </div>
 
               <div className="flex items-center justify-between text-[11px] text-slate-400 px-1 pt-1">
-                <span><span class="material-symbols-rounded notranslate text-xs align-middle" translate="no">arrow_back</span> Swipe or click cards to step through {activeStory.persona.split(' ')[0]}&apos;s crisis resolution</span>
+                <span><span className="material-symbols-rounded notranslate text-xs align-middle" translate="no">arrow_back</span> Swipe or click cards to step through {activeStory.persona.split(' ')[0]}&apos;s crisis resolution</span>
                 <span className="hidden sm:inline">Use Prev/Next buttons for guided walkthrough</span>
               </div>
             </div>
