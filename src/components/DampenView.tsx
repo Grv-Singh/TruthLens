@@ -52,10 +52,6 @@ export const DampenView: React.FC<DampenViewProps> = ({ client, sharedMedia, onN
       .then(setSimResult);
   }, [client, hours, pForward, frictionEnabled, coolingSeconds]);
 
-  const avertedCount = simResult
-    ? Math.max(0, simResult.peak_unmitigated - simResult.peak_dampened)
-    : 18520;
-
   return (
     <div className="space-y-6">
       {/* Linked Media Badge from Step 1 */}
@@ -81,38 +77,11 @@ export const DampenView: React.FC<DampenViewProps> = ({ client, sharedMedia, onN
           <span>Virality Control</span>
         </div>
         <h2 className="mt-1 font-display text-2xl font-bold text-white">
-          Real-Time Contagion Damping
+          Pre-Share Contagion Throttling
         </h2>
         <p className="mt-0.5 text-xs text-slate-400">
-          Interactive contagion simulator and live propagation throttling controls.
+          Simulate spread velocity before forwarding and test pre-share friction controls.
         </p>
-      </div>
-
-      {/* 3 Clear Metric Cards */}
-      <div className="grid gap-3 sm:grid-cols-3">
-        <div className="rounded-xl border border-white/10 bg-[#0b1229]/90 p-4">
-          <div className="text-xs text-slate-400">Harm Stopped</div>
-          <div className="mt-1 font-display text-3xl font-bold text-[#10D4A2] tabular-nums">
-            {simResult?.harm_prevented_pct ?? 78}%
-          </div>
-          <div className="mt-0.5 text-[11px] text-slate-400">Peak rumor spread prevented</div>
-        </div>
-
-        <div className="rounded-xl border border-white/10 bg-[#0b1229]/90 p-4">
-          <div className="text-xs text-slate-400">Users Protected</div>
-          <div className="mt-1 font-display text-3xl font-bold text-sky-400 tabular-nums">
-            {avertedCount.toLocaleString()}
-          </div>
-          <div className="mt-0.5 text-[11px] text-slate-400">People spared from fake news</div>
-        </div>
-
-        <div className="rounded-xl border border-white/10 bg-[#0b1229]/90 p-4">
-          <div className="text-xs text-slate-400">Dampening Force</div>
-          <div className="mt-1 font-display text-3xl font-bold text-amber-400 tabular-nums">
-            {telemetry?.dampening_factor ?? 4.2}x
-          </div>
-          <div className="mt-0.5 text-[11px] text-slate-400">Reduction in viral velocity</div>
-        </div>
       </div>
 
       {/* 24-Hour Spread Simulator */}
