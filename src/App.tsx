@@ -11,8 +11,6 @@ import {
   Shield,
   Sparkles,
   Wifi,
-  Moon,
-  Sun,
 } from 'lucide-react';
 import type {
   ApiInfoResponse,
@@ -45,7 +43,6 @@ const NAV_ITEMS: {
 export default function App() {
   const [activeTab, setActiveTab] = useState<NavTab>('overview');
   const [lang, setLang] = useState<Language>('en');
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [baseUrl, setBaseUrl] = useState<string>(DEFAULT_BASE_URL);
   const [mode] = useState<ExecutionMode>('live');
   const [selectedDomain, setSelectedDomain] = useState<DomainId>('fintech');
@@ -113,17 +110,9 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    const saved = localStorage.getItem('truthlens_theme') as 'light' | 'dark' | null;
-    if (saved) {
-      setTheme(saved);
-    }
+    document.documentElement.classList.remove('light');
+    document.documentElement.classList.add('dark');
   }, []);
-
-  useEffect(() => {
-    document.documentElement.classList.remove('light', 'dark');
-    document.documentElement.classList.add(theme);
-    localStorage.setItem('truthlens_theme', theme);
-  }, [theme]);
 
   const refreshHealth = useCallback(async () => {
     const [h, info] = await Promise.all([client.getHealth(), client.getApiInfo()]);
@@ -146,9 +135,9 @@ export default function App() {
   };
 
   return (
-    <div className={`min-h-screen bg-forensic-grid flex flex-col transition-colors duration-200 ${theme === 'dark' ? 'bg-[#050919] text-slate-100' : 'bg-[#f8fafc] text-slate-900'}`}>
+    <div className="min-h-screen bg-forensic-grid flex flex-col bg-[#050919] text-slate-100">
       {/* Top Utility Header */}
-      <header className={`sticky top-0 z-40 border-b backdrop-blur-md shadow-xs transition-colors duration-200 ${theme === 'dark' ? 'border-slate-800 bg-[#060b1f]/90' : 'border-slate-200 bg-white/95'}`}>
+      <header className="sticky top-0 z-40 border-b backdrop-blur-md shadow-xs border-slate-800 bg-[#060b1f]/90">
         <div className="mx-auto flex max-w-[1520px] items-center justify-between gap-3 px-4 py-3 sm:px-8">
           {/* Brand Emblem */}
           <div className="flex items-center gap-3">
@@ -159,13 +148,13 @@ export default function App() {
               </span>
             </div>
             <div>
-              <div className={`font-display text-base font-extrabold tracking-wider flex items-center gap-1.5 ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
+              <div className="font-display text-base font-extrabold tracking-wider flex items-center gap-1.5 text-white">
                 TRUTHLENS
                 <span className="text-[10px] bg-blue-50 border border-blue-200 text-blue-700 px-2 py-0.5 rounded-full font-mono font-bold">
                   v2.3.0
                 </span>
               </div>
-              <div className={`font-mono text-[10.5px] font-medium flex items-center gap-1 ${theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`}>
+              <div className="font-mono text-[10.5px] font-medium flex items-center gap-1 text-slate-400">
                 <Shield className="h-3 w-3 text-emerald-600" />
                 Multimodal Systems Defense
               </div>
@@ -173,7 +162,7 @@ export default function App() {
           </div>
 
           {/* Active Module Indicator (Desktop) */}
-          <div className={`hidden md:flex items-center gap-2 text-xs font-semibold px-3 py-1.5 rounded-full border ${theme === 'dark' ? 'bg-slate-800/80 border-slate-700 text-slate-200' : 'bg-slate-100 border-slate-200 text-slate-700'}`}>
+          <div className="hidden md:flex items-center gap-2 text-xs font-semibold px-3 py-1.5 rounded-full border bg-slate-800/80 border-slate-700 text-slate-200">
             <span className="h-2 w-2 rounded-full bg-blue-600" />
             <span>{tr.nav[activeTab]}</span>
             <span className="text-slate-400">/</span>
@@ -197,34 +186,11 @@ export default function App() {
               </button>
             )}
 
-            {/* Theme Toggle Button */}
-            <button
-              onClick={() => setTheme((t) => (t === 'light' ? 'dark' : 'light'))}
-              className={`inline-flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-bold transition cursor-pointer shadow-xs ${theme === 'dark'
-                  ? 'border-slate-700 bg-slate-800 text-amber-300 hover:bg-slate-700'
-                  : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'
-                }`}
-              title="Toggle Light / Dark Mode"
-            >
-              {theme === 'dark' ? (
-                <>
-                  <Sun className="h-3.5 w-3.5 text-amber-300" />
-                  <span>Light</span>
-                </>
-              ) : (
-                <>
-                  <Moon className="h-3.5 w-3.5 text-slate-700" />
-                  <span>Dark</span>
-                </>
-              )}
-            </button>
+            
 
             <button
               onClick={() => setLang((l) => (l === 'en' ? 'hi' : 'en'))}
-              className={`inline-flex items-center gap-1.5 rounded-xl border px-3 py-1.5 text-xs font-bold transition cursor-pointer shadow-xs ${theme === 'dark'
-                  ? 'border-slate-700 bg-slate-800 text-slate-200 hover:bg-slate-700'
-                  : 'border-slate-200 bg-white text-slate-700 hover:bg-slate-50'
-                }`}
+              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-700 bg-slate-800 text-slate-200 hover:bg-slate-700 px-3 py-1.5 text-xs font-bold transition cursor-pointer shadow-xs"
               title="Switch between English and Hindi"
             >
               <Globe className="h-3.5 w-3.5 text-blue-600" />
@@ -282,11 +248,7 @@ export default function App() {
       </main>
 
       {/* Viewport Sticky Floating Bottom Navigation Bar */}
-      <nav
-        className={`fixed bottom-4 left-1/2 -translate-x-1/2 z-50 backdrop-blur-2xl border shadow-[0_16px_40px_-6px_rgba(0,0,0,0.25),0_4px_12px_rgba(0,0,0,0.1)] rounded-full p-1.5 flex items-center gap-1 max-w-[calc(100vw-24px)] overflow-x-auto scrollbar-none transition-all duration-200 ${theme === 'dark'
-            ? 'bg-[#080e23]/92 border-slate-700/80 shadow-black/40'
-            : 'bg-white/95 border-slate-300/85'
-          }`}
+      <nav className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 backdrop-blur-2xl border shadow-[0_16px_40px_-6px_rgba(0,0,0,0.5),0_4px_12px_rgba(0,0,0,0.3)] rounded-full p-1.5 flex items-center gap-1 max-w-[calc(100vw-24px)] overflow-x-auto scrollbar-none transition-all duration-200 bg-[#080e23]/92 border-slate-700/80 shadow-black/40"
         aria-label="Floating Module Selector"
       >
         {NAV_ITEMS.map((item) => {
@@ -301,12 +263,10 @@ export default function App() {
               }}
               className={`flex items-center gap-2 rounded-full px-4 py-2.5 text-xs font-bold transition-all duration-200 cursor-pointer whitespace-nowrap ${active
                   ? 'bg-blue-600 text-white shadow-[0_4px_14px_rgba(37,99,235,0.4)]'
-                  : theme === 'dark'
-                    ? 'text-slate-400 hover:bg-slate-800/80 hover:text-slate-100'
-                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                  : 'text-slate-400 hover:bg-slate-800/80 hover:text-slate-100'
                 }`}
             >
-              <Icon className={`h-4 w-4 ${active ? 'text-white' : theme === 'dark' ? 'text-slate-400' : 'text-slate-500'}`} />
+              <Icon className={`h-4 w-4 ${active ? "text-white" : "text-slate-400"}`} />
               <span>{tr.nav[item.id]}</span>
             </button>
           );
