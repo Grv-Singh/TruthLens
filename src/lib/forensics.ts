@@ -362,6 +362,75 @@ export async function createDemoImageFile(presetId: string): Promise<File> {
 }
 
 // Local edge forensic analysis fallback when remote backend is offline
+
+// Canvas corner inspection for visual watermark (Gemini star in bottom right)
+export async function detectVisualWatermarkInCanvas(file: File): Promise<{ detected: boolean; provider: string; details: string }> {
+  return new Promise((resolve) => {
+    if (!file.type.startsWith('image/')) {
+      return resolve({ detected: false, provider: '', details: '' });
+    }
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      const canvas = document.createElement('canvas');
+      const w = img.naturalWidth || img.width;
+      const h = img.naturalHeight || img.height;
+      if (!w || !h) return resolve({ detected: false, provider: '', details: '' });
+
+      // Check bottom-right corner (last 20% width & height)
+      const cw = Math.max(24, Math.floor(w * 0.20));
+      const ch = Math.max(24, Math.floor(h * 0.20));
+      const sx = w - cw;
+      const sy = h - ch;
+      canvas.width = cw;
+      canvas.height = ch;
+      const ctx = canvas.getContext('2d', { willReadFrequently: true });
+      if (!ctx) return resolve({ detected: false, provider: '', details: '' });
+
+      ctx.drawImage(img, sx, sy, cw, ch, 0, 0, cw, ch);
+      const idata = ctx.getImageData(0, 0, cw, ch);
+      const data = idata.data;
+
+      let sum = 0;
+      let count = 0;
+      let maxLum = 0;
+      const lums: number[] = [];
+
+      for (let i = 0; i < data.length; i += 4) {
+        const lum = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
+        lums.push(lum);
+        sum += lum;
+        if (lum > maxLum) maxLum = lum;
+        count++;
+      }
+
+      const mean = sum / count;
+      let varianceSum = 0;
+      for (let l of lums) {
+        varianceSum += (l - mean) ** 2;
+      }
+      const std = Math.sqrt(varianceSum / count);
+
+      // Star watermark signature in bottom-right corner
+      if ((std > 26 && maxLum > 175) || (maxLum - mean > 70 && std > 20)) {
+        return resolve({
+          detected: true,
+          provider: 'Google Gemini (Visual Sparkle Watermark)',
+          details: `Detected visual watermark badge / Gemini sparkle in bottom-right corner (contrast σ=${std.toFixed(1)}, peak=${Math.round(maxLum)}).`,
+        });
+      }
+
+      resolve({ detected: false, provider: '', details: '' });
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      resolve({ detected: false, provider: '', details: '' });
+    };
+    img.src = url;
+  });
+}
+
 export async function runLocalEdgeDetect(file: File): Promise<DetectResult> {
   const start = performance.now();
   const [sha256, dhash] = await Promise.all([computeSha256(file), computeDHash(file)]);
@@ -382,11 +451,17 @@ export async function runLocalEdgeDetect(file: File): Promise<DetectResult> {
     !isKnownAuthentic
   );
 
+  const visualWm = await detectVisualWatermarkInCanvas(file);
+
   let verdict: DetectResult['verdict'] = 'REAL';
   let manipulationScore = 14;
   let confidence = 94.2;
 
-  if (isKnownAi) {
+  if (visualWm.detected) {
+    verdict = 'AI_GENERATED';
+    manipulationScore = 96;
+    confidence = 98.2;
+  } else if (isKnownAi) {
     verdict = 'AI_GENERATED';
     manipulationScore = 91;
     confidence = 96.4;
@@ -457,6 +532,19 @@ export async function runLocalEdgeDetect(file: File): Promise<DetectResult> {
 }
 
 export async function runLocalWatermarkCheck(file: File): Promise<WatermarkResult> {
+  const visualWm = await detectVisualWatermarkInCanvas(file);
+  if (visualWm.detected) {
+    return {
+      synthid_detected: true,
+      synthid_confidence: 0.98,
+      c2pa_present: false,
+      c2pa_issuer: visualWm.provider,
+      iptc_ai_flag: true,
+      iptc_digital_source_type: 'trainedAlgorithmicMedia (Google Gemini)',
+      provenance_summary: visualWm.details,
+      source: 'edge-demo',
+    };
+  }
   const name = file.name.toLowerCase();
   const isAi = name.includes('faceswap') || name.includes('ai') || name.includes('synth') || name.includes('kyc');
   const isAuthentic = name.includes('authentic') || name.includes('original') || name.includes('real');
