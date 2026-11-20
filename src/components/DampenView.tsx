@@ -21,69 +21,8 @@ interface DampenViewProps {
   sharedMedia: SharedMediaContext;
 }
 
-interface CausalDomain {
-  id: string;
-  name: string;
-  topic: string;
-  reinforcingLoop: string[];
-  balancingIntervention: string[];
-  systemicImpact: string;
-}
-
-const CAUSAL_DOMAINS: CausalDomain[] = [
-  {
-    id: 'banking',
-    name: 'Banking Panic',
-    topic: 'Fake Bank Run & Currency Expiry Rumors',
-    reinforcingLoop: [
-      'Panic message shared in group chats',
-      'Sudden ATM & branch cash runs',
-      'Liquidity alarm spreads online'
-    ],
-    balancingIntervention: [
-      'Official RBI fact-check tag',
-      '15-second forward cooling delay',
-      'Direct factual context card'
-    ],
-    systemicImpact: 'Prevents bank branch panics and halts liquidity runs.'
-  },
-  {
-    id: 'health',
-    name: 'Health Scams',
-    topic: 'Fake Cures & Chemical Poison Warnings',
-    reinforcingLoop: [
-      'Viral home-cure advisory forwarded',
-      'Emergency room overcrowding',
-      'Delayed hospital care'
-    ],
-    balancingIntervention: [
-      'Medical database verification tag',
-      'Official health advisory link',
-      '1-click debunk message'
-    ],
-    systemicImpact: 'Prevents toxic remedy ingestion and protects ER beds.'
-  },
-  {
-    id: 'civic',
-    name: 'Civic & Voice Clone',
-    topic: 'AI Voice Note Claiming Curfew / Riot',
-    reinforcingLoop: [
-      'Cloned audio sent in closed groups',
-      'Anger-driven fast re-shares',
-      'Offline unrest and panic'
-    ],
-    balancingIntervention: [
-      'AI clone audio detected & flagged',
-      'Forwarding speed throttled',
-      'Official administration advisory'
-    ],
-    systemicImpact: 'Halts viral spread before offline disruption occurs.'
-  }
-];
-
 export const DampenView: React.FC<DampenViewProps> = ({ client }) => {
   const [telemetry, setTelemetry] = useState<TelemetryResponse | null>(null);
-  const [activeDomainId, setActiveDomainId] = useState<string>('banking');
 
   // Simulator controls
   const [hours] = useState(24);
@@ -95,8 +34,6 @@ export const DampenView: React.FC<DampenViewProps> = ({ client }) => {
   // Wellbeing & Bot Shields
   const [outrageStreak, setOutrageStreak] = useState(4);
   const [botLikelihood, setBotLikelihood] = useState(86);
-
-  const activeDomain = CAUSAL_DOMAINS.find(d => d.id === activeDomainId) || CAUSAL_DOMAINS[0];
 
   useEffect(() => {
     client.getTelemetry().then(setTelemetry);
@@ -129,7 +66,7 @@ export const DampenView: React.FC<DampenViewProps> = ({ client }) => {
           Real-Time Contagion Damping
         </h2>
         <p className="mt-0.5 text-xs text-slate-400">
-          Compare unchecked rumor spread against TruthLens active dampening.
+          Interactive contagion simulator and live propagation throttling controls.
         </p>
       </div>
 
@@ -157,91 +94,6 @@ export const DampenView: React.FC<DampenViewProps> = ({ client }) => {
             {telemetry?.dampening_factor ?? 4.2}x
           </div>
           <div className="mt-0.5 text-[11px] text-slate-400">Reduction in viral velocity</div>
-        </div>
-      </div>
-
-      {/* Visual Spread vs Protection Flow */}
-      <div className="rounded-2xl border border-white/10 bg-[#0b1229]/90 p-5 space-y-4">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <h3 className="font-display text-base font-bold text-white flex items-center gap-1.5">
-              <span className="material-symbols-rounded notranslate text-sky-400 text-lg align-middle" translate="no">hub</span>
-              <span>Rumor Category</span>
-            </h3>
-            <p className="text-xs text-slate-400">Select a real-world scenario to see how contagion is broken.</p>
-          </div>
-
-          <div className="inline-flex rounded-xl border border-white/10 bg-[#050919] p-1">
-            {CAUSAL_DOMAINS.map((dom) => (
-              <button
-                key={dom.id}
-                onClick={() => setActiveDomainId(dom.id)}
-                className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition cursor-pointer ${
-                  activeDomainId === dom.id
-                    ? 'bg-sky-500 text-white shadow-xs'
-                    : 'text-slate-400 hover:text-white'
-                }`}
-              >
-                {dom.name}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Side-by-Side: How it spreads vs How we stop it */}
-        <div className="rounded-xl border border-white/10 bg-[#050919]/70 p-4 space-y-4">
-          <div className="text-xs text-slate-300 font-semibold">
-            Scenario: <span className="text-white">{activeDomain.topic}</span>
-          </div>
-
-          <div className="grid gap-4 md:grid-cols-2">
-            {/* Unchecked Spread */}
-            <div className="rounded-xl border border-rose-500/30 bg-rose-500/10 p-3.5 space-y-2.5">
-              <div className="flex items-center justify-between text-xs font-bold text-rose-300">
-                <span className="flex items-center gap-1">
-                  <span className="material-symbols-rounded notranslate text-sm align-middle" translate="no">warning</span>
-                  <span>Uncontrolled Viral Spread</span>
-                </span>
-                <span className="rounded bg-rose-500/20 px-2 py-0.5 text-[10px] uppercase font-mono">DANGER</span>
-              </div>
-              <div className="space-y-1.5 text-xs">
-                {activeDomain.reinforcingLoop.map((step, idx) => (
-                  <div key={idx} className="flex items-center gap-2 text-slate-200">
-                    <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-rose-500/30 font-mono text-[10px] text-rose-200">
-                      {idx + 1}
-                    </span>
-                    <span>{step}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* TruthLens Dampening */}
-            <div className="rounded-xl border border-[#10D4A2]/30 bg-[#10D4A2]/10 p-3.5 space-y-2.5">
-              <div className="flex items-center justify-between text-xs font-bold text-[#10D4A2]">
-                <span className="flex items-center gap-1">
-                  <span className="material-symbols-rounded notranslate text-sm align-middle" translate="no">verified_user</span>
-                  <span>TruthLens Containment</span>
-                </span>
-                <span className="rounded bg-[#10D4A2]/20 px-2 py-0.5 text-[10px] uppercase font-mono">ACTIVE</span>
-              </div>
-              <div className="space-y-1.5 text-xs">
-                {activeDomain.balancingIntervention.map((step, idx) => (
-                  <div key={idx} className="flex items-center gap-2 text-slate-200">
-                    <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[#10D4A2]/30 font-mono text-[10px] text-[#10D4A2]">
-                      {idx + 1}
-                    </span>
-                    <span>{step}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-lg border border-white/5 bg-white/[0.02] p-2.5 text-xs text-slate-300 flex items-center gap-2">
-            <span className="material-symbols-rounded notranslate text-[#10D4A2] text-sm" translate="no">check_circle</span>
-            <span><strong>Result:</strong> {activeDomain.systemicImpact}</span>
-          </div>
         </div>
       </div>
 
