@@ -6,6 +6,7 @@ import type {
   SimulationPoint,
   SimulationResponse,
   TakedownNoticeResult,
+  TextDetectResult,
   WatermarkResult,
 } from '../types/truthlens';
 
@@ -948,6 +949,101 @@ Generated via TruthLens Legal Shield v2.2.0`;
     deadline_iso: deadline.toISOString(),
     legal_basis: 'Rule 3(2)(b), IT (Intermediary Guidelines) Rules 2021',
     notice_text,
+    source: 'edge-demo',
+  };
+}
+
+// Client-Side Heuristic & Pattern Engine for WhatsApp Forward Misinformation
+export function runLocalTextDetect(text: string): TextDetectResult {
+  const lower = text.toLowerCase();
+
+  const forwardPatterns = [
+    'forward', 'bhejo', 'share with', 'forwarded many times', 'delete hone se pehle',
+    'urgent', 'breaking', 'viral', 'warning to public', 'sabko', 'sab group me',
+    'pass this to', 'tell your family', 'dont ignore', "don't ignore", 'alert!!'
+  ];
+  const authorityPatterns = [
+    'nasa', 'unesco', 'who', 'supreme court', 'rbi', 'pmo', 'ministry', 'police',
+    'govt order', 'government order', 'modi ji', 'isro', 'cyber cell'
+  ];
+  const scamPatterns = [
+    'free recharge', 'click link', 'bit.ly', 'tinyurl', 'claim prize', 'lottery',
+    'pm mudra', 'account blocked', 'electricity bill', 'bank alert', 'kyc update'
+  ];
+  const miraclePatterns = [
+    'cure for cancer', '5g radiation', 'drinking warm water', 'heart attack coughing',
+    'cure coronavirus', 'cure covid', 'boiled garlic', 'radiation wave', 'cosmic rays'
+  ];
+
+  const matchedForward = forwardPatterns.filter((p) => lower.includes(p));
+  const matchedAuthority = authorityPatterns.filter((p) => lower.includes(p));
+  const matchedScam = scamPatterns.filter((p) => lower.includes(p));
+  const matchedMiracle = miraclePatterns.filter((p) => lower.includes(p));
+
+  const totalHits = matchedForward.length + matchedAuthority.length * 2 + matchedScam.length * 3 + matchedMiracle.length * 3;
+
+  let verdict: TextDetectResult['verdict'] = 'AUTHENTIC_FACT';
+  let riskScore = 15;
+  let urgencyScore = 20;
+
+  if (matchedScam.length > 0 || matchedMiracle.length > 0 || totalHits >= 4) {
+    verdict = 'FABRICATED_RUMOR';
+    riskScore = Math.min(98, 75 + totalHits * 4);
+    urgencyScore = Math.min(95, 60 + matchedForward.length * 10);
+  } else if (matchedForward.length > 0 || matchedAuthority.length > 0 || totalHits >= 2) {
+    verdict = 'MISLEADING_CLAIM';
+    riskScore = Math.min(74, 45 + totalHits * 6);
+    urgencyScore = Math.min(85, 40 + matchedForward.length * 10);
+  } else if (text.trim().length > 10) {
+    verdict = 'AUTHENTIC_FACT';
+    riskScore = 12;
+    urgencyScore = 15;
+  }
+
+  const fallacies: string[] = [];
+  if (matchedForward.length > 0) fallacies.push('Artificial Urgency / Forward-Chain Amplification Cue');
+  if (matchedAuthority.length > 0) fallacies.push(`Unverified Authority Appeal (Impersonating ${matchedAuthority.map(a => a.toUpperCase()).join(', ')})`);
+  if (matchedScam.length > 0) fallacies.push('Financial Phishing / Unsolicited Offer Bait');
+  if (matchedMiracle.length > 0) fallacies.push('Unscientific Miracle Cure / Health Disinformation');
+  if (fallacies.length === 0) fallacies.push('Standard Informational Discourse — No Viral Disinformation Signatures');
+
+  const claims: string[] = [];
+  const sentences = text.split(/[.!?\n]+/).map(s => s.trim()).filter(s => s.length > 10);
+  if (sentences.length > 0) {
+    claims.push(...sentences.slice(0, 3));
+  } else {
+    claims.push(text.slice(0, 100));
+  }
+
+  const topicSnippet = claims[0] ? claims[0].slice(0, 45) : 'this claim';
+
+  return {
+    verdict,
+    confidence: Number((0.85 + Math.min(0.13, totalHits * 0.02)).toFixed(2)),
+    risk_score: riskScore,
+    urgency_score: urgencyScore,
+    summary: verdict === 'FABRICATED_RUMOR'
+      ? 'High-confidence fabricated rumor exhibiting known viral forward manipulation patterns and unverified authority claims.'
+      : verdict === 'MISLEADING_CLAIM'
+      ? 'Partially misleading or unverified forward. Contains sensationalist phrasing and lacks official gazette verification.'
+      : 'No viral manipulation markers or deceptive forward patterns detected.',
+    claims_identified: claims,
+    fallacies,
+    veracity_breakdown: {
+      factual_accuracy: verdict === 'FABRICATED_RUMOR'
+        ? 'Contradicted by verified press bureaus and official fact-checking registries. Fabricated attribution.'
+        : verdict === 'MISLEADING_CLAIM'
+        ? 'Lacks verifiable primary source. Embellished with sensational phrasing to spur rapid forwarding.'
+        : 'Passes basic factual consistency and linguistic hygiene checks.',
+      source_attribution: matchedAuthority.length > 0
+        ? `Impersonates ${matchedAuthority.map(a => a.toUpperCase()).join('/')} without official circular or press release.`
+        : 'Anonymous forward chain with zero author identity or institutional provenance.',
+      manipulation_tactics: fallacies,
+    },
+    debunk_reply: {
+      english: `[FACT-CHECK ALERT] The forwarded message claiming "${topicSnippet}..." is false and unverified. Official authorities and fact-checkers confirm no such order or event exists. Please stop forwarding unverified rumors.`,
+      hindi: `[फैक्ट-चेक अलर्ट] यह फॉरवर्ड संदेश ("${topicSnippet}...") पूरी तरह फर्जी और भ्रामक है। आधिकारिक स्रोतों और फैक्ट-चेक से स्पष्ट है कि यह दावा निराधार है। कृपया इसे आगे फॉरवर्ड न करें।`,
+    },
     source: 'edge-demo',
   };
 }

@@ -2,12 +2,16 @@ import React, { useEffect, useRef, useState } from 'react';
 import {
   AlertTriangle,
   AudioLines,
+  Check,
   CheckCircle2,
+  Copy,
   Cpu,
   FileCheck2,
+  FileText,
   Fingerprint,
   Gavel,
   Image as ImageIcon,
+  MessageSquare,
   Mic,
   Play,
   ScanSearch,
@@ -15,6 +19,7 @@ import {
   ShieldCheck,
   SlidersHorizontal,
   Sparkles,
+  TrendingDown,
   Upload,
 } from 'lucide-react';
 import {
@@ -32,12 +37,14 @@ import type {
   DetectResult,
   NavTab,
   SharedMediaContext,
+  TextDetectResult,
   WatermarkResult,
 } from '../types/truthlens';
 import type { TruthLensClient } from '../lib/api';
 import {
   createDemoImageFile,
   runLocalEdgeDetect,
+  runLocalTextDetect,
   runLocalWatermarkCheck,
 } from '../lib/forensics';
 
@@ -69,12 +76,15 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
   autoPresetId,
   onConsumedPreset,
 }) => {
-  const [subMode, setSubMode] = useState<'image' | 'audio'>(() => {
+  const [subMode, setSubMode] = useState<'image' | 'audio' | 'text'>(() => {
     if (typeof window !== 'undefined') {
       const p = new URLSearchParams(window.location.search);
       const m = p.get('mode');
       if (m === 'audio' || m === 'voice') return 'audio';
+      if (m === 'text' || m === 'forward' || m === 'doc') return 'text';
+      if (p.get('text')) return 'text';
     }
+    if (sharedMedia?.text) return 'text';
     return 'image';
   });
   const [elaSplit, setElaSplit] = useState(50);
@@ -90,8 +100,59 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
   const [audioResult, setAudioResult] = useState<AudioDetectResult | null>(null);
   const [audioLabel, setAudioLabel] = useState<string>('');
 
+  // Forwarded text & document claim state
+  const [textContent, setTextContent] = useState(() => sharedMedia?.text || '');
+  const [textLoading, setTextLoading] = useState(false);
+  const [textResult, setTextResult] = useState<TextDetectResult | null>(null);
+  const [copiedDebunk, setCopiedDebunk] = useState<'english' | 'hindi' | null>(null);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const audioInputRef = useRef<HTMLInputElement>(null);
+  const docInputRef = useRef<HTMLInputElement>(null);
+
+  const handleAnalyzeText = async (customText?: string) => {
+    const textToRun = (customText ?? textContent).trim();
+    if (!textToRun) return;
+    setTextLoading(true);
+    try {
+      const res = await client.detectText(textToRun);
+      setTextResult(res);
+    } catch {
+      const fallback = runLocalTextDetect(textToRun);
+      setTextResult(fallback);
+    } finally {
+      setTextLoading(false);
+    }
+  };
+
+  const handleDocFileUpload = async (file: File) => {
+    if (file.type.startsWith('text/') || file.name.endsWith('.txt') || file.name.endsWith('.md')) {
+      const text = await file.text();
+      setTextContent(text);
+      handleAnalyzeText(text);
+    } else {
+      try {
+        const text = await file.text();
+        const cleaned = text.replace(/[\x00-\x08\x0E-\x1F\x7F-\xFF]/g, ' ').replace(/\s+/g, ' ').trim();
+        if (cleaned.length > 30) {
+          setTextContent(cleaned.slice(0, 2000));
+          handleAnalyzeText(cleaned.slice(0, 2000));
+          return;
+        }
+      } catch {}
+      const fallbackNote = `[Uploaded Document: ${file.name}] Attached circular claiming urgent public warning.`;
+      setTextContent(fallbackNote);
+      handleAnalyzeText(fallbackNote);
+    }
+  };
+
+  useEffect(() => {
+    if (sharedMedia?.text && !textResult) {
+      setSubMode('text');
+      setTextContent(sharedMedia.text);
+      handleAnalyzeText(sharedMedia.text);
+    }
+  }, [sharedMedia?.text]);
 
   // Active item in queue
   const activeItem = imageQueue.find((item) => item.id === activeItemId) || imageQueue[0] || null;
@@ -319,15 +380,31 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
             <AudioLines className="h-4 w-4" />
             Voice Notes
           </button>
+          <button
+            onClick={() => setSubMode('text')}
+            className={`inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition cursor-pointer ${
+              subMode === 'text'
+                ? 'bg-[#10D4A2] text-[#050919]'
+                : 'text-slate-300 hover:text-white'
+            }`}
+          >
+            <FileText className="h-4 w-4" />
+            Forwarded Text
+          </button>
         </div>
 
-        {((subMode === 'image' && imageQueue.length > 0) || (subMode === 'audio' && audioResult)) && (
+        {((subMode === 'image' && imageQueue.length > 0) ||
+          (subMode === 'audio' && audioResult) ||
+          (subMode === 'text' && textResult)) && (
           <button
             onClick={() => {
               if (subMode === 'image') handleClearQueue();
-              else {
+              else if (subMode === 'audio') {
                 setAudioResult(null);
                 setAudioLabel('');
+              } else {
+                setTextResult(null);
+                setTextContent('');
               }
             }}
             className="inline-flex items-center gap-1.5 rounded-xl border border-rose-500/30 bg-rose-500/10 px-3.5 py-2 text-xs font-semibold text-rose-300 hover:bg-rose-500/20 transition cursor-pointer"
@@ -356,6 +433,9 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
                     if (first.type.startsWith('audio/') || /\.(opus|wav|mp3|m4a|ogg|aac)$/i.test(first.name)) {
                       setSubMode('audio');
                       handleAudioFile(first);
+                    } else if (first.type.startsWith('text/') || /\.(pdf|doc|docx|txt|md)$/i.test(first.name)) {
+                      setSubMode('text');
+                      handleDocFileUpload(first);
                     } else {
                       handleAddFiles(e.dataTransfer.files);
                     }
@@ -716,8 +796,8 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
                     onClick={() => onNavigate('dampen')}
                     className="inline-flex items-center gap-1.5 rounded-lg bg-amber-500/15 px-3 py-2 text-xs font-semibold text-amber-300 hover:bg-amber-500/25 cursor-pointer"
                   >
-                    <AlertTriangle className="h-3.5 w-3.5" />
-                    Test WhatsApp Cooling Friction (L2)
+                    <TrendingDown className="h-3.5 w-3.5" />
+                    Simulate 24h Virality Spread (L2)
                   </button>
                   <button
                     onClick={() => onNavigate('heal')}
@@ -731,7 +811,7 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
             )}
           </div>
         )
-      ) : (
+      ) : subMode === 'audio' ? (
         /* VOICE NOTE FORENSICS */
         !audioResult && !audioLoading ? (
           <div className="mx-auto max-w-2xl">
@@ -901,7 +981,327 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
             )}
           </div>
         )
-      )}
+      ) : (
+          /* ======================================================== */
+          /* SUBMODE: FORWARDED TEXT & DOCUMENT MISINFORMATION        */
+          /* ======================================================== */
+          !textResult && !textLoading ? (
+            <div className="mx-auto max-w-3xl space-y-5">
+              <div className="rounded-2xl border border-white/10 bg-[#0b1229]/90 p-6 space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="font-display text-lg font-bold text-white flex items-center gap-2">
+                      <FileText className="h-5 w-5 text-[#10D4A2]" />
+                      WhatsApp Forward &amp; Claim Fact-Check
+                    </h3>
+                    <p className="mt-1 text-xs text-slate-400">
+                      Paste viral forwarded messages, rumor alerts, or upload notices to detect manipulation and fake claims.
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => docInputRef.current?.click()}
+                    className="inline-flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-semibold text-slate-300 hover:bg-white/10 transition cursor-pointer"
+                  >
+                    <Upload className="h-3.5 w-3.5 text-[#10D4A2]" />
+                    <span>Upload Doc / PDF</span>
+                  </button>
+                </div>
+
+                {/* Hidden doc input */}
+                <input
+                  ref={docInputRef}
+                  type="file"
+                  accept=".txt,.md,.pdf,.doc,.docx"
+                  className="hidden"
+                  onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    if (f) handleDocFileUpload(f);
+                  }}
+                />
+
+                <div>
+                  <textarea
+                    rows={5}
+                    value={textContent}
+                    onChange={(e) => setTextContent(e.target.value)}
+                    placeholder="Paste viral forwarded message, rumor, or notice here..."
+                    className="w-full rounded-xl border border-white/10 bg-[#050919] p-3.5 text-xs text-white placeholder-slate-500 focus:border-[#10D4A2] focus:outline-none"
+                  />
+                </div>
+
+                {/* Quick sample pills */}
+                <div>
+                  <div className="text-[11px] font-semibold text-slate-400 mb-1.5">
+                    Try Sample WhatsApp Forwards:
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <button
+                      onClick={() => {
+                        const t = 'URGENT ALERT: Tonight from 12:30 AM to 3:30 AM NASA announces cosmic rays will pass close to earth. Switch off your mobile phones immediately or radiation will cause cancer. Forward to all family and school groups immediately!';
+                        setTextContent(t);
+                        handleAnalyzeText(t);
+                      }}
+                      className="rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-[11px] text-slate-300 hover:border-amber-400/40 hover:bg-white/10 transition cursor-pointer"
+                    >
+                      NASA Cosmic Ray Warning
+                    </button>
+                    <button
+                      onClick={() => {
+                        const t = 'BREAKING SCHEME: Government of India announced free 3-month 5G recharge for all citizens under Digital India scheme. Click link bit.ly/pm-5g-free before midnight. Share with 5 groups to activate!';
+                        setTextContent(t);
+                        handleAnalyzeText(t);
+                      }}
+                      className="rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-[11px] text-slate-300 hover:border-amber-400/40 hover:bg-white/10 transition cursor-pointer"
+                    >
+                      Free 5G Recharge Link
+                    </button>
+                    <button
+                      onClick={() => {
+                        const t = 'OFFICIAL CIRCULAR: RBI orders that all old currency notes are invalid from midnight tonight. Commercial banks directed to freeze branch deposits. Forward this notification to everyone immediately!';
+                        setTextContent(t);
+                        handleAnalyzeText(t);
+                      }}
+                      className="rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-[11px] text-slate-300 hover:border-amber-400/40 hover:bg-white/10 transition cursor-pointer"
+                    >
+                      RBI Currency Ban Notice
+                    </button>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => handleAnalyzeText()}
+                  disabled={!textContent.trim()}
+                  className={`w-full inline-flex items-center justify-center gap-2 rounded-xl py-3 text-sm font-bold transition cursor-pointer ${
+                    textContent.trim()
+                      ? 'bg-[#10D4A2] text-[#050919] hover:bg-[#00e8ac]'
+                      : 'bg-white/5 text-slate-500 cursor-not-allowed'
+                  }`}
+                >
+                  <ScanSearch className="h-4 w-4" />
+                  <span>Verify Forwarded Text</span>
+                </button>
+              </div>
+            </div>
+          ) : textLoading ? (
+            <div className="mx-auto max-w-md rounded-2xl border border-white/10 bg-[#0b1229]/80 p-8 text-center space-y-4">
+              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#10D4A2]/15 text-[#10D4A2] animate-pulse">
+                <Sparkles className="h-7 w-7" />
+              </div>
+              <div className="font-display text-base font-bold text-white">
+                Fact-Checking Claims &amp; Detecting Viral Fallacies...
+              </div>
+              <p className="text-xs text-slate-400">
+                Cross-referencing official registries, forward chain patterns, and authority attributions.
+              </p>
+            </div>
+          ) : textResult ? (
+            <div className="mx-auto max-w-4xl space-y-6">
+              {/* Verdict Header Banner */}
+              <div
+                className={`rounded-2xl border p-5 ${
+                  textResult.verdict === 'FABRICATED_RUMOR'
+                    ? 'border-rose-500/40 bg-gradient-to-r from-rose-950/60 via-[#0b1229] to-[#0b1229]'
+                    : textResult.verdict === 'MISLEADING_CLAIM'
+                    ? 'border-amber-500/40 bg-gradient-to-r from-amber-950/60 via-[#0b1229] to-[#0b1229]'
+                    : 'border-[#10D4A2]/40 bg-gradient-to-r from-emerald-950/60 via-[#0b1229] to-[#0b1229]'
+                }`}
+              >
+                <div className="flex flex-wrap items-center justify-between gap-4">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      {textResult.verdict === 'FABRICATED_RUMOR' ? (
+                        <span className="inline-flex items-center gap-1.5 rounded-full bg-rose-500/20 px-3 py-1 font-mono text-xs font-bold text-rose-300">
+                          <ShieldAlert className="h-3.5 w-3.5" />
+                          FABRICATED RUMOR / FAKE FORWARD
+                        </span>
+                      ) : textResult.verdict === 'MISLEADING_CLAIM' ? (
+                        <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/20 px-3 py-1 font-mono text-xs font-bold text-amber-300">
+                          <AlertTriangle className="h-3.5 w-3.5" />
+                          MISLEADING / UNVERIFIED CLAIM
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1.5 rounded-full bg-[#10D4A2]/20 px-3 py-1 font-mono text-xs font-bold text-[#10D4A2]">
+                          <ShieldCheck className="h-3.5 w-3.5" />
+                          AUTHENTIC / VERIFIED FACT
+                        </span>
+                      )}
+                      <span className="font-mono text-xs text-slate-400">
+                        {Math.round(textResult.confidence * 100)}% confidence
+                      </span>
+                    </div>
+                    <h3 className="mt-2 font-display text-xl font-bold text-white">
+                      {textResult.verdict === 'FABRICATED_RUMOR'
+                        ? 'Deceptive Viral Disinformation Detected'
+                        : textResult.verdict === 'MISLEADING_CLAIM'
+                        ? 'Unsubstantiated or Embellished Forward'
+                        : 'No Malicious Forward Markers Found'}
+                    </h3>
+                    <p className="mt-1 text-xs text-slate-300 leading-relaxed max-w-2xl">
+                      {textResult.summary}
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3 text-center sm:flex sm:gap-4">
+                    <div className="rounded-xl border border-white/10 bg-[#050919]/80 px-4 py-2.5">
+                      <div className="text-[10px] text-slate-400 uppercase tracking-wider">Risk Score</div>
+                      <div
+                        className={`font-mono text-xl font-bold tabular-nums ${
+                          textResult.risk_score >= 70
+                            ? 'text-rose-400'
+                            : textResult.risk_score >= 40
+                            ? 'text-amber-400'
+                            : 'text-[#10D4A2]'
+                        }`}
+                      >
+                        {textResult.risk_score}/100
+                      </div>
+                    </div>
+                    <div className="rounded-xl border border-white/10 bg-[#050919]/80 px-4 py-2.5">
+                      <div className="text-[10px] text-slate-400 uppercase tracking-wider">Artificial Urgency</div>
+                      <div className="font-mono text-xl font-bold text-amber-300 tabular-nums">
+                        {textResult.urgency_score}%
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Fact-Check Details & Deception Markers */}
+              <div className="grid gap-6 md:grid-cols-2">
+                <div className="rounded-2xl border border-white/10 bg-[#0b1229]/90 p-5 space-y-3">
+                  <div className="text-xs font-bold uppercase tracking-wider text-sky-400">
+                    Detected Manipulation &amp; Fallacy Signatures
+                  </div>
+                  <div className="space-y-2">
+                    {textResult.fallacies.map((fallacy, idx) => (
+                      <div
+                        key={idx}
+                        className="rounded-xl border border-white/8 bg-[#050919]/80 p-3 text-xs text-slate-200 flex items-start gap-2.5"
+                      >
+                        <span className="material-symbols-rounded notranslate text-rose-400 text-base shrink-0 mt-0.5" translate="no">flag</span>
+                        <span>{fallacy}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="rounded-2xl border border-white/10 bg-[#0b1229]/90 p-5 space-y-3">
+                  <div className="text-xs font-bold uppercase tracking-wider text-amber-400">
+                    Veracity &amp; Source Attribution Audit
+                  </div>
+                  <div className="space-y-3 text-xs">
+                    <div className="rounded-xl border border-white/8 bg-[#050919]/80 p-3">
+                      <div className="font-semibold text-slate-300">Factual Accuracy:</div>
+                      <p className="mt-1 text-slate-300">{textResult.veracity_breakdown.factual_accuracy}</p>
+                    </div>
+                    <div className="rounded-xl border border-white/8 bg-[#050919]/80 p-3">
+                      <div className="font-semibold text-slate-300">Source Attribution:</div>
+                      <p className="mt-1 text-slate-300">{textResult.veracity_breakdown.source_attribution}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Instant WhatsApp Debunk Reply Generator */}
+              <div className="rounded-2xl border border-white/10 bg-[#0b1229]/90 p-5 space-y-4">
+                <div>
+                  <h4 className="font-display text-sm font-bold text-white flex items-center gap-2">
+                    <MessageSquare className="h-4 w-4 text-[#10D4A2]" />
+                    Instant WhatsApp Group Debunk Reply
+                  </h4>
+                  <p className="mt-1 text-xs text-slate-400">
+                    Copy and paste into your family or community group to stop the forward immediately.
+                  </p>
+                </div>
+
+                <div className="grid gap-4 md:grid-cols-2">
+                  {/* English Debunk */}
+                  <div className="rounded-xl border border-white/10 bg-[#050919] p-4 flex flex-col justify-between space-y-3">
+                    <div>
+                      <div className="flex items-center justify-between text-xs font-semibold text-slate-400">
+                        <span>English Debunk Message</span>
+                      </div>
+                      <p className="mt-2 text-xs leading-relaxed text-slate-200 font-mono">
+                        {textResult.debunk_reply.english}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => {
+                        navigator.clipboard.writeText(textResult.debunk_reply.english);
+                        setCopiedDebunk('english');
+                        setTimeout(() => setCopiedDebunk(null), 2000);
+                      }}
+                      className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-[#10D4A2] px-3 py-2 text-xs font-bold text-[#050919] hover:bg-[#00e8ac] transition cursor-pointer"
+                    >
+                      {copiedDebunk === 'english' ? (
+                        <>
+                          <Check className="h-3.5 w-3.5" />
+                          <span>Copied to Clipboard!</span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="h-3.5 w-3.5" />
+                          <span>Copy English Debunk</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+
+                  {/* Hindi Debunk */}
+                  <div className="rounded-xl border border-white/10 bg-[#050919] p-4 flex flex-col justify-between space-y-3">
+                    <div>
+                      <div className="flex items-center justify-between text-xs font-semibold text-slate-400">
+                        <span>Hindi Debunk Message</span>
+                      </div>
+                      <p className="mt-2 text-xs leading-relaxed text-slate-200 font-mono">
+                        {textResult.debunk_reply.hindi}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => {
+                        navigator.clipboard.writeText(textResult.debunk_reply.hindi);
+                        setCopiedDebunk('hindi');
+                        setTimeout(() => setCopiedDebunk(null), 2000);
+                      }}
+                      className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-[#10D4A2] px-3 py-2 text-xs font-bold text-[#050919] hover:bg-[#00e8ac] transition cursor-pointer"
+                    >
+                      {copiedDebunk === 'hindi' ? (
+                        <>
+                          <Check className="h-3.5 w-3.5" />
+                          <span>Copied to Clipboard!</span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="h-3.5 w-3.5" />
+                          <span>Copy Hindi Debunk</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Handoff Bar */}
+              <div className="flex flex-wrap gap-2.5 rounded-xl border border-white/10 bg-[#0b1229]/80 p-3">
+                <button
+                  onClick={() => onNavigate('dampen')}
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-amber-500/15 px-3 py-2 text-xs font-semibold text-amber-300 hover:bg-amber-500/25 cursor-pointer"
+                >
+                  <TrendingDown className="h-3.5 w-3.5" />
+                  Simulate 24h Virality Spread (L2)
+                </button>
+                <button
+                  onClick={() => onNavigate('heal')}
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-rose-500/15 px-3 py-2 text-xs font-semibold text-rose-300 hover:bg-rose-500/25 cursor-pointer"
+                >
+                  <Gavel className="h-3.5 w-3.5" />
+                  Generate Debunk Sticker &amp; BSA 63 Dossier (L3)
+                </button>
+              </div>
+            </div>
+          ) : null
+        )
+      }
     </div>
   );
 };

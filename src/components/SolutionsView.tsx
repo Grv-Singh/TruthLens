@@ -1,20 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
-  AlertTriangle,
   ArrowRight,
   Building2,
-  Camera,
   CheckCircle2,
   Gavel,
   Landmark,
   Newspaper,
-  PhoneCall,
-  Radio,
-  ShieldAlert,
   ShieldCheck,
   ShoppingBag,
   Users,
-  Video,
 } from 'lucide-react';
 import type { DomainId, NavTab } from '../types/truthlens';
 
@@ -195,14 +189,6 @@ export const SolutionsView: React.FC<SolutionsViewProps> = ({
 }) => {
   const active = DOMAINS.find((d) => d.id === selectedDomain) ?? DOMAINS[0];
 
-  // Interactive domain mini-simulator controls
-  const [kycVirtualCam, setKycVirtualCam] = useState(true);
-  const [wireAmountCr, setWireAmountCr] = useState(1.8);
-  const [becFaceSyncMs, setBecFaceSyncMs] = useState(145);
-  const [interviewGazeDrift, setInterviewGazeDrift] = useState(68);
-  const [ugcHasC2pa, setUgcHasC2pa] = useState(false);
-  const [gigHammingDist, setGigHammingDist] = useState(4);
-
   const handleAction = () => {
     if (active.actionTarget.type === 'preset') {
       onLaunchPresetInForensics(active.actionTarget.presetId);
@@ -245,274 +231,46 @@ export const SolutionsView: React.FC<SolutionsViewProps> = ({
         })}
       </div>
 
-      {/* Active Vertical Detail + Live Domain Guardrail Console */}
-      <div className="grid gap-6 lg:grid-cols-12">
-        {/* Left: Capabilities & API Wiring */}
-        <div className="rounded-2xl border border-white/10 bg-[#0b1229]/90 p-6 lg:col-span-7 space-y-5">
-          <div>
-            <h3 className="font-display text-xl font-bold text-white">{active.title}</h3>
-            <p className="mt-1 text-sm text-slate-300">{active.tagline}</p>
-          </div>
-
-          <div className="space-y-3">
-            {active.pillars.map((p) => (
-              <div
-                key={p.title}
-                className="rounded-xl border border-white/8 bg-[#050919]/75 p-4"
-              >
-                <div className="flex items-center gap-2 font-display text-sm font-bold text-[#10D4A2]">
-                  <CheckCircle2 className="h-4 w-4 shrink-0" />
-                  {p.title}
-                </div>
-                <p className="mt-1.5 text-xs leading-relaxed text-slate-300">{p.detail}</p>
-              </div>
-            ))}
-          </div>
-
-          <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-4">
-            <div className="flex flex-wrap gap-1.5">
-              {active.apisUsed.map((api) => (
-                <code
-                  key={api}
-                  className="rounded-md border border-[#10D4A2]/25 bg-[#10D4A2]/10 px-2 py-1 text-[11px] text-[#10D4A2]"
-                >
-                  {api}
-                </code>
-              ))}
-            </div>
-            <button
-              onClick={handleAction}
-              className="inline-flex items-center gap-2 rounded-xl bg-[#10D4A2] px-4 py-2.5 text-xs font-bold text-[#050919] hover:bg-[#00e8ac] cursor-pointer"
-            >
-              {active.actionLabel}
-              <ArrowRight className="h-4 w-4" />
-            </button>
-          </div>
+      {/* Active Vertical Detail */}
+      <div className="rounded-2xl border border-white/10 bg-[#0b1229]/90 p-6 space-y-5">
+        <div>
+          <h3 className="font-display text-xl font-bold text-white">{active.title}</h3>
+          <p className="mt-1 text-sm text-slate-300">{active.tagline}</p>
         </div>
 
-        {/* Right: Live Interactive Domain Telemetry Sandbox */}
-        <div className="rounded-2xl border border-white/10 bg-gradient-to-b from-[#101a38] to-[#070d20] p-5 lg:col-span-5 space-y-4">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-sky-400">
-              Live Policy Gate Simulator
-            </span>
-            <span className="rounded-full bg-white/10 px-2 py-0.5 font-mono text-[10px] text-slate-200">
-              REAL-TIME SDK
-            </span>
+        <div className="grid gap-4 md:grid-cols-2">
+          {active.pillars.map((p) => (
+            <div
+              key={p.title}
+              className="rounded-xl border border-white/8 bg-[#050919]/75 p-4"
+            >
+              <div className="flex items-center gap-2 font-display text-sm font-bold text-[#10D4A2]">
+                <CheckCircle2 className="h-4 w-4 shrink-0" />
+                {p.title}
+              </div>
+              <p className="mt-1.5 text-xs leading-relaxed text-slate-300">{p.detail}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-4">
+          <div className="flex flex-wrap gap-1.5">
+            {active.apisUsed.map((api) => (
+              <code
+                key={api}
+                className="rounded-md border border-[#10D4A2]/25 bg-[#10D4A2]/10 px-2 py-1 text-[11px] text-[#10D4A2]"
+              >
+                {api}
+              </code>
+            ))}
           </div>
-
-          {active.id === 'fintech' && (
-            <div className="space-y-4 text-xs">
-              <div className="rounded-xl border border-white/10 bg-[#050919]/80 p-4 space-y-3">
-                <div className="flex items-center justify-between font-semibold text-white">
-                  <span className="flex items-center gap-1.5">
-                    <Camera className="h-4 w-4 text-sky-400" />
-                    Remote KYC Passive Liveness Check
-                  </span>
-                  <label className="inline-flex items-center gap-1.5 text-[11px] text-slate-300 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={kycVirtualCam}
-                      onChange={(e) => setKycVirtualCam(e.target.checked)}
-                      className="accent-rose-500"
-                    />
-                    Inject OBS Virtual-Cam
-                  </label>
-                </div>
-                <div
-                  className={`rounded-lg p-3 font-mono text-[11px] ${
-                    kycVirtualCam
-                      ? 'bg-rose-500/15 text-rose-200 border border-rose-500/35'
-                      : 'bg-[#10D4A2]/15 text-[#10D4A2] border border-[#10D4A2]/35'
-                  }`}
-                >
-                  {kycVirtualCam
-                    ? 'BLOCKED: Virtual-camera frame injection + facial splice ELA delta (91/100). Account onboarding halted.'
-                    : 'PASSED: Hardware sensor noise verified + natural micro-saccades + C2PA intact.'}
-                </div>
-              </div>
-
-              <div className="rounded-xl border border-white/10 bg-[#050919]/80 p-4 space-y-2.5">
-                <div className="flex items-center justify-between">
-                  <span className="flex items-center gap-1.5 font-semibold text-white">
-                    <PhoneCall className="h-4 w-4 text-amber-400" />
-                    Call-Center Wire Transfer Gate
-                  </span>
-                  <span className="font-mono text-amber-300">₹{wireAmountCr.toFixed(1)} Cr</span>
-                </div>
-                <input
-                  type="range"
-                  min={0.1}
-                  max={5.0}
-                  step={0.1}
-                  value={wireAmountCr}
-                  onChange={(e) => setWireAmountCr(Number(e.target.value))}
-                  className="w-full accent-amber-400"
-                />
-                <div className="text-[11px] text-slate-300">
-                  {wireAmountCr >= 1.0
-                    ? 'High-Risk Threshold: Mandatory SciPy 11.2 kHz Voice-Clone FFT + Secondary Hardware Token active.'
-                    : 'Standard Threshold: Passive voice glottal kurtosis monitor running silently.'}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {active.id === 'social' && (
-            <div className="space-y-3 text-xs">
-              <div className="rounded-xl border border-[#10D4A2]/30 bg-[#10D4A2]/10 p-4 space-y-1.5">
-                <div className="font-bold text-[#10D4A2]">Benign Edit vs. Malicious Deepfake</div>
-                <p className="text-slate-200">
-                  TruthLens separates creative filters / satire (labeled softly with C2PA) from
-                  non-consensual impersonation or financial scams (hard 15s cognitive cooling +
-                  WhatsApp debunk sticker).
-                </p>
-              </div>
-              <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 space-y-1.5">
-                <div className="font-bold text-amber-300">Wellbeing &amp; Bot Suppression Live</div>
-                <p className="text-slate-200">
-                  Exposure streak detector pauses auto-play after 4 consecutive outrage-bait clips,
-                  while coordinated bot clusters with low account trust are downranked 90%.
-                </p>
-              </div>
-            </div>
-          )}
-
-          {active.id === 'enterprise' && (
-            <div className="space-y-4 text-xs">
-              <div className="rounded-xl border border-white/10 bg-[#050919]/80 p-4 space-y-2.5">
-                <div className="flex items-center justify-between font-semibold text-white">
-                  <span className="flex items-center gap-1.5">
-                    <Video className="h-4 w-4 text-rose-400" />
-                    Zoom/Meet BEC 2.0 Audio-Lip Drift
-                  </span>
-                  <span className="font-mono text-rose-300">{becFaceSyncMs} ms</span>
-                </div>
-                <input
-                  type="range"
-                  min={15}
-                  max={240}
-                  value={becFaceSyncMs}
-                  onChange={(e) => setBecFaceSyncMs(Number(e.target.value))}
-                  className="w-full accent-rose-400"
-                />
-                <div
-                  className={`rounded-lg p-2.5 font-mono text-[11px] ${
-                    becFaceSyncMs > 90
-                      ? 'bg-rose-500/15 text-rose-200'
-                      : 'bg-[#10D4A2]/15 text-[#10D4A2]'
-                  }`}
-                >
-                  {becFaceSyncMs > 90
-                    ? 'BEC 2.0 ALERT: Real-time face-swap rendering lag detected on CFO feed! Freeze urgent wire request.'
-                    : 'CALL AUTHENTIC: Sub-90ms organic audiovisual sync.'}
-                </div>
-              </div>
-
-              <div className="rounded-xl border border-white/10 bg-[#050919]/80 p-4 space-y-2.5">
-                <div className="flex items-center justify-between font-semibold text-white">
-                  <span>Proxy Interview Gaze / Prompting Anomaly</span>
-                  <span className="font-mono text-amber-300">{interviewGazeDrift}%</span>
-                </div>
-                <input
-                  type="range"
-                  min={5}
-                  max={95}
-                  value={interviewGazeDrift}
-                  onChange={(e) => setInterviewGazeDrift(Number(e.target.value))}
-                  className="w-full accent-amber-400"
-                />
-                <div className="text-[11px] text-slate-300">
-                  {interviewGazeDrift > 55
-                    ? 'Flagged for Recruiter: High off-screen prompting / overlay jitter correlation.'
-                    : 'Candidate behavioral telemetry within normal technical interview bounds.'}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {active.id === 'journalism' && (
-            <div className="space-y-4 text-xs">
-              <div className="rounded-xl border border-white/10 bg-[#050919]/80 p-4 space-y-3">
-                <div className="flex items-center justify-between font-semibold text-white">
-                  <span className="flex items-center gap-1.5">
-                    <Radio className="h-4 w-4 text-sky-400" />
-                    Newsroom Broadcast Readiness Gate
-                  </span>
-                  <label className="inline-flex items-center gap-1.5 text-[11px] cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={ugcHasC2pa}
-                      onChange={(e) => setUgcHasC2pa(e.target.checked)}
-                      className="accent-[#10D4A2]"
-                    />
-                    C2PA Camera Signed
-                  </label>
-                </div>
-                <div
-                  className={`rounded-lg p-3 font-mono text-[11px] ${
-                    ugcHasC2pa
-                      ? 'bg-[#10D4A2]/15 text-[#10D4A2]'
-                      : 'bg-amber-500/15 text-amber-200'
-                  }`}
-                >
-                  {ugcHasC2pa
-                    ? 'CLEARED FOR AIR: Hardware C2PA provenance intact + ELA noise uniform + zero SynthID.'
-                    : 'HOLD BROADCAST: Stripped metadata on breaking UGC — route to Desk ELA + 11.2 kHz audio verification.'}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {active.id === 'commerce' && (
-            <div className="space-y-4 text-xs">
-              <div className="rounded-xl border border-white/10 bg-[#050919]/80 p-4 space-y-2.5">
-                <div className="flex items-center justify-between font-semibold text-white">
-                  <span>Gig Driver Re-Verification (Qdrant dHash)</span>
-                  <span className="font-mono text-[#10D4A2]">Hamming d = {gigHammingDist}</span>
-                </div>
-                <input
-                  type="range"
-                  min={0}
-                  max={24}
-                  value={gigHammingDist}
-                  onChange={(e) => setGigHammingDist(Number(e.target.value))}
-                  className="w-full accent-[#10D4A2]"
-                />
-                <div
-                  className={`rounded-lg p-3 font-mono text-[11px] ${
-                    gigHammingDist <= 10
-                      ? 'bg-[#10D4A2]/15 text-[#10D4A2]'
-                      : 'bg-rose-500/15 text-rose-200'
-                  }`}
-                >
-                  {gigHammingDist <= 10
-                    ? `VERIFIED OPERATOR (d=${gigHammingDist} ≤ 10): Shift unlocked in 340ms with zero friction.`
-                    : `ACCOUNT SHARING / SPOOF ALERT (d=${gigHammingDist} > 10): Require live challenge re-KYC.`}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {active.id === 'legal' && (
-            <div className="space-y-3 text-xs">
-              <div className="rounded-xl border border-rose-500/30 bg-rose-500/10 p-4 space-y-1.5">
-                <div className="flex items-center gap-1.5 font-bold text-rose-300">
-                  <ShieldAlert className="h-4 w-4" />
-                  Admissible Chain-of-Custody Validation
-                </div>
-                <p className="text-slate-200">
-                  Every scan binds SHA-256 + 64-bit dHash + UTC timestamp directly into a Section 63
-                  BSA 2023 certificate, Section 67C IT Act / Sec 94 BNSS ISP CGNAT preservation
-                  order, and Rule 3(2)(b) 24-hour intermediary removal notice.
-                </p>
-              </div>
-              <div className="rounded-xl border border-white/10 bg-[#050919]/80 p-3 flex items-center gap-2 text-slate-300">
-                <AlertTriangle className="h-4 w-4 text-amber-400 shrink-0" />
-                Client-side edge preservation ensures exhibits are hashed before any upload.
-              </div>
-            </div>
-          )}
+          <button
+            onClick={handleAction}
+            className="inline-flex items-center gap-2 rounded-xl bg-[#10D4A2] px-4 py-2.5 text-xs font-bold text-[#050919] hover:bg-[#00e8ac] cursor-pointer"
+          >
+            {active.actionLabel}
+            <ArrowRight className="h-4 w-4" />
+          </button>
         </div>
       </div>
     </div>

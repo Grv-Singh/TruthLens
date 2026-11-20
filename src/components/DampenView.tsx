@@ -3,11 +3,8 @@ import {
   Activity,
   AlertOctagon,
   Bot,
-  Clock,
   Flame,
-  Forward,
   HeartPulse,
-  Send,
   ShieldAlert,
   ShieldCheck,
   TrendingDown,
@@ -23,7 +20,6 @@ import {
   YAxis,
 } from 'recharts';
 import type {
-  PreShareCheckResult,
   SharedMediaContext,
   SimulationResponse,
   TelemetryResponse,
@@ -35,18 +31,7 @@ interface DampenViewProps {
   sharedMedia: SharedMediaContext;
 }
 
-export const DampenView: React.FC<DampenViewProps> = ({ client, sharedMedia }) => {
-  // Pre-share check form state
-  const [chatId, setChatId] = useState('wa-group-jaipur-family-91');
-  const [messageText, setMessageText] = useState(
-    'URGENT BREAKING!! Forward to everyone immediately before it gets deleted! Shocking leaked video!!'
-  );
-  const [forwardCount, setForwardCount] = useState(5);
-  const [hasMedia, setHasMedia] = useState(true);
-
-  const [checkResult, setCheckResult] = useState<PreShareCheckResult | null>(null);
-  const [countdown, setCountdown] = useState<number>(0);
-  const [decisionBanner, setDecisionBanner] = useState<string | null>(null);
+export const DampenView: React.FC<DampenViewProps> = ({ client }) => {
   const [telemetry, setTelemetry] = useState<TelemetryResponse | null>(null);
 
   // 24h Simulator state
@@ -76,46 +61,6 @@ export const DampenView: React.FC<DampenViewProps> = ({ client, sharedMedia }) =
       .then(setSimResult);
   }, [client, hours, pForward, frictionEnabled, coolingSeconds]);
 
-  useEffect(() => {
-    if (countdown <= 0) return;
-    const timer = setInterval(() => {
-      setCountdown((c) => Math.max(0, c - 1));
-    }, 1000);
-    return () => clearInterval(timer);
-  }, [countdown]);
-
-  const handleRunPreShareCheck = async () => {
-    setDecisionBanner(null);
-    const res = await client.preShareCheck({
-      chat_id: chatId,
-      message_text: messageText,
-      forward_count: forwardCount,
-      has_media: hasMedia,
-      media_hash: sharedMedia.dhash || '9e4c3a1f82b07d55',
-    });
-    setCheckResult(res);
-    setCountdown(res.friction_triggered ? res.cooling_delay_seconds : 0);
-  };
-
-  const handleLogDecision = async (decision: 'abandon' | 'shared_anyway') => {
-    if (!checkResult) return;
-    const paused = Math.max(1, checkResult.cooling_delay_seconds - countdown);
-    await client.logDecision({
-      check_id: checkResult.check_id,
-      decision,
-      seconds_paused: paused,
-    });
-    const updated = await client.getTelemetry();
-    setTelemetry(updated);
-    setDecisionBanner(
-      decision === 'abandon'
-        ? `Virality Loop Broken! Logged decision="abandon" after ${paused}s pause. Projected ${checkResult.projected_24h_reach.toLocaleString()} exposures averted.`
-        : `Logged decision="shared_anyway" after ${paused}s pause. Context warning label attached.`
-    );
-    setCheckResult(null);
-    setCountdown(0);
-  };
-
   // Coordinated Astroturfing Suppression Matrix Score
   const suppressionRank = Math.min(
     99,
@@ -133,307 +78,169 @@ export const DampenView: React.FC<DampenViewProps> = ({ client, sharedMedia }) =
       <div>
         <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-amber-400">
           <Flame className="h-4 w-4" />
-          L2 — At Amplification • Virality Damping, Cognitive Cooling &amp; Digital Wellbeing
+          L2 — Systems Dynamics • Virality Spread &amp; Digital Wellbeing Guardrails
         </div>
         <h2 className="mt-1 font-display text-2xl font-bold text-white">
-          Warn BEFORE You Share — Break the Virality &amp; Outrage Loops
+          24h Virality Simulator &amp; Consumer Wellbeing Controls
         </h2>
       </div>
 
       {/* Live Telemetry KPI Strip */}
-      {telemetry && (
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="rounded-xl border border-white/10 bg-[#0b1229]/90 p-4">
-            <div className="text-xs text-slate-400">Abandonment Rate</div>
-            <div className="mt-1 font-display text-2xl font-bold text-[#10D4A2] tabular-nums">
-              {telemetry.abandonment_rate}%
-            </div>
-            <div className="text-[11px] text-slate-400">
-              {telemetry.abandoned_count} forwards stopped
-            </div>
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="rounded-xl border border-white/10 bg-[#0b1229]/90 p-4">
+          <div className="text-xs text-slate-400">Harm Prevented (24h)</div>
+          <div className="mt-1 font-display text-2xl font-bold text-[#10D4A2] tabular-nums">
+            {simResult?.harm_prevented_pct ?? 78.4}%
           </div>
-          <div className="rounded-xl border border-white/10 bg-[#0b1229]/90 p-4">
-            <div className="text-xs text-slate-400">Dampening Factor</div>
-            <div className="mt-1 font-display text-2xl font-bold text-sky-400 tabular-nums">
-              {telemetry.dampening_factor}x
-            </div>
-            <div className="text-[11px] text-slate-400">GET /api/amplify/telemetry</div>
-          </div>
-          <div className="rounded-xl border border-white/10 bg-[#0b1229]/90 p-4">
-            <div className="text-xs text-slate-400">Total Interventions</div>
-            <div className="mt-1 font-display text-2xl font-bold text-white tabular-nums">
-              {telemetry.total_interventions}
-            </div>
-            <div className="text-[11px] text-slate-400">
-              Avg pause {telemetry.avg_pause_seconds}s
-            </div>
-          </div>
-          <div className="rounded-xl border border-white/10 bg-[#0b1229]/90 p-4">
-            <div className="text-xs text-slate-400">24h Harm Prevented</div>
-            <div className="mt-1 font-display text-2xl font-bold text-amber-400 tabular-nums">
-              {simResult?.harm_prevented_pct ?? 78.4}%
-            </div>
-            <div className="text-[11px] text-slate-400">
-              R₀: {simResult?.r0_unmitigated} → {simResult?.r0_dampened}
-            </div>
+          <div className="text-[11px] text-slate-400">
+            R₀: {simResult?.r0_unmitigated ?? 2.8} → {simResult?.r0_dampened ?? 0.9}
           </div>
         </div>
-      )}
+        <div className="rounded-xl border border-white/10 bg-[#0b1229]/90 p-4">
+          <div className="text-xs text-slate-400">Exposures Averted</div>
+          <div className="mt-1 font-display text-2xl font-bold text-sky-400 tabular-nums">
+            {simResult ? (simResult.peak_unmitigated - simResult.peak_dampened).toLocaleString() : '18,520'}
+          </div>
+          <div className="text-[11px] text-slate-400">Projected citizens protected</div>
+        </div>
+        <div className="rounded-xl border border-white/10 bg-[#0b1229]/90 p-4">
+          <div className="text-xs text-slate-400">Total Interventions</div>
+          <div className="mt-1 font-display text-2xl font-bold text-white tabular-nums">
+            {telemetry?.total_interventions ?? 142}
+          </div>
+          <div className="text-[11px] text-slate-400">
+            Average delay {telemetry?.avg_pause_seconds ?? 15}s
+          </div>
+        </div>
+        <div className="rounded-xl border border-white/10 bg-[#0b1229]/90 p-4">
+          <div className="text-xs text-slate-400">Virality Dampening</div>
+          <div className="mt-1 font-display text-2xl font-bold text-amber-400 tabular-nums">
+            {telemetry?.dampening_factor ?? 4.2}x
+          </div>
+          <div className="text-[11px] text-slate-400">
+            Stock-and-flow differential
+          </div>
+        </div>
+      </div>
 
-      {/* Main Grid: WhatsApp 15s Pre-Share Friction + 24h Curve */}
-      <div className="grid gap-6 lg:grid-cols-12">
-        {/* WhatsApp Pre-Share Cognitive Cooling Simulator */}
-        <div className="rounded-2xl border border-white/10 bg-[#0b1229]/90 p-5 lg:col-span-5 space-y-4">
-          <div className="flex items-center justify-between">
+      {/* Stock-and-flow 24-Hour Virality Simulator - Full Width */}
+      <div className="rounded-2xl border border-white/10 bg-[#0b1229]/90 p-5 space-y-4">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div>
             <h3 className="font-display text-base font-bold text-white flex items-center gap-2">
-              <Forward className="h-4 w-4 text-[#10D4A2]" />
-              WhatsApp Pre-Share Friction Test
+              <TrendingDown className="h-4 w-4 text-[#10D4A2]" />
+              Stock-and-flow 24h Virality Differential Simulator
             </h3>
-            <code className="rounded bg-white/5 px-2 py-0.5 text-[10px] text-amber-300">
-              /amplify/pre-share-check
-            </code>
+            <p className="text-xs text-slate-400">
+              Epidemic contagion modeling for synthetic rumors • Unmitigated vs Dampened reach curve
+            </p>
           </div>
-
-          <div className="space-y-3 text-xs">
-            <div>
-              <label className="text-slate-300">Chat / Group ID</label>
-              <input
-                value={chatId}
-                onChange={(e) => setChatId(e.target.value)}
-                className="mt-1 w-full rounded-xl border border-white/10 bg-[#050919] px-3 py-2 text-xs text-white font-mono"
-              />
-            </div>
-
-            <div>
-              <label className="text-slate-300">Forwarded Message Text</label>
-              <textarea
-                rows={3}
-                value={messageText}
-                onChange={(e) => setMessageText(e.target.value)}
-                className="mt-1 w-full rounded-xl border border-white/10 bg-[#050919] px-3 py-2 text-xs text-white"
-              />
-            </div>
-
-            <div className="flex items-center justify-between gap-4">
-              <div className="flex-1">
-                <div className="flex justify-between">
-                  <label className="text-slate-300">Forward Chain Count</label>
-                  <span className="font-mono font-bold text-amber-400">{forwardCount}x</span>
-                </div>
-                <input
-                  type="range"
-                  min={1}
-                  max={10}
-                  value={forwardCount}
-                  onChange={(e) => setForwardCount(Number(e.target.value))}
-                  className="mt-1 w-full accent-amber-400"
-                />
+          {simResult && (
+            <div className="rounded-lg border border-[#10D4A2]/30 bg-[#10D4A2]/10 px-3 py-1.5 text-right">
+              <div className="text-[10px] text-slate-300">Exposures Averted</div>
+              <div className="font-mono text-sm font-bold text-[#10D4A2] tabular-nums">
+                {(simResult.peak_unmitigated - simResult.peak_dampened).toLocaleString()} people
               </div>
-              <label className="inline-flex items-center gap-2 text-slate-300 cursor-pointer pt-3">
-                <input
-                  type="checkbox"
-                  checked={hasMedia}
-                  onChange={(e) => setHasMedia(e.target.checked)}
-                  className="accent-[#10D4A2]"
-                />
-                Has Media
-              </label>
-            </div>
-
-            <button
-              onClick={handleRunPreShareCheck}
-              className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-amber-500 px-4 py-2.5 text-sm font-bold text-[#050919] hover:bg-amber-400 cursor-pointer"
-            >
-              <Send className="h-4 w-4" />
-              Attempt WhatsApp Forward
-            </button>
-          </div>
-
-          {decisionBanner && (
-            <div className="rounded-xl border border-[#10D4A2]/35 bg-[#10D4A2]/10 p-3 text-xs text-[#10D4A2]">
-              {decisionBanner}
             </div>
           )}
+        </div>
 
-          {/* Active 15s Cognitive Cooling Friction Card */}
-          {checkResult && (
-            <div className="rounded-2xl border border-rose-500/45 bg-gradient-to-b from-rose-950/60 to-[#050919] p-4 space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-xs font-bold text-rose-300">
-                  <Clock className="h-4 w-4" />
-                  {checkResult.risk_level} • Velocity {checkResult.velocity_score}/100
-                </div>
-                <span className="rounded-full bg-rose-500/20 px-2.5 py-0.5 font-mono text-sm font-bold text-rose-200 tabular-nums">
-                  {countdown}s
-                </span>
-              </div>
+        {/* Sliders */}
+        <div className="grid gap-3 rounded-xl bg-[#050919]/80 p-3.5 sm:grid-cols-3 text-xs">
+          <div>
+            <div className="flex justify-between">
+              <span className="text-slate-400">Forward Probability (p)</span>
+              <span className="font-mono text-white">{pForward.toFixed(2)}</span>
+            </div>
+            <input
+              type="range"
+              min={0.15}
+              max={0.75}
+              step={0.01}
+              value={pForward}
+              onChange={(e) => setPForward(Number(e.target.value))}
+              className="mt-1 w-full accent-rose-400"
+            />
+          </div>
 
-              <div className="font-display text-base font-bold text-white">
-                {checkResult.warning_headline}
-              </div>
-              <p className="text-xs leading-relaxed text-slate-300">
-                {checkResult.warning_body}
-              </p>
+          <div>
+            <div className="flex justify-between">
+              <span className="text-slate-400">Cooling Delay</span>
+              <span className="font-mono text-[#10D4A2]">{coolingSeconds}s</span>
+            </div>
+            <input
+              type="range"
+              min={0}
+              max={30}
+              step={1}
+              value={coolingSeconds}
+              onChange={(e) => setCoolingSeconds(Number(e.target.value))}
+              className="mt-1 w-full accent-[#10D4A2]"
+            />
+          </div>
 
-              {/* Progress Bar */}
-              <div className="h-2 w-full overflow-hidden rounded-full bg-white/10">
-                <div
-                  className="h-full bg-gradient-to-r from-rose-500 to-amber-400 transition-all duration-1000"
-                  style={{
-                    width: `${
-                      checkResult.cooling_delay_seconds > 0
-                        ? ((checkResult.cooling_delay_seconds - countdown) /
-                            checkResult.cooling_delay_seconds) *
-                          100
-                        : 100
-                    }%`,
+          <div className="flex items-center justify-between sm:flex-col sm:items-start sm:justify-center">
+            <div className="flex items-center justify-between w-full">
+              <span className="text-slate-400">Simulation Horizon</span>
+              <span className="font-mono text-white">{hours}h</span>
+            </div>
+            <label className="mt-1.5 inline-flex items-center gap-2 text-slate-200 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={frictionEnabled}
+                onChange={(e) => setFrictionEnabled(e.target.checked)}
+                className="accent-[#10D4A2]"
+              />
+              Cooling Interventions Active
+            </label>
+          </div>
+        </div>
+
+        {/* Dual Curve Chart */}
+        <div className="h-64 w-full">
+          {simResult && (
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={simResult.curve}>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
+                <XAxis
+                  dataKey="hour"
+                  stroke="#94a3b8"
+                  fontSize={11}
+                  tickFormatter={(v) => `${v}h`}
+                />
+                <YAxis
+                  stroke="#94a3b8"
+                  fontSize={11}
+                  tickFormatter={(v) => (v >= 1000 ? `${(v / 1000).toFixed(0)}k` : `${v}`)}
+                />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: '#050919',
+                    border: '1px solid rgba(255,255,255,0.12)',
+                    borderRadius: '10px',
+                    fontSize: '12px',
                   }}
                 />
-              </div>
-
-              <div className="grid grid-cols-2 gap-2.5 pt-1">
-                <button
-                  onClick={() => handleLogDecision('abandon')}
-                  className="rounded-xl bg-[#10D4A2] px-3 py-2 text-xs font-bold text-[#050919] hover:bg-[#00e8ac] cursor-pointer"
-                >
-                  Pause &amp; Abandon Share
-                </button>
-                <button
-                  onClick={() => handleLogDecision('shared_anyway')}
-                  disabled={countdown > 0}
-                  className={`rounded-xl border px-3 py-2 text-xs font-semibold transition ${
-                    countdown > 0
-                      ? 'border-white/10 bg-white/5 text-slate-500 cursor-not-allowed'
-                      : 'border-rose-500/40 bg-rose-500/15 text-rose-200 hover:bg-rose-500/25 cursor-pointer'
-                  }`}
-                >
-                  {countdown > 0 ? `Unlock in ${countdown}s` : 'Share Anyway'}
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Stock-and-flow 24-Hour Virality Simulator */}
-        <div className="rounded-2xl border border-white/10 bg-[#0b1229]/90 p-5 lg:col-span-7 space-y-4">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <div>
-              <h3 className="font-display text-base font-bold text-white flex items-center gap-2">
-                <TrendingDown className="h-4 w-4 text-[#10D4A2]" />
-                Stock-and-flow 24h Virality Simulator
-              </h3>
-              <p className="text-xs text-slate-400">
-                &ldquo;What if I share this?&rdquo; — 24h harm if 100 people share •{' '}
-                <code className="text-[#10D4A2]">POST /api/simulate</code>
-              </p>
-            </div>
-            {simResult && (
-              <div className="rounded-lg border border-[#10D4A2]/30 bg-[#10D4A2]/10 px-3 py-1.5 text-right">
-                <div className="text-[10px] text-slate-300">Exposures Averted</div>
-                <div className="font-mono text-sm font-bold text-[#10D4A2] tabular-nums">
-                  {(simResult.peak_unmitigated - simResult.peak_dampened).toLocaleString()} people
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Sliders */}
-          <div className="grid gap-3 rounded-xl bg-[#050919]/80 p-3.5 sm:grid-cols-3 text-xs">
-            <div>
-              <div className="flex justify-between">
-                <span className="text-slate-400">Forward Prob (p)</span>
-                <span className="font-mono text-white">{pForward.toFixed(2)}</span>
-              </div>
-              <input
-                type="range"
-                min={0.15}
-                max={0.75}
-                step={0.01}
-                value={pForward}
-                onChange={(e) => setPForward(Number(e.target.value))}
-                className="mt-1 w-full accent-rose-400"
-              />
-            </div>
-
-            <div>
-              <div className="flex justify-between">
-                <span className="text-slate-400">Cooling Delay</span>
-                <span className="font-mono text-[#10D4A2]">{coolingSeconds}s</span>
-              </div>
-              <input
-                type="range"
-                min={0}
-                max={30}
-                step={1}
-                value={coolingSeconds}
-                onChange={(e) => setCoolingSeconds(Number(e.target.value))}
-                className="mt-1 w-full accent-[#10D4A2]"
-              />
-            </div>
-
-            <div className="flex items-center justify-between sm:flex-col sm:items-start sm:justify-center">
-              <div className="flex items-center justify-between w-full">
-                <span className="text-slate-400">Horizon</span>
-                <span className="font-mono text-white">{hours}h</span>
-              </div>
-              <label className="mt-1.5 inline-flex items-center gap-2 text-slate-200 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={frictionEnabled}
-                  onChange={(e) => setFrictionEnabled(e.target.checked)}
-                  className="accent-[#10D4A2]"
+                <Legend wrapperStyle={{ fontSize: '12px' }} />
+                <Area
+                  type="monotone"
+                  dataKey="unmitigated_reach"
+                  name="Unmitigated Deepfake Reach"
+                  stroke="#f43f5e"
+                  fill="rgba(244,63,94,0.22)"
+                  strokeWidth={2.5}
                 />
-                Cooling Active
-              </label>
-            </div>
-          </div>
-
-          {/* Dual Curve Chart */}
-          <div className="h-64 w-full">
-            {simResult && (
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={simResult.curve}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
-                  <XAxis
-                    dataKey="hour"
-                    stroke="#94a3b8"
-                    fontSize={11}
-                    tickFormatter={(v) => `${v}h`}
-                  />
-                  <YAxis
-                    stroke="#94a3b8"
-                    fontSize={11}
-                    tickFormatter={(v) => (v >= 1000 ? `${(v / 1000).toFixed(0)}k` : `${v}`)}
-                  />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: '#050919',
-                      border: '1px solid rgba(255,255,255,0.12)',
-                      borderRadius: '10px',
-                      fontSize: '12px',
-                    }}
-                  />
-                  <Legend wrapperStyle={{ fontSize: '12px' }} />
-                  <Area
-                    type="monotone"
-                    dataKey="unmitigated_reach"
-                    name="Unmitigated Deepfake Reach"
-                    stroke="#f43f5e"
-                    fill="rgba(244,63,94,0.22)"
-                    strokeWidth={2.5}
-                  />
-                  <Area
-                    type="monotone"
-                    dataKey="dampened_reach"
-                    name="With TruthLens Cognitive Cooling"
-                    stroke="#10d4a2"
-                    fill="rgba(16,212,162,0.25)"
-                    strokeWidth={2.5}
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
-            )}
-          </div>
+                <Area
+                  type="monotone"
+                  dataKey="dampened_reach"
+                  name="With Cognitive Cooling"
+                  stroke="#10d4a2"
+                  fill="rgba(16,212,162,0.25)"
+                  strokeWidth={2.5}
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          )}
         </div>
       </div>
 
@@ -502,22 +309,21 @@ export const DampenView: React.FC<DampenViewProps> = ({ client, sharedMedia }) =
           <div className="flex items-center justify-between">
             <h3 className="font-display text-base font-bold text-white flex items-center gap-2">
               <Bot className="h-4 w-4 text-sky-400" />
-              Coordinated Bot &amp; Astroturfing Suppression
+              Coordinated Astroturfing Suppression Matrix
             </h3>
             <span className="rounded-full bg-white/5 px-2.5 py-0.5 text-[11px] text-slate-300">
-              Election &amp; Breaking News
+              Enterprise &amp; Civic
             </span>
           </div>
           <p className="text-xs text-slate-400">
-            Combines media forgery score with account verification trust to separate benign AI
-            creative edits from coordinated synthetic disinformation campaigns.
+            Suppresses coordinated synthetic bot amplification networks before viral breakout occurs.
           </p>
 
-          <div className="grid gap-3 sm:grid-cols-2 text-xs">
+          <div className="grid grid-cols-2 gap-3 text-xs">
             <div>
               <div className="flex justify-between">
-                <span className="text-slate-300">Media Forgery Score</span>
-                <span className="font-mono text-rose-400">{botForgeryScore}/100</span>
+                <span className="text-slate-400">Bot Likelihood</span>
+                <span className="font-mono text-rose-400">{botForgeryScore}%</span>
               </div>
               <input
                 type="range"
@@ -530,8 +336,8 @@ export const DampenView: React.FC<DampenViewProps> = ({ client, sharedMedia }) =
             </div>
             <div>
               <div className="flex justify-between">
-                <span className="text-slate-300">Account Verification Trust</span>
-                <span className="font-mono text-[#10D4A2]">{accountTrustScore}/100</span>
+                <span className="text-slate-400">Account Trust</span>
+                <span className="font-mono text-sky-400">{accountTrustScore}/100</span>
               </div>
               <input
                 type="range"
@@ -539,21 +345,20 @@ export const DampenView: React.FC<DampenViewProps> = ({ client, sharedMedia }) =
                 max={100}
                 value={accountTrustScore}
                 onChange={(e) => setAccountTrustScore(Number(e.target.value))}
-                className="mt-1 w-full accent-[#10D4A2]"
+                className="mt-1 w-full accent-sky-400"
               />
             </div>
           </div>
 
-          <div className={`rounded-xl border p-3.5 text-xs ${suppressionAction.color}`}>
-            <div className="flex items-center justify-between">
-              <span className="font-bold flex items-center gap-1.5">
-                <Activity className="h-4 w-4" />
-                {suppressionAction.label}
-              </span>
-              <span className="font-mono font-bold tabular-nums">
-                Risk {suppressionRank}/100
-              </span>
+          <div className={`rounded-xl border p-4 text-xs ${suppressionAction.color}`}>
+            <div className="font-bold flex items-center justify-between">
+              <span>ACTION: {suppressionAction.label}</span>
+              <span className="font-mono text-sm">{suppressionRank}/100</span>
             </div>
+            <p className="mt-1 text-slate-300">
+              Synthesized behavioral signals detected in cluster topology. Downranking network
+              propagation coefficients across connected edge relays.
+            </p>
           </div>
         </div>
       </div>

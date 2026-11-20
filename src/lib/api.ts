@@ -11,6 +11,7 @@ import type {
   SimulationResponse,
   TakedownNoticeResult,
   TelemetryResponse,
+  TextDetectResult,
   VaultItem,
   VaultVerifyResult,
   WatermarkResult,
@@ -24,6 +25,7 @@ import {
   hammingDistanceHex,
   runLocalAudioDetect,
   runLocalEdgeDetect,
+  runLocalTextDetect,
   runLocalViralitySimulation,
   runLocalWatermarkCheck,
 } from './forensics';
@@ -272,6 +274,42 @@ export class TruthLensClient {
       }
     }
     return runLocalAudioDetect(file, presetMode);
+  }
+
+  // 5b. POST /api/detect/text (WhatsApp Forward / Claim Misinformation Check)
+  async detectText(text: string): Promise<TextDetectResult> {
+    if (this.shouldTryLive && text && text.trim().length > 0) {
+      try {
+        const res = await fetchWithTimeout(`${this.apiBase}/api/detect/text`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text }),
+        }, 8000);
+        if (res.ok) {
+          const data = await res.json();
+          const fallback = runLocalTextDetect(text);
+          return {
+            verdict: data.verdict ?? fallback.verdict,
+            confidence: Number(data.confidence ?? fallback.confidence),
+            risk_score: Number(data.risk_score ?? fallback.risk_score),
+            urgency_score: Number(data.urgency_score ?? fallback.urgency_score),
+            summary: data.summary ?? fallback.summary,
+            claims_identified: Array.isArray(data.claims_identified) && data.claims_identified.length > 0
+              ? data.claims_identified
+              : fallback.claims_identified,
+            fallacies: Array.isArray(data.fallacies) && data.fallacies.length > 0
+              ? data.fallacies
+              : fallback.fallacies,
+            veracity_breakdown: data.veracity_breakdown ?? fallback.veracity_breakdown,
+            debunk_reply: data.debunk_reply ?? fallback.debunk_reply,
+            source: 'live',
+          };
+        }
+      } catch {
+        // Fallback to local
+      }
+    }
+    return runLocalTextDetect(text);
   }
 
   // 6. POST /api/vault/register

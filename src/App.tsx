@@ -86,10 +86,20 @@ export default function App() {
           const textResp = await cache.match('/_shared_text');
           if (textResp) {
             const text = await textResp.text();
-            if (text.trim().startsWith('http')) {
-              setActiveTab('detect');
-            }
+            setSharedMedia((prev) => ({
+              ...prev,
+              text: text.trim(),
+            }));
+            setActiveTab('detect');
             await cache.delete('/_shared_text');
+          }
+          const urlText = params.get('text');
+          if (urlText) {
+            setSharedMedia((prev) => ({
+              ...prev,
+              text: urlText,
+            }));
+            setActiveTab('detect');
           }
           if (isShared) {
             window.history.replaceState({}, '', window.location.pathname);

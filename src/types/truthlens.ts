@@ -87,6 +87,26 @@ export interface AudioDetectResult {
   source: ExecutionMode;
 }
 
+export interface TextDetectResult {
+  verdict: 'FABRICATED_RUMOR' | 'MISLEADING_CLAIM' | 'AUTHENTIC_FACT' | 'SUSPICIOUS';
+  confidence: number;
+  risk_score: number;
+  urgency_score: number;
+  summary: string;
+  claims_identified: string[];
+  fallacies: string[];
+  veracity_breakdown: {
+    factual_accuracy: string;
+    source_attribution: string;
+    manipulation_tactics: string[];
+  };
+  debunk_reply: {
+    english: string;
+    hindi: string;
+  };
+  source: ExecutionMode;
+}
+
 export interface VaultItem {
   id: string;
   owner_id: string;
@@ -195,6 +215,7 @@ export interface SharedMediaContext {
   file: File | null;
   previewUrl: string | null;
   filename: string;
+  text?: string;
   dhash?: string;
   sha256?: string;
   verdict?: DetectResult['verdict'];
