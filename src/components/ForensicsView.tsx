@@ -502,16 +502,6 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
           /* STAGE 2: FORENSICS CARD TAKES OVER (UPLOAD CARDS HIDDEN) */
           /* ======================================================== */
           <div className="space-y-5">
-            {/* Forensics Title Appears Only After Upload */}
-            <div className="rounded-2xl border border-white/10 bg-[#0b1229]/90 p-5">
-              <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#10D4A2]">
-                <ShieldCheck className="h-4 w-4" />
-                Instant Deepfake &amp; AI Scanner
-              </div>
-              <h2 className="mt-1 font-display text-2xl font-bold text-white">
-                Forensics &amp; Provenance Report
-              </h2>
-            </div>
             {/* Top Toolbar: Multi-image selector + Actions */}
             <div className="rounded-2xl border border-white/10 bg-[#0b1229]/90 p-4">
               <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-white/10">
