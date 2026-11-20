@@ -1154,48 +1154,48 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0b1229] via-transparent to-transparent opacity-80" />
                 <div className="absolute top-3 left-4 inline-flex items-center gap-2 rounded-full bg-black/70 backdrop-blur-md px-3 py-1 text-xs font-bold uppercase tracking-wider text-sky-400 border border-sky-400/30">
                   <Brain className="h-4 w-4" />
-                  Powered by Google AI • asia-south1 DPDP
+                  Multimodal Forensics Architecture
                 </div>
               </div>
 
               <div className="p-6 space-y-4">
                 <div>
                   <h3 className="font-display text-xl font-bold text-white">
-                    Gemini Detects. Our Systems Engine Understands.
+                    Gemini Multimodal + Open Forensics Engine
                   </h3>
                   <p className="mt-1 text-xs text-slate-300">
-                    Sub-2s edge speed meets multimodal reasoning &mdash; zero unauthorized egress for user privacy, sovereign to India in asia-south1.
+                    Combining Google Gemini 2.5 Flash reasoning with local image, audio, and metadata forensics.
                   </p>
                 </div>
                 <div className="grid gap-3 sm:grid-cols-2">
                   {[
                     {
-                      name: 'Gemini API Multimodal',
-                      detail: 'Artifacts, lighting azimuth, face-blend seams & metadata mismatch.',
+                      name: 'Gemini 2.5 Flash',
+                      detail: 'Multimodal visual analysis for synthetic face seams and forwarded text fact-checking.',
                       icon: Sparkles,
                       color: 'text-amber-400',
-                      badge: 'Cloud Vertex AI',
+                      badge: 'Gemini API',
                     },
                     {
-                      name: 'Google SynthID & C2PA',
-                      detail: 'Detects imperceptible digital watermarks and cryptographic provenance.',
+                      name: 'Error Level Analysis',
+                      detail: 'Detects JPEG compression quantization errors and spliced pixel boundaries.',
+                      icon: ScanSearch,
+                      color: 'text-[#10D4A2]',
+                      badge: 'Computer Vision',
+                    },
+                    {
+                      name: 'Spectral FFT Audio',
+                      detail: 'Scans vocoder cutoff shelf at 11.2 kHz to catch AI-cloned voice notes.',
+                      icon: Activity,
+                      color: 'text-sky-400',
+                      badge: 'Audio Forensics',
+                    },
+                    {
+                      name: 'Metadata & Watermarks',
+                      detail: 'Inspects C2PA digital provenance headers, IPTC flags, and visual watermark badges.',
                       icon: Fingerprint,
                       color: 'text-rose-400',
-                      badge: 'AI Watermark',
-                    },
-                    {
-                      name: 'Gemini Live Voice Coach',
-                      detail: 'Hindi & English crisis companion — talks victims out of panic.',
-                      icon: Radio,
-                      color: 'text-sky-400',
-                      badge: 'Voice Stream',
-                    },
-                    {
-                      name: 'Gemma On-Device + Cloud Run',
-                      detail: 'Private offline edge checks + Vertex AI, Firestore & BigQuery (asia-south1).',
-                      icon: Cpu,
-                      color: 'text-[#10D4A2]',
-                      badge: 'On-Device Edge',
+                      badge: 'Provenance',
                     },
                   ].map((stack) => {
                     const Icon = stack.icon;
