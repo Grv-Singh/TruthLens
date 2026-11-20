@@ -19,7 +19,7 @@ export const copy = {
     navSub: {
       overview: 'Causal Loops & Architecture',
       deck: 'Executive Presentation',
-      detect: 'L0 • ELA, SynthID, Audio FFT',
+      detect: 'Photos & Audio',
       vault: 'L1 • Qdrant Perceptual Hash',
       dampen: 'L2 • Cooling, Outrage & Bots',
       heal: 'L3 • WhatsApp Debunk, BSA 63 & 24h Takedown',
@@ -64,7 +64,7 @@ export const copy = {
     navSub: {
       overview: 'कॉज़ल लूप्स व आर्किटेक्चर',
       deck: 'कार्यकारी प्रस्तुति',
-      detect: 'L0 • ELA, SynthID, ऑडियो FFT',
+      detect: 'फोटो और आवाज़',
       vault: 'L1 • Qdrant परसेप्चुअल हैश',
       dampen: 'L2 • कूलिंग, आउटरेज व बॉट्स',
       heal: 'L3 • व्हाट्सएप डिबंक, BSA 63 व 24h टेकडाउन',

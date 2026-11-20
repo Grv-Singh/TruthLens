@@ -320,11 +320,11 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#10D4A2]">
-            <Cpu className="h-4 w-4" />
-            L0 • Multimodal Edge Forensics (Client-Side Privacy)
+            <ShieldCheck className="h-4 w-4" />
+            Instant Deepfake &amp; AI Scanner
           </div>
           <h2 className="mt-1 font-display text-2xl font-bold text-white">
-            ELA Heatmap, SynthID/C2PA &amp; 11.2 kHz Voice Forensics
+            Check Photos &amp; Voice Notes for AI or Editing
           </h2>
         </div>
 
@@ -338,7 +338,7 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
             }`}
           >
             <ImageIcon className="h-4 w-4" />
-            Image &amp; Provenance
+            Photos
           </button>
           <button
             onClick={() => setSubMode('audio')}
@@ -349,7 +349,7 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
             }`}
           >
             <AudioLines className="h-4 w-4" />
-            Voice Note FFT
+            Voice Notes
           </button>
         </div>
       </div>
@@ -382,7 +382,7 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
                 </p>
                 <div className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-white/5 px-3 py-1 text-[11px] text-slate-300">
                   <ShieldCheck className="h-3.5 w-3.5 text-[#10D4A2]" />
-                  Client-Side Edge Mode — Photos stay private
+                  Photos stay 100% private
                 </div>
               </div>
             </div>
@@ -588,10 +588,10 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
                   <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
                     <div className="flex items-center gap-2 text-xs font-semibold text-white">
                       <SlidersHorizontal className="h-4 w-4 text-[#10D4A2]" />
-                      Interactive Error Level Analysis (ELA) Split Inspector
+                      Photo Edit Inspector
                     </div>
                     <span className="font-mono text-[11px] text-slate-400">
-                      Original ↔ Quantization Diff
+                      Slide to reveal hidden edits
                     </span>
                   </div>
 
@@ -616,7 +616,7 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
                       style={{ left: `${elaSplit}%` }}
                     />
                     <span className="pointer-events-none absolute left-3 top-3 rounded bg-black/70 px-2 py-0.5 font-mono text-[10px] font-bold text-[#10D4A2]">
-                      ELA HEATMAP
+                      EDIT HEATMAP
                     </span>
                     <span className="pointer-events-none absolute right-3 top-3 rounded bg-black/70 px-2 py-0.5 font-mono text-[10px] font-bold text-slate-200">
                       ORIGINAL
@@ -639,11 +639,11 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
                   {activeItem.watermarkResult && (
                     <div className="rounded-2xl border border-white/10 bg-[#0b1229]/90 p-4 space-y-2.5">
                       <div className="text-xs font-bold uppercase tracking-wider text-sky-400">
-                        Provenance &amp; Watermark Inspection
+                        AI Watermark &amp; Camera Origin
                       </div>
                       <div className="space-y-2 text-xs">
                         <div className="flex items-center justify-between rounded-lg bg-[#050919]/80 px-3 py-2">
-                          <span className="text-slate-300">Google SynthID / Gemini Star</span>
+                          <span className="text-slate-300">Gemini / SynthID Watermark</span>
                           <span
                             className={`font-mono font-bold ${
                               activeItem.watermarkResult.synthid_detected
@@ -657,7 +657,7 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
                           </span>
                         </div>
                         <div className="flex items-center justify-between rounded-lg bg-[#050919]/80 px-3 py-2">
-                          <span className="text-slate-300">C2PA Manifest</span>
+                          <span className="text-slate-300">Original Camera Signature</span>
                           <span
                             className={`font-mono font-bold ${
                               activeItem.watermarkResult.c2pa_present ? 'text-[#10D4A2]' : 'text-amber-300'
@@ -667,7 +667,7 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
                           </span>
                         </div>
                         <div className="flex items-center justify-between rounded-lg bg-[#050919]/80 px-3 py-2">
-                          <span className="text-slate-300">IPTC AI Marker</span>
+                          <span className="text-slate-300">AI Generated Tag</span>
                           <span
                             className={`font-mono font-bold ${
                               activeItem.watermarkResult.iptc_ai_flag ? 'text-rose-400' : 'text-slate-300'
@@ -685,7 +685,7 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
 
                   <div className="rounded-2xl border border-white/10 bg-[#0b1229]/90 p-4 space-y-2.5">
                     <div className="text-xs font-bold uppercase tracking-wider text-[#10D4A2]">
-                      Gemini Multimodal Forensic Notes
+                      AI Analysis Notes
                     </div>
                     <ul className="space-y-2 text-xs text-slate-300">
                       {activeItem.detectResult.gemini_notes.map((note, idx) => (
@@ -754,13 +754,13 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
                 Upload Voice Note (.opus / .wav / .mp3)
               </div>
               <p className="mt-1 text-xs text-slate-400">
-                SciPy FFT 11.2 kHz vocoder shelf + glottal pulse kurtosis
+                Detects AI voice clones and synthetic speech
               </p>
             </div>
 
             <div className="rounded-2xl border border-white/10 bg-[#0b1229]/90 p-4 space-y-2.5">
               <div className="text-xs font-bold uppercase tracking-wider text-[#10D4A2]">
-                1-Click Voice Clone Benchmark
+                Try Voice Samples
               </div>
               <button
                 onClick={() => runAudioPreset('clone')}
@@ -769,10 +769,10 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
               >
                 <div>
                   <div className="text-sm font-semibold text-white">
-                    CFO Wire-Transfer Voice Clone
+                    AI Voice Clone
                   </div>
                   <div className="text-[11px] text-rose-200/80">
-                    Triggers 11.2 kHz neural vocoder shelf cutoff
+                    High-frequency AI voice cutoff detected
                   </div>
                 </div>
                 <Play className="h-4 w-4 text-rose-300" />
@@ -785,10 +785,10 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
               >
                 <div>
                   <div className="text-sm font-semibold text-white">
-                    Authentic Human Voice Note
+                    Real Human Voice
                   </div>
                   <div className="text-[11px] text-[#10D4A2]/90">
-                    Natural fricatives past 14 kHz + healthy kurtosis
+                    Natural human vocal flow confirmed
                   </div>
                 </div>
                 <Play className="h-4 w-4 text-[#10D4A2]" />
@@ -857,10 +857,10 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
                 <div className="rounded-2xl border border-white/10 bg-[#0b1229]/90 p-4">
                   <div className="mb-2 flex items-center justify-between">
                     <div className="text-xs font-bold uppercase tracking-wider text-sky-400">
-                      SciPy FFT Spectral Envelope (0–16 kHz)
+                      Voice Frequency Graph
                     </div>
                     <span className="font-mono text-[11px] text-rose-300">
-                      Red Marker: 11.2 kHz Neural Vocoder Shelf
+                      AI Voice Cutoff Line
                     </span>
                   </div>
                   <div className="h-56 w-full">
