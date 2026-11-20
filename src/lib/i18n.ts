@@ -9,9 +9,9 @@ export const copy = {
     nav: {
       overview: 'Home',
       deck: 'Pitch Deck',
-      detect: 'Forensics Scanner',
+      detect: 'Forensics',
       vault: 'Origin Vault',
-      dampen: 'Virality Simulator',
+      dampen: 'Virality',
       heal: 'Legal Shield',
       solutions: 'Solutions',
       system: 'API & Gateway',
@@ -54,9 +54,9 @@ export const copy = {
     nav: {
       overview: 'होम',
       deck: 'पिच डेक',
-      detect: 'फॉरेन्सिक स्कैनर',
+      detect: 'फ़ॉरेंसिक्स',
       vault: 'ओरिजिन वॉल्ट',
-      dampen: 'वायरलिटी सिम्युलेटर',
+      dampen: 'वायरलिटी',
       heal: 'लीगल शील्ड',
       solutions: 'सोल्यूशंस',
       system: 'API और गेटवे',

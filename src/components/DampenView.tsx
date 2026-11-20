@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 import {
   Activity,
   AlertOctagon,
+  ArrowRight,
   Bot,
   Flame,
   HeartPulse,
-  ShieldAlert,
+  Network,
+  RefreshCw,
   ShieldCheck,
   TrendingDown,
 } from 'lucide-react';
@@ -31,8 +33,76 @@ interface DampenViewProps {
   sharedMedia: SharedMediaContext;
 }
 
+interface CausalDomain {
+  id: string;
+  name: string;
+  topic: string;
+  reinforcingLoop: string[];
+  balancingIntervention: string[];
+  systemicImpact: string;
+  loopGain: number;
+}
+
+const CAUSAL_DOMAINS: CausalDomain[] = [
+  {
+    id: 'banking',
+    name: 'Banking & Liquidity Panic',
+    topic: 'Fabricated Bank Failure / ₹2000 Note Expiry Rumor',
+    reinforcingLoop: [
+      'Viral WhatsApp Panic Notice',
+      'ATM / Branch Cash Run',
+      'Interbank Liquidity Shortage',
+      'Heightened Social Media Alarm'
+    ],
+    balancingIntervention: [
+      'Forensic ELA / Text Scan',
+      'One-Click RBI Gazette Debunk',
+      'Virality Velocity Throttling'
+    ],
+    systemicImpact: 'Averts localized bank runs and prevents regulatory panic trading.',
+    loopGain: 4.2
+  },
+  {
+    id: 'health',
+    name: 'Public Health & Bio-Alarm',
+    topic: 'Fake 5G Radiation / Miracle Poison Cure Forward',
+    reinforcingLoop: [
+      'Panic Health Advisory Forward',
+      'Hospital Emergency ER Inundation',
+      'Delayed Critical Care Access',
+      'Amplified Mortality Rumors'
+    ],
+    balancingIntervention: [
+      'System.com Causal Correlation Check',
+      'Official Health Registry Citation',
+      'Peer-to-Peer Debunk Sticker'
+    ],
+    systemicImpact: 'Protects hospital ER bandwidth and halts toxic ingestion pseudoscience.',
+    loopGain: 3.6
+  },
+  {
+    id: 'civic',
+    name: 'Elections & Civic Polarization',
+    topic: 'Cloned Political Audio / Rioting Allegation',
+    reinforcingLoop: [
+      'Fabricated Voice Note in Closed Groups',
+      'Outrage-Driven Re-Shares',
+      'Communal / Partisan Polarization',
+      'Escalating Retaliatory Forwards'
+    ],
+    balancingIntervention: [
+      '11.2 kHz FFT Voice-Clone Cutoff Flag',
+      'Mandatory Friction Delay (15s Pause)',
+      'Section 63 BSA Chain-of-Custody Dossier'
+    ],
+    systemicImpact: 'Breaks closed-loop feedback contagion before street escalation.',
+    loopGain: 5.1
+  }
+];
+
 export const DampenView: React.FC<DampenViewProps> = ({ client }) => {
   const [telemetry, setTelemetry] = useState<TelemetryResponse | null>(null);
+  const [activeDomainId, setActiveDomainId] = useState<string>('banking');
 
   // 24h Simulator state
   const [hours, setHours] = useState(24);
@@ -45,6 +115,8 @@ export const DampenView: React.FC<DampenViewProps> = ({ client }) => {
   const [outrageStreak, setOutrageStreak] = useState(4);
   const [botForgeryScore, setBotForgeryScore] = useState(86);
   const [accountTrustScore, setAccountTrustScore] = useState(18);
+
+  const activeCausalDomain = CAUSAL_DOMAINS.find(d => d.id === activeDomainId) || CAUSAL_DOMAINS[0];
 
   useEffect(() => {
     client.getTelemetry().then(setTelemetry);
@@ -78,10 +150,10 @@ export const DampenView: React.FC<DampenViewProps> = ({ client }) => {
       <div>
         <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-amber-400">
           <Flame className="h-4 w-4" />
-          L2 — Systems Dynamics • Virality Spread &amp; Digital Wellbeing Guardrails
+          L2 — Causal Dynamics • Contagion Damping &amp; Wellbeing
         </div>
         <h2 className="mt-1 font-display text-2xl font-bold text-white">
-          24h Virality Simulator &amp; Consumer Wellbeing Controls
+          Virality • Causal Feedback Loops &amp; Contagion Damping
         </h2>
       </div>
 
@@ -104,12 +176,12 @@ export const DampenView: React.FC<DampenViewProps> = ({ client }) => {
           <div className="text-[11px] text-slate-400">Projected citizens protected</div>
         </div>
         <div className="rounded-xl border border-white/10 bg-[#0b1229]/90 p-4">
-          <div className="text-xs text-slate-400">Total Interventions</div>
-          <div className="mt-1 font-display text-2xl font-bold text-white tabular-nums">
-            {telemetry?.total_interventions ?? 142}
+          <div className="text-xs text-slate-400">Feedback Loop Gain</div>
+          <div className="mt-1 font-display text-2xl font-bold text-rose-400 tabular-nums">
+            {activeCausalDomain.loopGain}x
           </div>
           <div className="text-[11px] text-slate-400">
-            Average delay {telemetry?.avg_pause_seconds ?? 15}s
+            System.com Causal Model
           </div>
         </div>
         <div className="rounded-xl border border-white/10 bg-[#0b1229]/90 p-4">
@@ -123,13 +195,106 @@ export const DampenView: React.FC<DampenViewProps> = ({ client }) => {
         </div>
       </div>
 
+      {/* Causal Feedback Loop Diagram & System.com Knowledge Graph */}
+      <div className="rounded-2xl border border-white/10 bg-[#0b1229]/90 p-5 space-y-4">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h3 className="font-display text-base font-bold text-white flex items-center gap-2">
+              <Network className="h-4 w-4 text-sky-400" />
+              Causal Feedback Loop Architecture (System.com Model)
+            </h3>
+            <p className="mt-0.5 text-xs text-slate-400">
+              Identifies the reinforcing contagion loops and the balancing intervention leverage points.
+            </p>
+          </div>
+          <div className="inline-flex rounded-xl border border-white/10 bg-[#050919] p-1">
+            {CAUSAL_DOMAINS.map((dom) => (
+              <button
+                key={dom.id}
+                onClick={() => setActiveDomainId(dom.id)}
+                className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition cursor-pointer ${
+                  activeDomainId === dom.id
+                    ? 'bg-sky-500 text-white'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                {dom.name}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="rounded-xl border border-white/10 bg-[#050919]/70 p-4 space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3">
+            <div>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Simulated Disinformation Vector</span>
+              <div className="text-xs font-bold text-white mt-0.5">{activeCausalDomain.topic}</div>
+            </div>
+            <div className="rounded-lg bg-sky-500/15 px-3 py-1 text-right">
+              <span className="font-mono text-xs font-bold text-sky-300">k_loop = {activeCausalDomain.loopGain}x</span>
+            </div>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            {/* Reinforcing Loop */}
+            <div className="rounded-xl border border-rose-500/30 bg-rose-500/10 p-3.5 space-y-2">
+              <div className="flex items-center justify-between text-xs font-bold text-rose-300">
+                <span className="flex items-center gap-1.5">
+                  <RefreshCw className="h-3.5 w-3.5" />
+                  Reinforcing Contagion Loop (R)
+                </span>
+                <span className="rounded bg-rose-500/20 px-1.5 py-0.5 font-mono text-[10px]">UNCHECKED</span>
+              </div>
+              <div className="space-y-1.5 text-xs">
+                {activeCausalDomain.reinforcingLoop.map((step, idx) => (
+                  <div key={idx} className="flex items-center gap-2 text-slate-200">
+                    <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-rose-500/30 font-mono text-[10px] text-rose-200">
+                      {idx + 1}
+                    </span>
+                    <span>{step}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Balancing Loop */}
+            <div className="rounded-xl border border-[#10D4A2]/30 bg-[#10D4A2]/10 p-3.5 space-y-2">
+              <div className="flex items-center justify-between text-xs font-bold text-[#10D4A2]">
+                <span className="flex items-center gap-1.5">
+                  <ShieldCheck className="h-3.5 w-3.5" />
+                  Balancing Intervention (B)
+                </span>
+                <span className="rounded bg-[#10D4A2]/20 px-1.5 py-0.5 font-mono text-[10px]">DAMPENED</span>
+              </div>
+              <div className="space-y-1.5 text-xs">
+                {activeCausalDomain.balancingIntervention.map((step, idx) => (
+                  <div key={idx} className="flex items-center gap-2 text-slate-200">
+                    <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[#10D4A2]/30 font-mono text-[10px] text-[#10D4A2]">
+                      {idx + 1}
+                    </span>
+                    <span>{step}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-lg border border-white/8 bg-white/[0.02] p-3 text-xs text-slate-300 flex items-center justify-between gap-2">
+            <span>
+              <strong>Systemic Impact Averted:</strong> {activeCausalDomain.systemicImpact}
+            </span>
+            <span className="shrink-0 font-mono text-[10px] text-slate-400">Harvard Dataverse system_graph</span>
+          </div>
+        </div>
+      </div>
+
       {/* Stock-and-flow 24-Hour Virality Simulator - Full Width */}
       <div className="rounded-2xl border border-white/10 bg-[#0b1229]/90 p-5 space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
             <h3 className="font-display text-base font-bold text-white flex items-center gap-2">
               <TrendingDown className="h-4 w-4 text-[#10D4A2]" />
-              Stock-and-flow 24h Virality Differential Simulator
+              Stock-and-Flow 24h Virality Differential Model
             </h3>
             <p className="text-xs text-slate-400">
               Epidemic contagion modeling for synthetic rumors • Unmitigated vs Dampened reach curve
