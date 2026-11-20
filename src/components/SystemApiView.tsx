@@ -31,7 +31,7 @@ const ENDPOINT_GROUPS = [
     ],
   },
   {
-    category: '2. Multimodal Edge Forensics (Zero Cloud Costs)',
+    category: '2. Multimodal Edge Forensics (Client-Side Privacy)',
     endpoints: [
       { method: 'POST', path: '/api/detect', desc: 'Multipart file. Runs Error Level Analysis (ELA) heatmap + 64-bit dHash.' },
       { method: 'POST', path: '/api/detect/watermark', desc: 'Multipart file. Checks Google SynthID, C2PA manifest, and IPTC AI metadata.' },

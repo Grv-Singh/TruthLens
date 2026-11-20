@@ -187,19 +187,12 @@ export const PitchDeckView: React.FC<PitchDeckViewProps> = ({ lang, onNavigate }
                 </span>
                 <div>
                   <h3 className="font-display text-base font-bold text-white">
-                    25-Second Product Demo &amp; Investor Walkthrough Video
+                    25-Second Product Demo &amp; Systems Architecture Walkthrough
                   </h3>
-                  <p className="text-xs text-slate-400">
-                    High-definition 720p 30fps MP4 narrative &bull; Problem &bull; Systems Architecture &bull; Traction
-                  </p>
                 </div>
               </div>
 
               <div className="flex items-center gap-2">
-                <span className="inline-flex items-center gap-1 rounded-full bg-[#10D4A2]/15 border border-[#10D4A2]/30 px-2.5 py-0.5 text-xs font-semibold text-[#10D4A2]">
-                  <Volume2 className="h-3 w-3" />
-                  Voice Narration
-                </span>
                 <span className="rounded-full bg-sky-400/15 border border-sky-400/30 px-3 py-0.5 text-xs font-mono font-semibold text-sky-300">
                   0:25 DURATION
                 </span>
@@ -228,7 +221,7 @@ export const PitchDeckView: React.FC<PitchDeckViewProps> = ({ lang, onNavigate }
 
               <div className="rounded-xl border border-white/10 bg-[#050919] p-3">
                 <div className="text-xs font-bold uppercase tracking-wider text-sky-400">02. The Architecture</div>
-                <div className="mt-1 text-sm font-semibold text-white">Zero-Cloud ELA + Gemini</div>
+                <div className="mt-1 text-sm font-semibold text-white">Client-Side ELA + Gemini</div>
                 <p className="mt-0.5 text-xs text-slate-400">
                   Error Level Analysis (&lt;2s), 11.2 kHz voice FFT, Qdrant vault, and 15s cooling friction.
                 </p>

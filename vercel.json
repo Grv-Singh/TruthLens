@@ -1,0 +1,17 @@
+{
+  "version": 2,
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "https://lens.truthortrust.com/api/$1"
+    },
+    {
+      "source": "/share-target",
+      "destination": "https://lens.truthortrust.com/share-target"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}

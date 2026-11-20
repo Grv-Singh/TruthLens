@@ -24,7 +24,6 @@ export const VaultView: React.FC<VaultViewProps> = ({ client, sharedMedia }) => 
   const [title, setTitle] = useState('Verified Official Portrait — Origin Vault Proof');
   const [registerFile, setRegisterFile] = useState<File | null>(sharedMedia.file);
   const [registering, setRegistering] = useState(false);
-  const [vaultItems, setVaultItems] = useState<VaultItem[]>(() => client.getLocalVaultItems());
   const [lastRegistered, setLastRegistered] = useState<VaultItem | null>(null);
 
   const [verifying, setVerifying] = useState(false);
@@ -40,7 +39,6 @@ export const VaultView: React.FC<VaultViewProps> = ({ client, sharedMedia }) => 
     try {
       const { item } = await client.registerVault(file, ownerId || 'anonymous@truthlens.in', title || file.name);
       setLastRegistered(item);
-      setVaultItems(client.getLocalVaultItems());
     } finally {
       setRegistering(false);
     }
@@ -312,47 +310,6 @@ export const VaultView: React.FC<VaultViewProps> = ({ client, sharedMedia }) => 
               matches its original owner inside Qdrant via 64-bit dHash!
             </div>
           )}
-        </div>
-      </div>
-
-      {/* Vault Registry Table */}
-      <div className="rounded-2xl border border-white/10 bg-[#0b1229]/90 p-5">
-        <div className="mb-3 flex items-center justify-between">
-          <h3 className="font-display text-base font-bold text-white">
-            Active Qdrant Collection: <code className="text-[#10D4A2]">truthlens_vault</code> (
-            {vaultItems.length} Sealed Origins)
-          </h3>
-          <span className="text-xs text-slate-400">
-            Used by Creators, Gig Driver Re-Verification &amp; Newsroom Provenance
-          </span>
-        </div>
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead>
-              <tr className="border-b border-white/10 text-slate-400">
-                <th className="py-2 pr-4">Asset Title</th>
-                <th className="py-2 pr-4">Owner ID</th>
-                <th className="py-2 pr-4">64-bit dHash</th>
-                <th className="py-2 pr-4">SHA-256 (Truncated)</th>
-                <th className="py-2">Sealed At</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-white/5">
-              {vaultItems.map((item) => (
-                <tr key={item.id} className="hover:bg-white/[0.02]">
-                  <td className="py-2.5 pr-4 font-medium text-white">{item.title}</td>
-                  <td className="py-2.5 pr-4 text-slate-300">{item.owner_id}</td>
-                  <td className="py-2.5 pr-4 font-mono text-[#10D4A2]">{item.dhash}</td>
-                  <td className="py-2.5 pr-4 font-mono text-slate-400">
-                    {item.sha256.slice(0, 18)}…
-                  </td>
-                  <td className="py-2.5 font-mono text-slate-400">
-                    {new Date(item.registered_at).toLocaleDateString()}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
         </div>
       </div>
     </div>

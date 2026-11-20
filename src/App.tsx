@@ -27,7 +27,6 @@ import { DEFAULT_BASE_URL, TruthLensClient } from './lib/api';
 import { t } from './lib/i18n';
 import { OverviewView } from './components/OverviewView';
 import { ForensicsView } from './components/ForensicsView';
-import { VaultView } from './components/VaultView';
 import { DampenView } from './components/DampenView';
 import { HealLegalView } from './components/HealLegalView';
 import { SolutionsView } from './components/SolutionsView';
@@ -38,7 +37,6 @@ const NAV_ITEMS: {
 }[] = [
     { id: 'overview', icon: LayoutDashboard },
     { id: 'detect', icon: ScanSearch },
-    { id: 'vault', icon: Fingerprint },
     { id: 'dampen', icon: Flame },
     { id: 'heal', icon: Gavel },
     { id: 'solutions', icon: Briefcase },
@@ -61,9 +59,58 @@ export default function App() {
     previewUrl: null,
     filename: '',
   });
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
 
   const client = useMemo(() => new TruthLensClient(baseUrl, mode), [baseUrl, mode]);
   const tr = t(lang);
+
+  // Web Share Target API capture from Service Worker Cache
+  useEffect(() => {
+    const checkShareTarget = async () => {
+      const params = new URLSearchParams(window.location.search);
+      const isShared = params.get('shared') === '1';
+      if ('caches' in window) {
+        try {
+          const cache = await caches.open('truthlens-share-data');
+          const fileResp = await cache.match('/_shared_file');
+          if (fileResp) {
+            const blob = await fileResp.blob();
+            const fileName = decodeURIComponent(fileResp.headers.get('X-File-Name') || 'whatsapp_shared.jpg');
+            const file = new File([blob], fileName, { type: blob.type || 'image/jpeg' });
+            const previewUrl = URL.createObjectURL(file);
+            setSharedMedia({
+              file,
+              previewUrl,
+              filename: file.name,
+            });
+            setActiveTab('detect');
+            await cache.delete('/_shared_file');
+          }
+          const textResp = await cache.match('/_shared_text');
+          if (textResp) {
+            const text = await textResp.text();
+            if (text.trim().startsWith('http')) {
+              setActiveTab('detect');
+            }
+            await cache.delete('/_shared_text');
+          }
+          if (isShared) {
+            window.history.replaceState({}, '', window.location.pathname);
+          }
+        } catch (e) {
+          console.error('[Web Share Target] Error retrieving payload:', e);
+        }
+      }
+    };
+    checkShareTarget();
+
+    const handleBeforeInstall = (e: Event) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+    window.addEventListener('beforeinstallprompt', handleBeforeInstall);
+    return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstall);
+  }, []);
 
   useEffect(() => {
     const saved = localStorage.getItem('truthlens_theme') as 'light' | 'dark' | null;
@@ -135,6 +182,21 @@ export default function App() {
 
           {/* Right Action & Control Buttons */}
           <div className="flex items-center gap-2 sm:gap-3">
+            {deferredPrompt && (
+              <button
+                onClick={async () => {
+                  deferredPrompt.prompt();
+                  const { outcome } = await deferredPrompt.userChoice;
+                  if (outcome === 'accepted') setDeferredPrompt(null);
+                }}
+                className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-500/40 bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-600 dark:text-[#10D4A2] hover:bg-emerald-500/20 transition cursor-pointer shadow-xs"
+                title="Install TruthLens as Native Android/Desktop App"
+              >
+                <span className="material-symbols-rounded notranslate text-sm align-middle" translate="no">install_mobile</span>
+                <span>Install App</span>
+              </button>
+            )}
+
             {/* Theme Toggle Button */}
             <button
               onClick={() => setTheme((t) => (t === 'light' ? 'dark' : 'light'))}
@@ -195,10 +257,6 @@ export default function App() {
             autoPresetId={autoPresetId}
             onConsumedPreset={() => setAutoPresetId(null)}
           />
-        )}
-
-        {activeTab === 'vault' && (
-          <VaultView client={client} sharedMedia={sharedMedia} />
         )}
 
         {activeTab === 'dampen' && (

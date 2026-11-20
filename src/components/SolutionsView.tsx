@@ -509,7 +509,7 @@ export const SolutionsView: React.FC<SolutionsViewProps> = ({
               </div>
               <div className="rounded-xl border border-white/10 bg-[#050919]/80 p-3 flex items-center gap-2 text-slate-300">
                 <AlertTriangle className="h-4 w-4 text-amber-400 shrink-0" />
-                Zero-cloud edge preservation ensures exhibits are hashed before any upload.
+                Client-side edge preservation ensures exhibits are hashed before any upload.
               </div>
             </div>
           )}

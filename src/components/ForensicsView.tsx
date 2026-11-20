@@ -35,7 +35,12 @@ import type {
   WatermarkResult,
 } from '../types/truthlens';
 import type { TruthLensClient } from '../lib/api';
-import { createDemoImageFile, NANO_BANANA_PRESETS } from '../lib/forensics';
+import {
+  createDemoImageFile,
+  NANO_BANANA_PRESETS,
+  runLocalEdgeDetect,
+  runLocalWatermarkCheck,
+} from '../lib/forensics';
 
 interface ForensicsViewProps {
   client: TruthLensClient;
@@ -88,6 +93,24 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
         sha256: det.sha256,
         verdict: det.verdict,
       });
+    } catch (err) {
+      console.warn('Analysis pipeline error, falling back to local edge engine:', err);
+      try {
+        const localDet = await runLocalEdgeDetect(file);
+        const localWm = await runLocalWatermarkCheck(file);
+        setDetectResult(localDet);
+        setWatermarkResult(localWm);
+        onUpdateSharedMedia({
+          file,
+          previewUrl,
+          filename: file.name,
+          dhash: localDet.dhash,
+          sha256: localDet.sha256,
+          verdict: localDet.verdict,
+        });
+      } catch (localErr) {
+        console.error('Fatal image analysis error:', localErr);
+      }
     } finally {
       setLoading(false);
     }
@@ -131,6 +154,14 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [autoPresetId]);
+
+  // Auto-trigger forensic analysis when media is shared via Web Share Target (WhatsApp / system share)
+  useEffect(() => {
+    if (sharedMedia.file && !detectResult && !loading) {
+      analyzeImageFile(sharedMedia.file);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sharedMedia.file]);
 
   const handleAudioFile = async (file: File) => {
     setAudioLoading(true);
@@ -191,7 +222,7 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
         <div>
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#10D4A2]">
             <Cpu className="h-4 w-4" />
-            L0 • Multimodal Edge Forensics (Zero Cloud Costs)
+            L0 • Multimodal Edge Forensics (Client-Side Privacy)
           </div>
           <h2 className="mt-1 font-display text-2xl font-bold text-white">
             ELA Heatmap, SynthID/C2PA &amp; 11.2 kHz Voice Forensics
@@ -226,23 +257,8 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
 
       {subMode === 'image' ? (
         <div className="grid gap-6 lg:grid-cols-12">
-          {/* Left Column: Upload & Nano Banana Safe Demo Presets */}
+          {/* Left Column: Upload */}
           <div className="space-y-4 lg:col-span-5">
-            {/* Funding Pitch Walkthrough Banner */}
-            <div className="rounded-xl border border-sky-500/30 bg-gradient-to-r from-sky-950/40 via-[#070e28] to-[#040816] p-3 shadow-md">
-              <div className="flex items-center justify-between text-xs">
-                <span className="font-bold uppercase tracking-wider text-sky-400 flex items-center gap-1.5">
-                  <Sparkles className="h-3.5 w-3.5" /> Pitch Demo: 1-Click Upload
-                </span>
-                <span className="rounded bg-sky-500/20 px-1.5 py-0.5 text-[10px] font-mono text-sky-300">
-                  Ready for VCs
-                </span>
-              </div>
-              <p className="mt-1 text-xs text-slate-300">
-                During live screen shares, drag any image, paste a link, or click a 1-click preset below to show instant ELA heatmaps &amp; C2PA credentials.
-              </p>
-            </div>
-
             <div
               onClick={() => fileInputRef.current?.click()}
               onDragOver={(e) => e.preventDefault()}
@@ -269,13 +285,9 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
               <div className="mt-3 font-display text-base font-semibold text-white">
                 Drop Image or Click to Scan
               </div>
-              <p className="mt-1 text-xs text-slate-400">
-                Runs <code className="text-[#10D4A2]">POST /api/detect</code> +{' '}
-                <code className="text-[#10D4A2]">POST /api/detect/watermark</code>
-              </p>
               <div className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-white/5 px-3 py-1 text-[11px] text-slate-300">
                 <ShieldCheck className="h-3.5 w-3.5 text-[#10D4A2]" />
-                Gemma On-Device Edge Mode — Photo stays private
+                Client-Side Edge Mode — Photo stays private
               </div>
             </div>
 
@@ -303,44 +315,6 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
                 </button>
               </div>
               {linkError && <p className="text-[11px] text-amber-300">{linkError}</p>}
-            </div>
-
-            {/* Nano Banana Safe Demo Generator */}
-            <div className="rounded-2xl border border-white/10 bg-[#0b1229]/90 p-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-300">
-                  <Sparkles className="h-3.5 w-3.5" />
-                  Nano Banana — 1-Click Safe Demo Fakes
-                </div>
-                <span className="text-[11px] text-slate-400">Zero PII</span>
-              </div>
-              <div className="mt-3 grid gap-2">
-                {NANO_BANANA_PRESETS.map((preset) => (
-                  <button
-                    key={preset.id}
-                    onClick={() => handleLoadPreset(preset.id)}
-                    disabled={loading}
-                    className="flex items-center justify-between rounded-xl border border-white/8 bg-[#050919]/70 px-3.5 py-2.5 text-left transition hover:border-[#10D4A2]/45 hover:bg-white/[0.04] cursor-pointer"
-                  >
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm font-semibold text-white">{preset.label}</span>
-                        <span
-                          className={`rounded px-1.5 py-0.5 font-mono text-[10px] font-bold ${
-                            preset.expectedVerdict === 'REAL'
-                              ? 'bg-[#10D4A2]/15 text-[#10D4A2]'
-                              : 'bg-rose-500/15 text-rose-300'
-                          }`}
-                        >
-                          {preset.badge}
-                        </span>
-                      </div>
-                      <p className="mt-0.5 text-[11px] text-slate-400">{preset.description}</p>
-                    </div>
-                    <ScanSearch className="h-4 w-4 shrink-0 text-slate-400" />
-                  </button>
-                ))}
-              </div>
             </div>
           </div>
 
@@ -381,10 +355,6 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
                           <span className="rounded-full bg-black/40 px-2.5 py-0.5 font-mono text-xs text-slate-200 tabular-nums">
                             {detectResult.confidence}% confidence
                           </span>
-                          <span className="rounded-full bg-white/10 px-2 py-0.5 font-mono text-[10px] text-slate-300">
-                            {detectResult.source === 'live' ? 'LIVE SERVER' : 'EDGE ENGINE'} •{' '}
-                            {detectResult.processing_ms}ms
-                          </span>
                         </div>
                         <div className="mt-0.5 font-mono text-xs text-slate-300">
                           dHash: <span className="text-[#10D4A2]">{detectResult.dhash}</span> • ELA
@@ -418,7 +388,7 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
                       Interactive Error Level Analysis (ELA) Split Inspector
                     </div>
                     <span className="font-mono text-[11px] text-slate-400">
-                      Drag slider: Original ↔ Thermal Quantization Diff
+                      Original ↔ Quantization Diff
                     </span>
                   </div>
 
@@ -538,13 +508,6 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
                 {/* Action Handoff Bar */}
                 <div className="flex flex-wrap gap-2.5 rounded-xl border border-white/10 bg-[#0b1229]/80 p-3">
                   <button
-                    onClick={() => onNavigate('vault')}
-                    className="inline-flex items-center gap-1.5 rounded-lg bg-[#10D4A2]/15 px-3 py-2 text-xs font-semibold text-[#10D4A2] hover:bg-[#10D4A2]/25 cursor-pointer"
-                  >
-                    <Fingerprint className="h-3.5 w-3.5" />
-                    Register / Verify in Origin Vault (L1)
-                  </button>
-                  <button
                     onClick={() => onNavigate('dampen')}
                     className="inline-flex items-center gap-1.5 rounded-lg bg-amber-500/15 px-3 py-2 text-xs font-semibold text-amber-300 hover:bg-amber-500/25 cursor-pointer"
                   >
@@ -567,15 +530,15 @@ export const ForensicsView: React.FC<ForensicsViewProps> = ({
                   Ready for Multimodal Edge Forensics
                 </h3>
                 <p className="mt-1 max-w-md text-xs text-slate-400">
-                  Upload any photo or pick a Nano Banana Safe Demo preset on the left to inspect
+                  Upload any photo or paste an image link to inspect
                   real-time ELA quantization heatmaps, 64-bit dHash, SynthID, and C2PA provenance.
                 </p>
                 <button
-                  onClick={() => handleLoadPreset('kyc-faceswap')}
+                  onClick={() => fileInputRef.current?.click()}
                   className="mt-4 inline-flex items-center gap-2 rounded-xl bg-[#10D4A2] px-4 py-2 text-sm font-semibold text-[#050919] hover:bg-[#00e8ac] cursor-pointer"
                 >
-                  <Sparkles className="h-4 w-4" />
-                  Run Instant KYC Face-Swap Demo
+                  <Upload className="h-4 w-4" />
+                  Upload Image to Scan
                 </button>
               </div>
             )}

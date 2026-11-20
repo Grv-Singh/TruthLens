@@ -75,7 +75,7 @@ const CAUSAL_NODES = [
     leverageTitle: 'Origin Derivative Vault (Qdrant)',
     leverageDesc:
       'Registers cryptographic SHA-256 + 64-bit dHash of authentic media BEFORE it can be faked. Proves provenance even after screenshots or re-compression (Hamming ≤ 10).',
-    targetTab: 'vault' as NavTab,
+    targetTab: 'detect' as NavTab,
     badgeColor: 'border-emerald-500/30 bg-emerald-500/10 text-[#10D4A2]',
     glowColor: 'hover:shadow-[0_0_25px_rgba(16,212,162,0.25)]',
   },
@@ -87,7 +87,7 @@ const CAUSAL_NODES = [
     icon: Eye,
     image: '/reactions/node2_platform.png',
     leverage: 'L0 — EDGE FORENSICS',
-    leverageTitle: 'Zero-Cloud Multimodal Gate',
+    leverageTitle: 'Client-Side Multimodal Gate',
     leverageDesc:
       'Runs Error Level Analysis (ELA), SynthID, C2PA, and 11.2 kHz audio vocoder FFT before broadcast — separating malicious impersonations from benign creative edits.',
     targetTab: 'detect' as NavTab,
@@ -217,7 +217,7 @@ const USE_CASE_STORIES = [
     steps: [
       {
         num: '01',
-        title: 'Instant Zero-Cloud ELA Heatmap Scan',
+        title: 'Instant Client-Side ELA Heatmap Scan',
         stage: 'L0 Forensics',
         tech: 'Gemma On-Device + Error Level Analysis',
         detail:
@@ -288,8 +288,8 @@ const USE_CASE_STORIES = [
         tech: 'Perceptual 64-bit dHash Vector Search',
         detail:
           'The call audio vector is compared against the Executive Director’s registered voice profile in Qdrant collection truthlens_vault. Hamming distance is 34 (threshold ≤ 10), failing authenticity.',
-        targetTab: 'vault' as NavTab,
-        cta: 'Inspect Origin Vault in Vault',
+        targetTab: 'detect' as NavTab,
+        cta: 'Inspect Edge Forensics in Scanner',
       },
       {
         num: '03',
@@ -395,27 +395,6 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
 
   return (
     <div className="space-y-8">
-      {/* Live Sovereign Defense Radar Ticker */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 rounded-2xl border border-emerald-500/30 bg-[#04091e]/90 px-4 py-2.5 text-xs backdrop-blur-md shadow-[0_0_25px_rgba(16,212,162,0.15)] animate-pulse-ring">
-        <div className="flex items-center gap-3 overflow-hidden">
-          <span className="relative flex h-2.5 w-2.5 shrink-0">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-500 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-500"></span>
-          </span>
-          <span className="font-mono font-extrabold text-rose-400 uppercase tracking-wider text-[11px] shrink-0">
-            <span className="material-symbols-rounded notranslate text-sm align-middle mr-1" translate="no">crisis_alert</span> LIVE DEFENSE RADAR
-          </span>
-          <span className="text-slate-500 hidden sm:inline">•</span>
-          <span className="text-slate-200 font-medium truncate">
-            1,482 synthetic attacks intercepted &bull; 88.4% WhatsApp forward cascades throttled &bull; Sec 63 BSA court affidavits issued
-          </span>
-        </div>
-        <div className="hidden md:flex items-center gap-2 font-mono text-[11px] text-[#10D4A2] shrink-0">
-          <span className="h-1.5 w-1.5 rounded-full bg-[#10D4A2] animate-pulse" />
-          <span>Sovereign India Engine &bull; asia-south1 DPDP</span>
-        </div>
-      </div>
-
       {/* 1. Unified Cinematic Hero Stage: Shark Tank Hook + 25s Video/Forensic Scanner + 4 KPIs */}
       <section className="relative overflow-hidden rounded-3xl border border-white/15 bg-gradient-to-br from-[#0c1538] via-[#070e28] to-[#030718] p-6 sm:p-10 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.7)] animate-border-glow">
         <div className="pointer-events-none absolute -right-20 -top-20 h-96 w-96 rounded-full bg-[#10D4A2]/15 blur-3xl animate-pulse-ring" />
@@ -423,6 +402,11 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
 
         <div className="relative flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
           <div className="max-w-xl space-y-5">
+            <div className="inline-flex items-center gap-2 rounded-full border border-[#10D4A2]/30 bg-[#10D4A2]/10 px-3.5 py-1 text-xs font-mono font-semibold text-[#10D4A2]">
+              <span className="material-symbols-rounded notranslate text-xs" translate="no">hub</span>
+              <span>DECENTRALIZED DEFENSE MIDDLEWARE &bull; EDGE PROVENANCE</span>
+            </div>
+
             <h1 className="font-display text-4xl font-extrabold tracking-tight text-white sm:text-6xl leading-[1.08]">
               Don&apos;t Just Detect Deepfakes.{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#10D4A2] via-[#00e8ac] to-sky-400 text-glow-emerald">
@@ -431,7 +415,7 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
             </h1>
 
             <p className="text-base leading-relaxed text-slate-300 sm:text-lg font-normal max-w-lg">
-              <strong className="text-white font-semibold">Deepfakes spread in 2 hours. Police takedowns take 2 days.</strong> In that 46-hour gap, lives and fortunes are destroyed. TruthLens intercepts synthetic outrage from creation to courtroom — powered by <span className="text-[#10D4A2] font-semibold">Google Gemini Multimodal</span> &amp; <span className="text-sky-300 font-semibold">Donella Meadows Systems Law</span>.
+              <strong className="text-white font-semibold">Detection alone failed.</strong> Reactive fact-checking cannot outrun algorithmic outrage. TruthLens operates as sovereign <strong className="text-[#10D4A2]">defense middleware</strong> sitting between feeds, messaging apps, and users—intercepting synthetic attacks at the edge, throttling WhatsApp cascades with 15s behavioral friction, and issuing court-ready Section 63 BSA affidavits in 2 minutes.
             </p>
 
             <div className="flex flex-wrap items-center gap-3 pt-1">
@@ -456,21 +440,13 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
                 <Flame className="h-4 w-4 text-amber-400" />
                 <span>15s Virality Friction</span>
               </button>
-              <a
-                href="/truthlens_demo_walkthrough.mp4"
-                download="truthlens_product_pitch.mp4"
-                className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-4 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold text-slate-300 hover:bg-white/10 transition cursor-pointer whitespace-nowrap"
-              >
-                <Download className="h-4 w-4 text-sky-400" />
-                <span>Pitch MP4</span>
-              </a>
             </div>
 
-            {/* Instant Shark Tank 1-Click Test Demo Triggers */}
+            {/* Instant Real-World Test Scenarios */}
             <div className="pt-2 flex flex-col gap-2">
               <div className="text-[11px] font-mono uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
                 <Zap className="h-3.5 w-3.5 text-amber-400 animate-pulse" />
-                <span>Instant Test Demos (1-Click Run):</span>
+                <span>Instant Test Scenarios (1-Click Run):</span>
               </div>
               <div className="flex flex-wrap gap-2">
                 <button
@@ -507,7 +483,7 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
               <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-2.5 text-center shadow-[0_0_15px_rgba(16,212,162,0.1)]">
                 <div className="text-[10px] text-emerald-300 uppercase font-bold tracking-wider">Edge Speed</div>
                 <div className="font-display text-base font-extrabold text-[#10D4A2]">&lt;1.8s Real-Time</div>
-                <div className="text-[9px] text-slate-400">Zero-Cloud ELA Heatmap</div>
+                <div className="text-[9px] text-slate-400">Client-Side ELA Heatmap</div>
               </div>
               <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-2.5 text-center shadow-[0_0_15px_rgba(245,158,11,0.1)]">
                 <div className="text-[10px] text-amber-300 uppercase font-bold tracking-wider">Cognitive Brake</div>
@@ -534,7 +510,7 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
                     }`}
                 >
                   <Video className="h-3.5 w-3.5" />
-                  <span className="material-symbols-rounded notranslate text-xs align-middle" translate="no">movie</span> 25s Pitch Video
+                  <span>Video Demo</span>
                 </button>
                 <button
                   onClick={() => setHeroMediaMode('scanner')}
@@ -544,13 +520,9 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
                     }`}
                 >
                   <ScanSearch className="h-3.5 w-3.5" />
-                  <span className="material-symbols-rounded notranslate text-xs align-middle" translate="no">biotech</span> Forensic Scanner
+                  <span>Forensic Scanner</span>
                 </button>
               </div>
-
-              <span className="text-[11px] font-mono text-slate-400">
-                {heroMediaMode === 'video' ? '720p HD + Voice Narration' : 'Multimodal ELA & C2PA'}
-              </span>
             </div>
 
             {heroMediaMode === 'video' ? (
@@ -562,10 +534,6 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
                   playsInline
                   className="h-full w-full object-cover"
                 />
-                <div className="pointer-events-none absolute top-3 left-3 inline-flex items-center gap-1.5 rounded-lg bg-black/80 px-2.5 py-1 text-[11px] font-semibold text-sky-300 border border-sky-500/30 backdrop-blur-md">
-                  <span className="h-2 w-2 rounded-full bg-sky-400 animate-pulse" />
-                  <span>Demo (25s)</span>
-                </div>
               </div>
             ) : (
               <div className="group relative w-full aspect-[16/10] overflow-hidden rounded-2xl border border-emerald-500/40 bg-[#040816] shadow-[0_0_35px_rgba(16,212,162,0.25)]">
@@ -606,12 +574,9 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
               Deepfakes exploit human fear and algorithmic outrage. If you only detect, you&apos;ve already lost.
             </p>
           </div>
-          <span className="hidden sm:inline-flex rounded-full bg-white/5 border border-white/10 px-3 py-1 text-xs text-slate-300">
-            Slide 2 • Buildathon 2026
-          </span>
         </div>
 
-        <div className="grid gap-5 md:grid-cols-3">
+        <div className="flex gap-5 overflow-x-auto pb-4 pt-1 snap-x snap-mandatory scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
           {[
             {
               title: '1. The Outrage Firehose',
@@ -660,7 +625,7 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
             return (
               <div
                 key={loop.title}
-                className={`overflow-hidden rounded-2xl border transition hover:scale-[1.02] duration-200 ${loop.accent}`}
+                className={`flex-none w-[88vw] sm:w-[380px] md:w-[420px] snap-center overflow-hidden rounded-2xl border transition hover:scale-[1.01] duration-200 ${loop.accent}`}
               >
                 {/* Visual Graphic Representation */}
                 <div className="relative aspect-[16/9] w-full overflow-hidden bg-black/50 border-b border-white/10">
@@ -855,15 +820,16 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
               </div>
             </div>
 
-            {/* Sleek Card Layout Swipe Deck */}
+            {/* Crisis Response Stages */}
             <div className="space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-1">
                 <div className="flex items-center gap-2">
                   <span className="font-display text-sm font-bold text-white">
-                    Resolution Card Deck:
+                    Step {activeStoryStep + 1} of 4
                   </span>
-                  <span className="text-xs text-slate-400">
-                    Step {activeStoryStep + 1} of 4 &bull; {activeStepData.stage}
+                  <span className="text-slate-500">&bull;</span>
+                  <span className="text-xs text-[#10D4A2] font-semibold">
+                    {activeStepData.stage}
                   </span>
                 </div>
 
@@ -965,11 +931,6 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
                   );
                 })}
               </div>
-
-              <div className="flex items-center justify-between text-[11px] text-slate-400 px-1 pt-1">
-                <span><span className="material-symbols-rounded notranslate text-xs align-middle" translate="no">arrow_back</span> Swipe or click cards to step through {activeStory.persona.split(' ')[0]}&apos;s crisis resolution</span>
-                <span className="hidden sm:inline">Use Prev/Next buttons for guided walkthrough</span>
-              </div>
             </div>
           </div>
         )}
@@ -1038,9 +999,6 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
                   Causal Intervention Graph: Strike at the Source of Virality
                 </h3>
               </div>
-              <span className="text-xs text-slate-400 bg-white/5 border border-white/10 px-3 py-1.5 rounded-xl">
-                Click any node in the causal chain to inspect TruthLens&apos;s intervention
-              </span>
             </div>
 
             {/* Chain Nodes */}
@@ -1115,6 +1073,57 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
                 Launch Module
                 <ArrowRight className="h-4 w-4" />
               </button>
+            </div>
+
+            {/* The Middleware Architectural Moat (NYU CSMP & Systems Research) */}
+            <div className="rounded-2xl border border-sky-500/30 bg-gradient-to-r from-sky-950/40 via-[#070e28] to-[#04091e] p-5 sm:p-6 shadow-xl">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4 mb-4">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sky-500/15 border border-sky-400/30 text-sky-400">
+                    <span className="material-symbols-rounded notranslate text-xl" translate="no">hub</span>
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-mono font-bold uppercase tracking-wider text-sky-400">The Middleware Architectural Thesis</span>
+                      <span className="rounded-full bg-sky-500/20 px-2 py-0.5 text-[10px] font-semibold text-sky-300 border border-sky-400/30">NYU &amp; Systems Law</span>
+                    </div>
+                    <h4 className="text-base font-bold text-white">Why Centralized Fact-Checking Failed &mdash; Why TruthLens Middleware Wins</h4>
+                  </div>
+                </div>
+                <div className="text-xs text-slate-400 font-mono">Client-Side Intercept &bull; Client-Side &bull; R₀ Suppression</div>
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-3">
+                <div className="rounded-xl border border-white/5 bg-white/[0.03] p-3.5 space-y-1.5">
+                  <div className="flex items-center gap-2 text-rose-400 text-xs font-bold uppercase font-mono">
+                    <span className="material-symbols-rounded notranslate text-sm" translate="no">cancel</span>
+                    <span>Old Way: Big Tech Fact-Checkers</span>
+                  </div>
+                  <p className="text-xs leading-relaxed text-slate-300">
+                    Mechanically tags content 48 hours late after 2M forwards. Studies show post-facto debunks backfire, entrench polarization, and do nothing to halt extortion.
+                  </p>
+                </div>
+
+                <div className="rounded-xl border border-[#10D4A2]/20 bg-[#10D4A2]/5 p-3.5 space-y-1.5">
+                  <div className="flex items-center gap-2 text-[#10D4A2] text-xs font-bold uppercase font-mono">
+                    <span className="material-symbols-rounded notranslate text-sm" translate="no">shield</span>
+                    <span>TruthLens: Decentralized Middleware</span>
+                  </div>
+                  <p className="text-xs leading-relaxed text-slate-300">
+                    Sits at the edge between feed streams and user devices. Injects 15s cognitive cooling to suppress viral cascades (<span className="text-[#10D4A2] font-semibold font-mono">R₀ &lt; 1.0</span>) before panic spreads.
+                  </p>
+                </div>
+
+                <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-3.5 space-y-1.5">
+                  <div className="flex items-center gap-2 text-amber-300 text-xs font-bold uppercase font-mono">
+                    <span className="material-symbols-rounded notranslate text-sm" translate="no">verified</span>
+                    <span>Cryptographic Provenance</span>
+                  </div>
+                  <p className="text-xs leading-relaxed text-slate-300">
+                    Pre-anchors authentic media in Qdrant Origin Vault (SHA-256 + dHash), instantly killing the <span className="text-amber-200 font-semibold">&quot;Liar&apos;s Dividend&quot;</span> so perpetrators cannot dismiss genuine crimes as AI.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         )}
@@ -1210,7 +1219,7 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
                     Gemini Detects. Our Systems Engine Understands.
                   </h3>
                   <p className="mt-1 text-xs text-slate-300">
-                    Sub-2s edge speed meets multimodal reasoning &mdash; zero cloud egress for user privacy, sovereign to India in asia-south1.
+                    Sub-2s edge speed meets multimodal reasoning &mdash; zero unauthorized egress for user privacy, sovereign to India in asia-south1.
                   </p>
                 </div>
                 <div className="grid gap-3 sm:grid-cols-2">
@@ -1223,11 +1232,11 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
                       badge: 'Cloud Vertex AI',
                     },
                     {
-                      name: 'Nano Banana',
-                      detail: 'Creates safe synthetic demo fakes to train users & simulate spread.',
-                      icon: ShieldAlert,
+                      name: 'Google SynthID & C2PA',
+                      detail: 'Detects imperceptible digital watermarks and cryptographic provenance.',
+                      icon: Fingerprint,
                       color: 'text-rose-400',
-                      badge: 'Synthetic Engine',
+                      badge: 'AI Watermark',
                     },
                     {
                       name: 'Gemini Live Voice Coach',
@@ -1335,22 +1344,11 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
                 </span>
                 <div>
                   <h3 className="font-display text-base sm:text-lg font-bold text-white">
-                    TruthLens 25-Second Funding Pitch Walkthrough
+                    TruthLens System Walkthrough
                   </h3>
-                  <p className="text-xs text-slate-400">
-                    Multimodal Synthetic Media Defense &amp; Counter-Virality Platform
-                  </p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <a
-                  href="/truthlens_demo_walkthrough.mp4"
-                  download="truthlens_demo_walkthrough.mp4"
-                  className="hidden sm:inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1 text-xs font-semibold text-slate-200 hover:bg-white/10"
-                >
-                  <Download className="h-3.5 w-3.5 text-sky-400" />
-                  MP4
-                </a>
                 <button
                   onClick={() => setShowVideoModal(false)}
                   className="rounded-lg p-1.5 text-slate-400 hover:bg-white/10 hover:text-white transition cursor-pointer"
@@ -1371,11 +1369,7 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
               />
             </div>
 
-            <div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-400">
-              <div className="flex items-center gap-2">
-                <span className="inline-block h-2 w-2 rounded-full bg-[#10D4A2]" />
-                <span>Ready for Live Demos &amp; Pitch Screen Sharing</span>
-              </div>
+            <div className="mt-4 flex flex-wrap items-center justify-end gap-3 text-xs text-slate-400">
               <div className="flex gap-2">
                 <button
                   onClick={() => {

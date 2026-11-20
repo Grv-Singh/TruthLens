@@ -286,7 +286,7 @@ export const HealLegalView: React.FC<HealLegalViewProps> = ({
                   className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-[#10D4A2] px-4 py-3 text-sm font-bold text-[#050919] hover:bg-[#00e8ac] cursor-pointer"
                 >
                   <Sticker className="h-4 w-4" />
-                  {stickerLoading ? 'Rendering Warning Sticker...' : 'Generate High-Contrast Sticker Card'}
+                  {stickerLoading ? 'Rendering Warning Sticker...' : 'Generate WhatsApp Sticker'}
                 </button>
               </div>
 
@@ -345,7 +345,7 @@ export const HealLegalView: React.FC<HealLegalViewProps> = ({
                 ) : (
                   <div className="flex h-64 flex-col items-center justify-center text-center text-xs text-slate-400">
                     <Sticker className="h-10 w-10 text-slate-600 mb-2" />
-                    Click <strong className="text-white">Generate High-Contrast Sticker Card</strong>{' '}
+                    Click <strong className="text-white">Generate WhatsApp Sticker</strong>{' '}
                     to build a shareable WhatsApp warning sticker + counter-narrative.
                   </div>
                 )}
