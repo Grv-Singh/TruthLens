@@ -60,7 +60,6 @@ export default function App() {
     filename: '',
   });
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
-  const [showInstallPopup, setShowInstallPopup] = useState(false);
 
   const client = useMemo(() => new TruthLensClient(baseUrl, mode), [baseUrl, mode]);
   const tr = t(lang);
@@ -121,19 +120,6 @@ export default function App() {
       setDeferredPrompt(e);
     };
     window.addEventListener('beforeinstallprompt', handleBeforeInstall);
-
-    const isStandalone =
-      window.matchMedia('(display-mode: standalone)').matches ||
-      (window.navigator as any).standalone;
-    const dismissed = sessionStorage.getItem('truthlens_install_dismissed');
-    if (!isStandalone && !dismissed) {
-      const timer = setTimeout(() => setShowInstallPopup(true), 1200);
-      return () => {
-        window.removeEventListener('beforeinstallprompt', handleBeforeInstall);
-        clearTimeout(timer);
-      };
-    }
-
     return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstall);
   }, []);
 
@@ -199,20 +185,26 @@ export default function App() {
 
           {/* Right Action & Control Buttons */}
           <div className="flex items-center gap-2 sm:gap-3">
-            {deferredPrompt && (
+            {/* Install Button with Breathing Glow */}
+            <div className="relative inline-flex group">
+              <span className="absolute -inset-0.5 rounded-xl bg-gradient-to-r from-emerald-500 via-teal-400 to-sky-500 opacity-75 blur-sm animate-pulse group-hover:opacity-100 transition duration-1000 group-hover:duration-200" />
               <button
                 onClick={async () => {
-                  deferredPrompt.prompt();
-                  const { outcome } = await deferredPrompt.userChoice;
-                  if (outcome === 'accepted') setDeferredPrompt(null);
+                  if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    if (outcome === 'accepted') setDeferredPrompt(null);
+                  } else {
+                    alert('To install TruthLens on your device:\n\n• On Android Chrome: Tap ⋮ menu > "Add to Home screen" or "Install app".\n• On iOS Safari: Tap Share > "Add to Home Screen".\n• On Desktop Chrome/Edge: Click the install icon in the browser address bar.');
+                  }
                 }}
-                className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-500/40 bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-600 dark:text-[#10D4A2] hover:bg-emerald-500/20 transition cursor-pointer shadow-xs"
-                title="Install TruthLens as Native Android/Desktop App"
+                className="relative inline-flex items-center gap-1.5 rounded-xl border border-emerald-500/50 bg-[#061826] px-3 py-1.5 text-xs font-bold text-[#10D4A2] hover:bg-[#082033] hover:text-white transition cursor-pointer shadow-lg shadow-emerald-500/20"
+                title="Install TruthLens as App"
               >
                 <span className="material-symbols-rounded notranslate text-sm align-middle" translate="no">install_mobile</span>
                 <span>Install</span>
               </button>
-            )}
+            </div>
 
             
 
@@ -317,60 +309,6 @@ export default function App() {
           );
         })}
       </nav>
-
-      {/* Floating Bottom Toast: Install as App (Accept Cookies Style) */}
-      {showInstallPopup && (
-        <div className="fixed bottom-24 sm:bottom-20 left-4 right-4 sm:left-auto sm:right-6 sm:max-w-md z-50 animate-in slide-in-from-bottom-5 duration-300">
-          <div className="flex items-center justify-between gap-3 rounded-2xl border border-blue-500/40 bg-[#07112c]/95 p-3 sm:p-3.5 shadow-2xl backdrop-blur-xl">
-            <div className="flex items-center gap-3 min-w-0">
-              <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-600 text-white font-display text-lg font-black shadow-md shadow-blue-500/30">
-                T
-                <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-white flex items-center justify-center">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                </span>
-              </div>
-              <div className="min-w-0">
-                <div className="font-display text-xs sm:text-sm font-bold text-white flex items-center gap-1.5">
-                  <span>Install</span>
-                </div>
-                <p className="text-[11px] text-slate-300 truncate sm:whitespace-normal">
-                  Add to home screen for offline edge forensics &amp; quick sharing.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-1.5 shrink-0">
-              <button
-                onClick={async () => {
-                  if (deferredPrompt) {
-                    deferredPrompt.prompt();
-                    const choice = await deferredPrompt.userChoice;
-                    if (choice.outcome === 'accepted') {
-                      setShowInstallPopup(false);
-                    }
-                    setDeferredPrompt(null);
-                  } else {
-                    setShowInstallPopup(false);
-                  }
-                }}
-                className="rounded-xl bg-blue-600 hover:bg-blue-500 px-3.5 py-1.5 text-xs font-bold text-white shadow-md shadow-blue-600/30 transition cursor-pointer"
-              >
-                Install
-              </button>
-              <button
-                onClick={() => {
-                  sessionStorage.setItem('truthlens_install_dismissed', '1');
-                  setShowInstallPopup(false);
-                }}
-                className="text-slate-400 hover:text-white p-1 transition cursor-pointer"
-                aria-label="Dismiss"
-              >
-                <span className="material-symbols-rounded notranslate text-lg align-middle" translate="no">close</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
