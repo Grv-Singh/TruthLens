@@ -155,8 +155,8 @@ export default function App() {
         <div className="mx-auto flex max-w-[1520px] items-center justify-between gap-3 px-4 py-3 sm:px-8">
           {/* Brand Emblem */}
           <div className="flex items-center gap-3">
-            <div className="relative flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-600 text-white font-display text-xl font-extrabold shadow-[0_2px_10px_rgba(37,99,235,0.3)]">
-              T
+            <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl overflow-hidden shadow-[0_2px_10px_rgba(16,212,162,0.3)] border border-white/10 bg-[#070e24]">
+              <img src="/icon-192.png" alt="TruthLens Logo" className="h-full w-full object-cover" />
               <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-white flex items-center justify-center shadow-xs">
                 <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
               </span>

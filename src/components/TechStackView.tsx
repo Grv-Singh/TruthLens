@@ -21,8 +21,8 @@ export const TechStackView: React.FC = () => {
       role: 'Unified 3-stage defense pipeline: Edge Forensics -> System.com Virality Throttling -> Court-Ready Legal Shield.',
       tier: 'TruthLens Middleware v2.3.0',
       logo: (
-        <div className="relative flex h-8 w-8 items-center justify-center rounded-xl bg-blue-600 text-white font-display text-base font-extrabold shadow-[0_2px_8px_rgba(37,99,235,0.4)]">
-          T
+        <div className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-xl overflow-hidden shadow-[0_2px_8px_rgba(16,212,162,0.3)] border border-white/10 bg-[#070e24]">
+          <img src="/icon-192.png" alt="TruthLens Logo" className="h-full w-full object-cover" />
           <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-white flex items-center justify-center">
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
           </span>
@@ -382,8 +382,8 @@ export const TechStackView: React.FC = () => {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center gap-3.5">
-        <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-blue-600 text-white font-display text-2xl font-extrabold shadow-[0_2px_12px_rgba(37,99,235,0.4)]">
-          T
+        <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl overflow-hidden shadow-[0_2px_12px_rgba(16,212,162,0.3)] border border-white/10 bg-[#070e24]">
+          <img src="/icon-192.png" alt="TruthLens Logo" className="h-full w-full object-cover" />
           <span className="absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full bg-white flex items-center justify-center shadow-xs">
             <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
           </span>
