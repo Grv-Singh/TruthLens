@@ -210,7 +210,7 @@ export default function App() {
                 title="Install TruthLens as Native Android/Desktop App"
               >
                 <span className="material-symbols-rounded notranslate text-sm align-middle" translate="no">install_mobile</span>
-                <span>Install App</span>
+                <span>Install</span>
               </button>
             )}
 
@@ -331,10 +331,10 @@ export default function App() {
               </div>
               <div className="min-w-0">
                 <div className="font-display text-xs sm:text-sm font-bold text-white flex items-center gap-1.5">
-                  <span>Install TruthLens App</span>
+                  <span>Install</span>
                 </div>
                 <p className="text-[11px] text-slate-300 truncate sm:whitespace-normal">
-                  Install on device for WhatsApp share intercept &amp; offline edge forensics.
+                  Add to home screen for offline edge forensics &amp; quick sharing.
                 </p>
               </div>
             </div>
