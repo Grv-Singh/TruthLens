@@ -31,3 +31,18 @@ pnpm-debug.log*
 
 # TypeScript build cache
 *.tsbuildinfo
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+
+# Binaries & packages
+*.apk
+*.idsig
+*.dex
+

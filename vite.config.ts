@@ -8,6 +8,7 @@ export default defineConfig(({ mode }) => {
   const proxyEntry = { target: apiTarget, changeOrigin: true, secure: false };
 
   return {
+    base: './',
     plugins: [react(), tailwindcss()],
     server: {
       port: 5173,
