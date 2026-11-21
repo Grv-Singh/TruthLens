@@ -57,14 +57,14 @@ export const HealLegalView: React.FC<HealLegalViewProps> = ({
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
   // Legal Evidence Dossier state
-  const [victimName, setVictimName] = useState('Ankita Sinha');
+  const [victimName, setVictimName] = useState('Aggrieved Citizen');
   const [suspectIdentifier, setSuspectIdentifier] = useState('+91-98XXXXXX42 / @fake_viral_handle');
   const [dossierLoading, setDossierLoading] = useState(false);
   const [dossier, setDossier] = useState<EvidenceDossierResult | null>(null);
   const [dossierDocTab, setDossierDocTab] = useState<'bsa63' | 'cybercell' | 'sec67c'>('bsa63');
 
   // Takedown Notice state
-  const [tdEmail, setTdEmail] = useState('ankita.sinha@example.in');
+  const [tdEmail, setTdEmail] = useState('grievance.desk@truthlens.in');
   const [tdPlatform, setTdPlatform] = useState('WhatsApp / Meta India');
   const [tdUrl, setTdUrl] = useState('https://instagram.com/p/C9xFakeMorphedClipDemo');
   const [tdDesc, setTdDesc] = useState(

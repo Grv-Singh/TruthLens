@@ -41,7 +41,7 @@ export const DEFAULT_BASE_URL =
 const localVaultStore: VaultItem[] = [
   {
     id: 'vault-seed-001',
-    owner_id: 'ankita.sinha@creator.in',
+    owner_id: 'creator.vault@truthlens.in',
     title: 'Keynote Press Headshot (Verified Original)',
     sha256: '4b7e2f8a19c0d431e2a556f891b22c4a8d10e9b3f771c45602a8d19e77c103ab',
     dhash: 'a4e8c92b71f04d36',

@@ -29,7 +29,7 @@ const SLIDES = [
     badge: 'Cover • Buildathon 2026',
     image: '/deck/slide1.png',
     keyPoints: [
-      'Team: Gaurav Singh (Jaipur) & Ankita Sinha (Remote)',
+      'Team: Gaurav Singh (Jaipur)',
       'Methodologies: Causal Inference (Erica) • Systems Dynamics (Schemo) • Gemini',
       'Theme: Buildathon 2026 • India • Hypothetica',
     ],
