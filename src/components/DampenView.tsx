@@ -33,6 +33,10 @@ export const DampenView: React.FC<DampenViewProps> = ({ client, sharedMedia, onN
   const [systemGrounding, setSystemGrounding] = useState<SystemGroundingResponse | null>(null);
   const [groundingLoading, setGroundingLoading] = useState(false);
 
+  const threatTopic =
+    sharedMedia.text?.trim() ||
+    (sharedMedia.filename ? sharedMedia.filename.replace(/\.[^/.]+$/, '') : 'misinformation');
+
   // Fetch System.com Empirical Causal Grounding
   useEffect(() => {
     setGroundingLoading(true);
@@ -41,7 +45,7 @@ export const DampenView: React.FC<DampenViewProps> = ({ client, sharedMedia, onN
         verdict: sharedMedia.verdict || 'AI_GENERATED',
         dhash: sharedMedia.dhash || '',
         sha256: sharedMedia.sha256 || '',
-        threat_topic: 'misinformation',
+        threat_topic: threatTopic,
       })
       .then((res) => {
         setSystemGrounding(res);
@@ -50,7 +54,7 @@ export const DampenView: React.FC<DampenViewProps> = ({ client, sharedMedia, onN
       .finally(() => {
         setGroundingLoading(false);
       });
-  }, [client, sharedMedia.verdict, sharedMedia.dhash, sharedMedia.sha256]);
+  }, [client, sharedMedia.verdict, sharedMedia.dhash, sharedMedia.sha256, threatTopic]);
 
   // Run virality simulation
   useEffect(() => {
@@ -63,6 +67,7 @@ export const DampenView: React.FC<DampenViewProps> = ({ client, sharedMedia, onN
         verdict: sharedMedia.verdict,
         dhash: sharedMedia.dhash,
         sha256: sharedMedia.sha256,
+        threat_topic: threatTopic,
       })
       .then((res) => {
         setSimResult(res);
@@ -70,19 +75,23 @@ export const DampenView: React.FC<DampenViewProps> = ({ client, sharedMedia, onN
           setSystemGrounding(res.system_grounding);
         }
       });
-  }, [client, hours, pForward, frictionEnabled, coolingSeconds, sharedMedia.verdict, sharedMedia.dhash, sharedMedia.sha256]);
+  }, [client, hours, pForward, frictionEnabled, coolingSeconds, sharedMedia.verdict, sharedMedia.dhash, sharedMedia.sha256, threatTopic]);
 
   return (
     <div className="space-y-6">
       {/* Linked Media Badge from Step 1 */}
-      {sharedMedia.verdict ? (
+      {sharedMedia.verdict || sharedMedia.text ? (
         <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-sky-500/30 bg-sky-500/10 px-4 py-2.5 text-xs">
           <div className="flex items-center gap-2">
             <span className="material-symbols-rounded notranslate text-sky-400 text-sm align-middle" translate="no">link</span>
             <span className="text-slate-200">
-              Scanned Threat: <strong className="text-white">{sharedMedia.verdict.replace('_', ' ')}</strong>
+              {sharedMedia.text ? (
+                <>WhatsApp Forward: <strong className="text-white">&quot;{sharedMedia.text.length > 55 ? `${sharedMedia.text.slice(0, 55)}...` : sharedMedia.text}&quot;</strong></>
+              ) : (
+                <>Scanned Threat: <strong className="text-white">{(sharedMedia.verdict || 'AI_GENERATED').replace('_', ' ')}</strong></>
+              )}
               {sharedMedia.dhash ? ` • dHash: ${sharedMedia.dhash}` : ''}
-              {sharedMedia.filename ? ` (${sharedMedia.filename})` : ''}
+              {sharedMedia.filename && !sharedMedia.text ? ` (${sharedMedia.filename})` : ''}
             </span>
           </div>
           <span className="font-mono text-[10px] text-sky-300 font-bold uppercase bg-sky-500/20 px-2 py-0.5 rounded">
@@ -128,7 +137,7 @@ export const DampenView: React.FC<DampenViewProps> = ({ client, sharedMedia, onN
                 Empirical Grounding: System.com Graph API
               </h3>
               <p className="text-[11px] text-slate-400">
-                Live empirical concept mapping for active forensic threat ({sharedMedia.verdict || 'AI_GENERATED'})
+                Live empirical concept mapping for {threatTopic !== 'misinformation' ? `payload "${threatTopic.length > 45 ? `${threatTopic.slice(0, 45)}...` : threatTopic}"` : `active threat (${sharedMedia.verdict || 'AI_GENERATED'})`}
               </p>
             </div>
           </div>
