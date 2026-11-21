@@ -168,6 +168,47 @@ export interface SimulationPoint {
   active_sharers_dampened: number;
 }
 
+export interface SystemConcept {
+  system_id: string;
+  wikidata_id: string;
+  wikidata_label: string;
+  description: string;
+  role: string;
+  system_url: string;
+}
+
+export interface CausalNode {
+  id: string;
+  label: string;
+  system_ref: string;
+}
+
+export interface CausalLoopItem {
+  name: string;
+  type: 'Reinforcing' | 'Balancing';
+  nodes: CausalNode[];
+  dynamics: string;
+}
+
+export interface SystemGroundingResponse {
+  status: string;
+  api_source: string;
+  api_endpoint: string;
+  verdict: string;
+  dhash?: string;
+  sha256?: string;
+  grounded_concepts: SystemConcept[];
+  causal_loops: {
+    reinforcing_r1: CausalLoopItem;
+    balancing_b1: CausalLoopItem;
+  };
+  leverage_points: {
+    level: string;
+    action: string;
+    effect: string;
+  }[];
+}
+
 export interface SimulationResponse {
   hours: number;
   p_forward: number;
@@ -179,6 +220,7 @@ export interface SimulationResponse {
   peak_dampened: number;
   harm_prevented_pct: number;
   curve: SimulationPoint[];
+  system_grounding?: SystemGroundingResponse;
   source: ExecutionMode;
 }
 

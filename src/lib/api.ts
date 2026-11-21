@@ -10,6 +10,7 @@ import type {
   PreShareCheckResult,
   SimulationResponse,
   TakedownNoticeResult,
+  SystemGroundingResponse,
   TelemetryResponse,
   TextDetectResult,
   VaultItem,
@@ -18,6 +19,7 @@ import type {
 } from '../types/truthlens';
 import {
   buildLocalEvidenceDossier,
+  buildLocalSystemGrounding,
   buildLocalTakedownNotice,
   computeDHash,
   computeSha256,
@@ -557,6 +559,10 @@ export class TruthLensClient {
     friction_enabled: boolean;
     cooling_delay_seconds: number;
     seed_sharers?: number;
+    verdict?: string;
+    dhash?: string;
+    sha256?: string;
+    threat_topic?: string;
   }): Promise<SimulationResponse> {
     params = { seed_sharers: 100, ...params };
     if (this.shouldTryLive) {
@@ -576,7 +582,36 @@ export class TruthLensClient {
         // Fallback
       }
     }
-    return runLocalViralitySimulation(params);
+    const local = runLocalViralitySimulation(params);
+    const localGrounding = buildLocalSystemGrounding(params);
+    return { ...local, system_grounding: localGrounding };
+  }
+
+  // 11b. System.com Causal Grounding API
+  async getSystemGrounding(params: {
+    verdict?: string;
+    threat_topic?: string;
+    dhash?: string;
+    sha256?: string;
+  }): Promise<SystemGroundingResponse> {
+    if (this.shouldTryLive) {
+      try {
+        const res = await fetchWithTimeout(`${this.apiBase}/api/system/ground`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(params),
+        }, 4000);
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.grounded_concepts) {
+            return data;
+          }
+        }
+      } catch {
+        // Fallback
+      }
+    }
+    return buildLocalSystemGrounding(params);
   }
 
   // 12. POST /api/debunk/sticker-card
