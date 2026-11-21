@@ -6,6 +6,7 @@ import {
   Gavel,
   Globe,
   HelpCircle,
+  Layers,
   LayoutDashboard,
   ScanSearch,
   Shield,
@@ -28,6 +29,7 @@ import { ForensicsView } from './components/ForensicsView';
 import { DampenView } from './components/DampenView';
 import { HealLegalView } from './components/HealLegalView';
 import { SolutionsView } from './components/SolutionsView';
+import { TechStackView } from './components/TechStackView';
 
 const NAV_ITEMS: {
   id: NavTab;
@@ -38,6 +40,7 @@ const NAV_ITEMS: {
     { id: 'detect', step: 1, icon: ScanSearch },
     { id: 'dampen', step: 2, icon: Flame },
     { id: 'heal', step: 3, icon: Gavel },
+    { id: 'stack', icon: Layers },
   ];
 
 export default function App() {
@@ -271,6 +274,8 @@ export default function App() {
             onNavigate={setActiveTab}
           />
         )}
+
+        {activeTab === 'stack' && <TechStackView />}
       </main>
 
       {/* Viewport Sticky Floating Bottom Navigation Bar */}
@@ -313,35 +318,28 @@ export default function App() {
         })}
       </nav>
 
-      {/* Center Modal: Install as App */}
+      {/* Floating Bottom Toast: Install as App (Accept Cookies Style) */}
       {showInstallPopup && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
-          <div className="relative w-full max-w-sm rounded-3xl border border-blue-500/40 bg-gradient-to-b from-[#091432] to-[#040817] p-6 shadow-2xl text-center space-y-4 animate-in zoom-in-95 duration-200">
-            <button
-              onClick={() => {
-                sessionStorage.setItem('truthlens_install_dismissed', '1');
-                setShowInstallPopup(false);
-              }}
-              className="absolute top-4 right-4 text-slate-400 hover:text-white transition cursor-pointer"
-              aria-label="Close"
-            >
-              <span className="material-symbols-rounded notranslate text-xl" translate="no">close</span>
-            </button>
-
-            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-500 text-white shadow-lg shadow-blue-500/30">
-              <span className="material-symbols-rounded notranslate text-3xl" translate="no">install_mobile</span>
+        <div className="fixed bottom-24 sm:bottom-20 left-4 right-4 sm:left-auto sm:right-6 sm:max-w-md z-50 animate-in slide-in-from-bottom-5 duration-300">
+          <div className="flex items-center justify-between gap-3 rounded-2xl border border-blue-500/40 bg-[#07112c]/95 p-3 sm:p-3.5 shadow-2xl backdrop-blur-xl">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-600 text-white font-display text-lg font-black shadow-md shadow-blue-500/30">
+                T
+                <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-white flex items-center justify-center">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                </span>
+              </div>
+              <div className="min-w-0">
+                <div className="font-display text-xs sm:text-sm font-bold text-white flex items-center gap-1.5">
+                  <span>Install TruthLens App</span>
+                </div>
+                <p className="text-[11px] text-slate-300 truncate sm:whitespace-normal">
+                  Install on device for WhatsApp share intercept &amp; offline edge forensics.
+                </p>
+              </div>
             </div>
 
-            <div>
-              <h3 className="font-display text-xl font-bold text-white">
-                Install as App
-              </h3>
-              <p className="mt-1.5 text-xs leading-relaxed text-slate-300">
-                Install TruthLens on your device for instant WhatsApp share-sheet intercept, offline edge forensics, and rapid court dossier generation.
-              </p>
-            </div>
-
-            <div className="flex flex-col gap-2 pt-2">
+            <div className="flex items-center gap-1.5 shrink-0">
               <button
                 onClick={async () => {
                   if (deferredPrompt) {
@@ -355,19 +353,19 @@ export default function App() {
                     setShowInstallPopup(false);
                   }
                 }}
-                className="w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 py-3 text-sm font-bold text-white shadow-lg shadow-blue-600/30 transition cursor-pointer"
+                className="rounded-xl bg-blue-600 hover:bg-blue-500 px-3.5 py-1.5 text-xs font-bold text-white shadow-md shadow-blue-600/30 transition cursor-pointer"
               >
-                <span className="material-symbols-rounded notranslate text-lg" translate="no">download</span>
-                <span>Install App</span>
+                Install
               </button>
               <button
                 onClick={() => {
                   sessionStorage.setItem('truthlens_install_dismissed', '1');
                   setShowInstallPopup(false);
                 }}
-                className="w-full py-2 text-xs font-semibold text-slate-400 hover:text-white transition cursor-pointer"
+                className="text-slate-400 hover:text-white p-1 transition cursor-pointer"
+                aria-label="Dismiss"
               >
-                Maybe Later
+                <span className="material-symbols-rounded notranslate text-lg align-middle" translate="no">close</span>
               </button>
             </div>
           </div>

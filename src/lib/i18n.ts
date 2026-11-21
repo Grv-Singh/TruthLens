@@ -15,6 +15,7 @@ export const copy = {
       heal: 'Legal Shield',
       solutions: 'Solutions',
       system: 'API & Gateway',
+      stack: 'Tech Stack',
     },
     navSub: {
       overview: 'System Architecture',
@@ -25,6 +26,7 @@ export const copy = {
       heal: 'BSA 63 & Takedown Notices',
       solutions: 'Industry Modules',
       system: 'Live Endpoints',
+      stack: 'Proxmox to Edge',
     },
     liveMode: 'Live Server',
     edgeDemoMode: 'Edge Demo Mode',
@@ -60,6 +62,7 @@ export const copy = {
       heal: 'लीगल शील्ड',
       solutions: 'सोल्यूशंस',
       system: 'API और गेटवे',
+      stack: 'टेक स्टैक',
     },
     navSub: {
       overview: 'सिस्टम आर्किटेक्चर',
@@ -70,6 +73,7 @@ export const copy = {
       heal: 'BSA 63 व टेकडाउन',
       solutions: 'इंडस्ट्री मॉड्यूल्स',
       system: 'लाइव एंडपॉइंट्स',
+      stack: 'प्रॉक्समॉक्स से एज तक',
     },
     liveMode: 'लाइव सर्वर',
     edgeDemoMode: 'एज डेमो मोड',

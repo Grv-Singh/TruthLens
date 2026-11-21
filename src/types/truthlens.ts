@@ -6,7 +6,8 @@ export type NavTab =
   | 'dampen'
   | 'heal'
   | 'solutions'
-  | 'system';
+  | 'system'
+  | 'stack';
 
 export type DomainId =
   | 'fintech'
