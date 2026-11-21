@@ -57,6 +57,7 @@ export default function App() {
     filename: '',
   });
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [showInstallPopup, setShowInstallPopup] = useState(false);
 
   const client = useMemo(() => new TruthLensClient(baseUrl, mode), [baseUrl, mode]);
   const tr = t(lang);
@@ -117,6 +118,19 @@ export default function App() {
       setDeferredPrompt(e);
     };
     window.addEventListener('beforeinstallprompt', handleBeforeInstall);
+
+    const isStandalone =
+      window.matchMedia('(display-mode: standalone)').matches ||
+      (window.navigator as any).standalone;
+    const dismissed = sessionStorage.getItem('truthlens_install_dismissed');
+    if (!isStandalone && !dismissed) {
+      const timer = setTimeout(() => setShowInstallPopup(true), 1200);
+      return () => {
+        window.removeEventListener('beforeinstallprompt', handleBeforeInstall);
+        clearTimeout(timer);
+      };
+    }
+
     return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstall);
   }, []);
 
@@ -298,6 +312,67 @@ export default function App() {
           );
         })}
       </nav>
+
+      {/* Center Modal: Install as App */}
+      {showInstallPopup && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
+          <div className="relative w-full max-w-sm rounded-3xl border border-blue-500/40 bg-gradient-to-b from-[#091432] to-[#040817] p-6 shadow-2xl text-center space-y-4 animate-in zoom-in-95 duration-200">
+            <button
+              onClick={() => {
+                sessionStorage.setItem('truthlens_install_dismissed', '1');
+                setShowInstallPopup(false);
+              }}
+              className="absolute top-4 right-4 text-slate-400 hover:text-white transition cursor-pointer"
+              aria-label="Close"
+            >
+              <span className="material-symbols-rounded notranslate text-xl" translate="no">close</span>
+            </button>
+
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-500 text-white shadow-lg shadow-blue-500/30">
+              <span className="material-symbols-rounded notranslate text-3xl" translate="no">install_mobile</span>
+            </div>
+
+            <div>
+              <h3 className="font-display text-xl font-bold text-white">
+                Install as App
+              </h3>
+              <p className="mt-1.5 text-xs leading-relaxed text-slate-300">
+                Install TruthLens on your device for instant WhatsApp share-sheet intercept, offline edge forensics, and rapid court dossier generation.
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-2 pt-2">
+              <button
+                onClick={async () => {
+                  if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    const choice = await deferredPrompt.userChoice;
+                    if (choice.outcome === 'accepted') {
+                      setShowInstallPopup(false);
+                    }
+                    setDeferredPrompt(null);
+                  } else {
+                    setShowInstallPopup(false);
+                  }
+                }}
+                className="w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 py-3 text-sm font-bold text-white shadow-lg shadow-blue-600/30 transition cursor-pointer"
+              >
+                <span className="material-symbols-rounded notranslate text-lg" translate="no">download</span>
+                <span>Install App</span>
+              </button>
+              <button
+                onClick={() => {
+                  sessionStorage.setItem('truthlens_install_dismissed', '1');
+                  setShowInstallPopup(false);
+                }}
+                className="w-full py-2 text-xs font-semibold text-slate-400 hover:text-white transition cursor-pointer"
+              >
+                Maybe Later
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

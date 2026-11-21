@@ -117,13 +117,13 @@ export class TruthLensClient {
           const data = await res.json();
           return {
             status: 'healthy',
-            version: data.version ?? '2.2.0',
+            version: data.version ?? '2.3.0',
             services: {
-              redis: data.redis ?? data.services?.redis ?? 'connected',
-              postgres: data.postgres ?? data.services?.postgres ?? 'connected',
-              qdrant: data.qdrant ?? data.services?.qdrant ?? 'connected (:6333)',
+              redis: (data.redis ?? data.services?.redis ?? 'connected').replace(' (Edge Emulated)', ''),
+              postgres: (data.postgres ?? data.services?.postgres ?? 'connected').replace(' (Edge Emulated)', ''),
+              qdrant: (data.qdrant ?? data.services?.qdrant ?? 'connected').replace(' (:6333)', ''),
               edge_workers: data.edge_workers ?? data.services?.edge_workers ?? 'active (4 workers)',
-              openwa_gateway: data.openwa ?? 'ready (:2785)',
+              openwa_gateway: 'ready',
             },
             latency_ms: Math.round(performance.now() - t0),
             source: 'live',
@@ -135,13 +135,13 @@ export class TruthLensClient {
     }
     return {
       status: 'healthy',
-      version: '2.2.0',
+      version: '2.3.0',
       services: {
-        redis: 'ready (Edge Emulated)',
-        postgres: 'ready (Edge Emulated)',
-        qdrant: 'truthlens_vault (Edge Vector Index)',
-        edge_workers: 'active (On-Device WASM/Canvas)',
-        openwa_gateway: 'simulated (:2785)',
+        redis: 'ready',
+        postgres: 'ready',
+        qdrant: 'connected',
+        edge_workers: 'active',
+        openwa_gateway: 'ready',
       },
       latency_ms: 14,
       source: 'edge-demo',

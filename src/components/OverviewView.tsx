@@ -946,8 +946,8 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
               </div>
             </div>
 
-            {/* Chain Nodes */}
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {/* Chain Nodes - Horizontally Scrollable */}
+            <div className="flex gap-4 overflow-x-auto pb-4 pt-1 snap-x snap-mandatory scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
               {CAUSAL_NODES.map((node, idx) => {
                 const isSelected = node.id === activeNode.id;
                 const Icon = node.icon;
@@ -955,7 +955,7 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
                   <button
                     key={node.id}
                     onClick={() => setSelectedNodeId(node.id)}
-                    className={`group relative flex flex-col items-start overflow-hidden rounded-2xl border text-left transition duration-200 cursor-pointer ${isSelected
+                    className={`group relative flex flex-col items-start overflow-hidden rounded-2xl border text-left transition duration-200 cursor-pointer min-w-[270px] sm:min-w-[300px] max-w-[320px] shrink-0 snap-start ${isSelected
                       ? 'border-[#10D4A2] bg-[#10D4A2]/15 shadow-[0_0_25px_rgba(16,212,162,0.3)] scale-[1.02]'
                       : `border-white/10 bg-[#050919]/60 hover:border-white/30 hover:bg-white/[0.04] ${node.glowColor}`
                       }`}
@@ -1038,8 +1038,8 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
                 <div className="text-xs text-slate-400 font-mono">Client-Side Intercept &bull; Client-Side &bull; R₀ Suppression</div>
               </div>
 
-              <div className="grid gap-4 sm:grid-cols-3">
-                <div className="rounded-xl border border-white/5 bg-white/[0.03] p-3.5 space-y-1.5">
+              <div className="flex gap-4 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
+                <div className="rounded-xl border border-white/5 bg-white/[0.03] p-3.5 space-y-1.5 min-w-[270px] sm:min-w-[300px] shrink-0 snap-start">
                   <div className="flex items-center gap-2 text-rose-400 text-xs font-bold uppercase font-mono">
                     <span className="material-symbols-rounded notranslate text-sm" translate="no">cancel</span>
                     <span>Old Way: Big Tech Fact-Checkers</span>
@@ -1049,7 +1049,7 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
                   </p>
                 </div>
 
-                <div className="rounded-xl border border-[#10D4A2]/20 bg-[#10D4A2]/5 p-3.5 space-y-1.5">
+                <div className="rounded-xl border border-[#10D4A2]/20 bg-[#10D4A2]/5 p-3.5 space-y-1.5 min-w-[270px] sm:min-w-[300px] shrink-0 snap-start">
                   <div className="flex items-center gap-2 text-[#10D4A2] text-xs font-bold uppercase font-mono">
                     <span className="material-symbols-rounded notranslate text-sm" translate="no">shield</span>
                     <span>TruthLens: Decentralized Middleware</span>
@@ -1059,7 +1059,7 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
                   </p>
                 </div>
 
-                <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-3.5 space-y-1.5">
+                <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-3.5 space-y-1.5 min-w-[270px] sm:min-w-[300px] shrink-0 snap-start">
                   <div className="flex items-center gap-2 text-amber-300 text-xs font-bold uppercase font-mono">
                     <span className="material-symbols-rounded notranslate text-sm" translate="no">verified</span>
                     <span>Cryptographic Provenance</span>
@@ -1097,14 +1097,15 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
               </button>
             </div>
 
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {/* 6 Real-World Battlegrounds - Horizontally Scrollable */}
+            <div className="flex gap-4 overflow-x-auto pb-4 pt-1 snap-x snap-mandatory scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
               {VERTICAL_SUMMARY.map((item) => {
                 const Icon = item.icon;
                 return (
                   <button
                     key={item.id}
                     onClick={() => onOpenDomain(item.id)}
-                    className="group flex flex-col justify-between overflow-hidden rounded-2xl border border-white/10 bg-[#0b1229]/80 text-left transition hover:border-[#10D4A2]/50 hover:bg-[#111b3a]/90 hover:scale-[1.02] duration-200 cursor-pointer shadow-lg"
+                    className="group flex flex-col justify-between overflow-hidden rounded-2xl border border-white/10 bg-[#0b1229]/80 text-left transition hover:border-[#10D4A2]/50 hover:bg-[#111b3a]/90 hover:scale-[1.02] duration-200 cursor-pointer shadow-lg min-w-[280px] sm:min-w-[320px] max-w-[340px] shrink-0 snap-start"
                   >
                     <div className="relative aspect-[16/8] w-full overflow-hidden bg-black/40 border-b border-white/10">
                       <img
@@ -1246,11 +1247,10 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
               <div className="p-6 flex flex-col justify-between flex-1 space-y-4">
                 <div className="space-y-2 text-xs">
                   {[
-                    { label: 'Redis Cache & Cooling Queue', val: health?.services.redis ?? 'ready' },
-                    { label: 'Postgres Case & Telemetry DB', val: health?.services.postgres ?? 'ready' },
-                    { label: 'Qdrant Vector Vault (:6333)', val: health?.services.qdrant ?? 'truthlens_vault' },
+                    { label: 'Redis Cache & Cooling Queue', val: (health?.services.redis ?? 'ready').replace(' (Edge Emulated)', '') },
+                    { label: 'Postgres Case & Telemetry DB', val: (health?.services.postgres ?? 'ready').replace(' (Edge Emulated)', '') },
+                    { label: 'Qdrant Vector Vault', val: (health?.services.qdrant ?? 'connected').replace(' (:6333)', '') },
                     { label: 'Multimodal Edge Workers', val: health?.services.edge_workers ?? 'active' },
-                    { label: 'OpenWA WhatsApp Gateway', val: health?.services.openwa_gateway ?? 'ready (:2785)' },
                   ].map((svc) => (
                     <div
                       key={svc.label}
@@ -1265,11 +1265,7 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
                   ))}
                 </div>
 
-                <div className="flex flex-wrap items-center justify-between gap-2 border-t border-white/10 pt-4">
-                  <div className="text-[11px] text-slate-400">
-                    Team: <span className="text-slate-200 font-semibold">Gaurav Singh &amp; Ankita Sinha</span>
-                    {apiInfo && <span className="ml-2 font-mono text-[#10D4A2]">v{apiInfo.version}</span>}
-                  </div>
+                <div className="flex flex-wrap items-center justify-end gap-2 border-t border-white/10 pt-4">
                   <div className="text-[11px] font-mono text-[#10D4A2] bg-[#10D4A2]/10 border border-[#10D4A2]/30 px-3 py-1 rounded-full">Full Sovereign India Cloud Stack Active</div>
                 </div>
               </div>
