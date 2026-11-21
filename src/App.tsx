@@ -164,7 +164,7 @@ export default function App() {
             <div>
               <div className="font-display text-base font-extrabold tracking-wider flex items-center gap-1.5 text-white">
                 TRUTHLENS
-                <span className="text-[10px] bg-blue-50 border border-blue-200 text-blue-700 px-2 py-0.5 rounded-full font-mono font-bold">
+                <span className="text-[10px] bg-black border border-white/20 text-[#10D4A2] px-2 py-0.5 rounded-full font-mono font-bold">
                   v2.3.0
                 </span>
               </div>
