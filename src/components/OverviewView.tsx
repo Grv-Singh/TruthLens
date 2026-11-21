@@ -285,11 +285,11 @@ const USE_CASE_STORIES = [
         num: '03',
         title: 'Automated Wire Transfer Policy Gate Freeze',
         stage: 'L1 Transaction Gate',
-        tech: 'Fintech / Banking Policy Gate Simulator',
+        tech: 'Fintech / Banking Policy Gate',
         detail:
           'TruthLens triggers an automated webhook that blocks RTGS execution, flags the target account, and prompts for multi-factor in-person biometric challenge.',
-        targetTab: 'solutions' as NavTab,
-        cta: 'Test Fintech Domain Gate',
+        targetTab: 'heal' as NavTab,
+        cta: 'Inspect Legal Shield',
       },
       {
         num: '04',
@@ -351,11 +351,11 @@ const USE_CASE_STORIES = [
         num: '04',
         title: 'Live Newsroom Provenance Ticker Broadcast',
         stage: 'L0 Civic Verification',
-        tech: 'Newsrooms & UGC Domain Playbook',
+        tech: 'Newsrooms & UGC Domain Broadcast',
         detail:
           'The TV channel runs an on-screen TruthLens verified debunk badge with ELA heatmap proof, halting the political weaponization of the deepfake.',
-        targetTab: 'solutions' as NavTab,
-        cta: 'Open Journalism Domain Playbook',
+        targetTab: 'dampen' as NavTab,
+        cta: 'Inspect Virality Dampener',
       },
     ],
   },
@@ -1289,7 +1289,7 @@ export const OverviewView: React.FC<OverviewViewProps> = ({
                 </span>
                 <div>
                   <h3 className="font-display text-base sm:text-lg font-bold text-white">
-                    TruthLens System Walkthrough
+                    Architecting Multimodal Defense: The TruthLens Middleware Stack
                   </h3>
                 </div>
               </div>
